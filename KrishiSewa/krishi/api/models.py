@@ -1,8 +1,8 @@
 from django.db import models
 
-# Create your models here.
-<<<<<<< HEAD
-class Test(models.Model):
-    attribute = models.CharField(max_length=50)
-=======
->>>>>>> anuj
+
+class Note(models.Model):
+    title = models.CharField(max_length=50)
+    content = models.CharField(max_length=500)
+
+
