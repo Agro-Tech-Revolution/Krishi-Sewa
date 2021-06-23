@@ -3,8 +3,10 @@ import requests
 from rest_framework.response import Response
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from .auth import *
 
 # Create your views here.
+@unauthenticated_user
 def login_view(request):
     if request.method== 'POST':
         username = request.POST.get('username')
@@ -42,6 +44,7 @@ def login_view(request):
     return render(request, 'accounts/login.html')
 
 
+@unauthenticated_user
 def register_view(request):
     if request.method=='POST':
         
@@ -71,7 +74,7 @@ def register_view(request):
             profile_request = requests.post('http://127.0.0.1:8000/api/profile/', data=profile_data)
             if Response(profile_request).status_code == 200:
                 print("User successfully created")
-                return redirect('/')
+                return redirect('/login')
         else:
             print("Error in creating user")
 
@@ -81,4 +84,4 @@ def register_view(request):
 def logout_user(request):
     request.session.clear()
     logout(request)
-    return redirect('/')
+    return redirect('/login')

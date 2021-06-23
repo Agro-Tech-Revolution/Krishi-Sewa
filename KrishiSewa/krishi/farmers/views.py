@@ -1,7 +1,9 @@
 from django.shortcuts import render
-from django.http.response import HttpResponse
+from django.contrib.auth.decorators import login_required
+from accounts.auth import *
 
 # Create your views here.
+@login_required
+@farmers_only
 def index(request):
-    print(request.session.get('token'))
-    return HttpResponse("This is farmers page")
+    return render(request, 'farmers/farmers.html')

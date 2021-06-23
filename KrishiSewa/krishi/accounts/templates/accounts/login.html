@@ -1,18 +1,86 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <form method="POST">
-        {% csrf_token %}
-        <input type="text" placeholder="Username" name="username">
-        <input type="password" placeholder="Password" name="password">
-        <button type="submit">Login</button>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="{% static 'accounts/css/style.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+    />
+    <link rel="
+    <script
+      src="<script"
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    ></script>
+    <link href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" rel="stylesheet">
 
-    </form>
-</body>
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row px-3"><div class="ol-lg-10 col-xl-9 card flex-row mx-auto px-0">
+          <div class="img-left d-none d-md-flex"></div>
+
+          <div class="card-body">
+              <h5 class="title text-center mt-4">Login</h5>
+              <form class="form-box px-3" method="POST">
+                {% csrf_token %}
+                  <div class="form-input">
+                      <span><i class="fas fa-user"></i></span>
+                      <input type="text" name="username" placeholder="Username" tabindex="10" required>
+                    </div>
+                    <div class="form-input">
+                        <span><i class="fa fa-key"></i></span>
+                        <input type="password" name="password" placeholder="password">
+                      </div>
+
+
+<!-----------------------------------------------------Remember me checkbox---------------------------------------------->
+                      <div class="mb-3">
+                          <div class="custom-control custom-checkbox">
+                              <input type="checkbox" class="custom-control-input" id="cb1" name="">
+                              <label class="custom-control-label" for="cb1">Remember me</label>
+                          </div>
+                      </div>
+
+<!-------------------------------------------Login button-------------------------------------------------------->       
+                      <div class="mb-3">
+                          <button type="submit" class="btn btn-block text-uppercase">LOGIN</button>
+                      </div>
+<!-------------------------------------------forgotpassword-------------------------------------------------->                                   <div class="text-right">
+                        <a href="#" class="forget-link">Forgot Password?</a>
+                        <hr class="my-4">
+                  </div>
+<!-------------------------------------------OR-------------------------------------------------->   
+                  <div class="text-center mb-3">OR</div>
+                  
+
+<!-------------------------------------------Social media icons-------------------------------------------------->   
+                  <div class="row mb-3" id="social">
+                      <div class="col-4">
+                          <a href="#" class="btn.btn-block btn social btn-facebook">Facebook</a>
+                      </div>
+
+                      <div class="col-4">
+                        <a href="#" class="btn.btn-block btn social btn-google">Google</a>
+                    </div>
+
+                    <div class="col-4">
+                        <a href="#" class="btn.btn-block btn social btn-twitter">Twitter</a>
+                    </div>
+                  </div>
+<!-------------------------------------------Signup here--------------------------------------------------> 
+
+                  <hr class="my-4">
+                  <div class="text-center mb-2">Don't have an account? <a href="/register" class="register-link">Register here</a>
+                  </div>
+              </form>
+          </div>
+      </div>
+    </div>
+  </body>
 </html>
