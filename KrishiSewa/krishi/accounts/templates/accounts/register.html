@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" placeholder="First Name" name="fname"><br>
+        <input type="text" placeholder="Last Name" name="lname"><br>
+        <input type="text" placeholder="Username" name="username"><br>
+        <input type="email" placeholder="email" name="email"><br>
+        <select name="user_type">
+            <option value="FARMERS">Farmers</option>
+            <option value="VENDORS">Vendors</option>
+            <option value="BUYERS">Buyers</option>
+        </select><br>
+        <input type="password" placeholder="Password" name="password"><br>
+        <input type="password" placeholder="Confirm Password" name="cpassword"><br>
+        <button type="submit">Login</button>
+    </form>
+</body>
+</html>
