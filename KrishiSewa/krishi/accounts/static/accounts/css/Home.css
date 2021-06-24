@@ -1,0 +1,132 @@
+*{
+    margin: 0px;
+    padding:0px;
+    box-sizing: border-box;
+}
+
+body{
+    font-size: 20px;
+    overflow-x: hidden;
+    color:white;
+    font-family: 'Garamond', cursive;
+}
+
+header{
+    background-image:linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)), url('../images/main.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh;
+}
+
+.row{
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+.logo{
+    height: 60px;
+    width: auto;
+    float:left;
+    margin-top: 20px;
+    margin-left: 0px;   
+}
+
+.main-nav{
+    float: right;
+    margin-top: 30px;
+}
+
+.main-nav li{
+    display: inline-block;
+    list-style: none;
+    margin-left: 40px;
+}
+
+.btn{
+    display: inline-block;
+    list-style: none;
+    padding: 10px 30px;
+    font-weight: lighter;
+    text-decoration: none;
+    text-transform: uppercase;
+    border-radius: 200px;
+    transition: background-color 0.2s, border 0.2s, color 0.2s;
+
+}
+
+.btn-full{
+    background-color: transparent;
+    color: orange;
+    margin-right: 15px;
+    border: 1px solid orange;
+}
+
+.btn-full:hover{
+    background-color:green;
+}
+
+.btn-nav{
+    background-color: transparent;
+    color:green;
+    border: 1px solid green;
+}
+
+.btn-nav:hover{
+    background-color:white;
+}
+
+.main-content-header{
+    width: 400px;
+    position: absolute;
+    top: 50%;
+    Left: 50px;
+    transform: translate(170%, -30%);
+
+}
+
+h1{
+    transform: translate(15%, -30%);
+    font-weight: lighter;
+}
+
+
+h4{
+    font-weight: lighter;
+}
+
+h1{
+    animation: h1soilanalyzer 1s infinite;
+}
+
+@keyframes h1soilanalyzer{
+    0%{color:green;}
+    25%{color: red;}
+    50%{color: white;}
+    100%{color:orange;}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.container{
+    color: black;
+}
+
+h1{
+    text-align: center;
+}
+
+.container p{
+    text-align: center;
+}
