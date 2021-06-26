@@ -3,11 +3,6 @@ from .models import *
 from django.contrib.auth.models import User
 from rest_framework.authtoken.views import Token
 
-class NoteSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = Note
-        fields = ['id', 'title', 'content']
-
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

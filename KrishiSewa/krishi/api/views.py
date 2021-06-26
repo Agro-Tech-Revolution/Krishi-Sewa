@@ -1,17 +1,73 @@
+from re import S
 from django.shortcuts import render, HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import *
+from farmers.models import *
 from rest_framework import status
 from .serializers import *
+from farmers.serializers import *
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 
-class NoteAPIView(APIView):
-    
+class UserAPIView(APIView):
+    def get(self, request):
+        users = User.objects.all()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserDetail(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = (TokenAuthentication,)
+    def get_object(self, username):
+        try:
+            return User.objects.get(username=username)
+        except User.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, username):
+        user = self.get_object(username)
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+    
+
+class CreateProfile(APIView):
+    def post(self, request):
+        serializer = CreateProfileSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GetProfileType(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = (TokenAuthentication,)
+
+    def get_object(self, user_id):
+        try:
+            return Profile.objects.get(user=user_id)
+        except Profile.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, user_id):
+        profile = self.get_object(user_id)
+        serializer = CreateProfileSerializer(profile)
+        return Response(serializer.data)
+
+
+class NoteAPIView(APIView):
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,)
     def get(self, request):
         notes = Note.objects.all()
         serializer = NoteSerializers(notes, many=True)
@@ -57,56 +113,65 @@ class NoteDetails(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class UserAPIView(APIView):
+class ProductAPIView(APIView):
     def get(self, request):
-        users = User.objects.all()
-        serializer = UserSerializer(users, many=True)
-        return Response(serializer.data)
-
-    def post(self, request):
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class UserDetail(APIView):
-    permission_classes = [IsAuthenticated]
-    authentication_classes = (TokenAuthentication,)
-    def get_object(self, username):
-        try:
-            return User.objects.get(username=username)
-        except User.DoesNotExist:
-            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-
-    def get(self, request, username):
-        user = self.get_object(username)
-        serializer = UserSerializer(user)
+        products = Products.objects.all()
+        serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
     
-
-class CreateProfile(APIView):
     def post(self, request):
-        serializer = CreateProfileSerializer(data=request.data)
+        serializer = ProductSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class GetProfileType(APIView):
-    permission_classes = [IsAuthenticated]
-    authentication_classes = (TokenAuthentication,)
-    def get_object(self, user_id):
+class MyProducts(APIView):
+    def get_objects(self, user_id):
         try:
-            return Profile.objects.get(user=user_id)
-        except Profile.DoesNotExist:
+            return Products.objects.filter(prod_added_by=user_id)
+        except Products.DoesNotExist:
             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
 
     def get(self, request, user_id):
-        profile = self.get_object(user_id)
-        serializer = CreateProfileSerializer(profile)
+        products = self.get_objects(user_id)
+        serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
+
+
+class ProductDetails(APIView):
+    def get_object(self, prod_id):
+        try:
+            return Products.objects.get(id=prod_id)
+        except Products.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, prod_id):
+        product = self.get_object(prod_id)
+        serializer = ProductSerializer(product)
+        return Response(serializer.data)
+
+    def put(self, request, prod_id):
+        product = self.get_object(prod_id)
+        if product.prod_added_by.id == request.user.id:
+            serializer = ProductSerializer(product, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"Bad Request": "Not your product"}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+    def delete(self, request, prod_id):
+        product = self.get_object(prod_id)
+        
+        if product.prod_added_by.id == request.user.id:
+            product.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({"Bad Request": "Not your product"}, status=status.HTTP_400_BAD_REQUEST)
 
 
