@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test your soil</title>
+</head>
+<body>
+  <form action="result">
+    {% csrf_token %}
+
+    <div>
+      <h3>Nitrogen</h3>
+      <input placeholder="Nitrogen(N)" name="N">
+    </div>
+
+    <div>
+      <h3>Phosphorous</h3>
+      <input placeholder="Phosphorous(P)" name="P">
+    </div>
+
+    <div>
+      <h3>Potassium</h3>
+      <input placeholder="Potassium(K)" name="K">
+    </div>
+
+    <div>
+      <h3>Temprature</h3>
+      <input placeholder="Temprature" name="temp">
+    </div>
+
+    <div>
+      <h3>Humidity</h3>
+      <input placeholder="Humidity" name="humidity">
+    </div>
+
+    <div>
+      <h3>Ph</h3>
+      <input placeholder="ph" name="ph">
+    </div>
+
+    <div>
+      <input type="submit" value="Predict">
+    </div>
+
+  </form>
+</body>
+</html>
