@@ -1,4 +1,3 @@
-
 from django.urls import path, include
 from .views import *
 
@@ -9,4 +8,6 @@ urlpatterns = [
     path('users/<str:username>', UserDetail.as_view()),
     path('profile/', CreateProfile.as_view()),
     path('profile/<int:user_id>', GetProfileType.as_view()),
+    path('equipment/', CreateEquipment.as_view()),
+    path('equipment/<int:id>', EquipmentDetails.as_view())
 ]

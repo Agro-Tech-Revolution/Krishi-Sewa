@@ -9,13 +9,13 @@ from rest_framework.permissions import IsAuthenticated
 
 
 class NoteAPIView(APIView):
-    
     permission_classes = [IsAuthenticated]
     authentication_classes = (TokenAuthentication,)
+
     def get(self, request):
         notes = Note.objects.all()
         serializer = NoteSerializers(notes, many=True)
-        
+
         return Response(serializer.data)
 
     def post(self, request):
@@ -31,6 +31,7 @@ class NoteAPIView(APIView):
 class NoteDetails(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = (TokenAuthentication,)
+
     def get_object(self, id):
         try:
             return Note.objects.get(id=id)
@@ -74,6 +75,7 @@ class UserAPIView(APIView):
 class UserDetail(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = (TokenAuthentication,)
+
     def get_object(self, username):
         try:
             return User.objects.get(username=username)
@@ -84,7 +86,7 @@ class UserDetail(APIView):
         user = self.get_object(username)
         serializer = UserSerializer(user)
         return Response(serializer.data)
-    
+
 
 class CreateProfile(APIView):
     def post(self, request):
@@ -98,6 +100,7 @@ class CreateProfile(APIView):
 class GetProfileType(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = (TokenAuthentication,)
+
     def get_object(self, user_id):
         try:
             return Profile.objects.get(user=user_id)
@@ -110,3 +113,39 @@ class GetProfileType(APIView):
         return Response(serializer.data)
 
 
+class CreateEquipment(APIView):
+
+    def post(self, request):
+        serializer = CreateEquipmentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class EquipmentDetails(APIView):
+
+    def get_object(self, id):
+        try:
+            return Equipment.objects.get(id=id)
+        except Equipment.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, id):
+        equipment = self.get_object(id)
+        serializer = CreateEquipmentSerializer(equipment)
+        return Response(serializer.data)
+
+    def put(self, request, id):
+        equipment = self.get_object(id)
+        serializer = CreateEquipmentSerializer(equipment, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id):
+        equipment = self.get_object(id)
+        equipment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
