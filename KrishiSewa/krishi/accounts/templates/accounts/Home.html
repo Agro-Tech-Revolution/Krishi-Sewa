@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,13 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Krishi Sewa</title> 
-    <link rel="stylesheet"type="text/css" href="css/Home.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'accounts/css/Home.css' %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
 </head>
 <body>
     <header>
         <nav>
             <div class="row">
-                <img src="images/logo.jpg" class="logo">
+                <img src="{% static 'accounts/images/logo.jpg' %}" class="logo">
                 
                 <ul class="main-nav">
                 <li><a href="#" class="btn btn-full">Signup</a></li>
@@ -33,37 +35,223 @@
 
     <br>
 
-    <div class="container">
-          <h1>Our Motive</h1>
+    <div class="motive">
+          <h2>Our Motive</h2>
           <br>
           <p>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit.Deleniti explicabo itaque nihil praesentium. 
-            Maxime tempora liquam odit ipsa delectus quia sapiente laudantium expedita ipsum corporis. A quam 
-            ut labore consectetur!
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit.Deleniti explicabo itaque nihil praesentium.
+            Maxime tempora liquam quia sapiente laudantium expedita ipsum corporis. A quam
+            ut labore consectetur!Lorem ipsum, dolor sit consectetur adipisicing elit. Deleniti explicabo
+            itaque nihil praesentium.
           </p>
     </div>
 
     <br>
-    
-    <div class="container my-5">
-        <div class="row">
-          <div class="col-md-4">
+
+    <div class="value">
+          <div class="column">
             <h3 class="text-success">569</h3>
             <span class="text-capitalize">Happy Customer</span>
           </div>
-          <div class="col-md-4">
+          <div class="column">
             <h3 class="text-success">420</h3>
             <span class="text-capitalize">Crops Recommended</span>
           </div>
-          <div class="col-md-4">
+          <div class="column">
             <h3 class="text-success">84%</h3>
             <span class="text-capitalize">Modal Accuracy</span>
           </div>
         </div>
-    </div>
+
 
     <br>
-    
-    
-</body>
+
+    <div class="seed">
+
+      <h3>Say no to less production</h3>
+
+      <h5>Signup today and see your crop flourish</h5>
+
+        <ul class="started">
+            <li><a href="#" class="btn btn-start">Get Started</a></li>
+        </ul>
+
+
+    </div>
+
+
+    <br>
+
+
+
+    <div class="use">
+        <h2>How to Use</h2>
+
+          <div class="desc">
+              <img src="{% static 'accounts/images/logo.jpg' %}" class="account"><br>
+              Create an account then login to the system to get the access
+          </div>
+
+
+          <div class="desc">
+              <img src="{% static 'accounts/images/logo.jpg' %}" class="account"><br>
+              Send your soil sample to laboratory and then you can get the result
+          </div>
+
+
+          <div class="desc">
+              <img src="{% static 'accounts/images/logo.jpg' %}" class="account"><br>
+              Insert your data as obtained from the report in the respective fields
+          </div>
+
+
+          <div class="desc">
+              <img src="{% static 'accounts/images/logo.jpg' %}" class="account"><br>
+              Plant your crop according to the recommendation provided
+          </div>
+    </div>
+
+
+      <div class="container">
+          <h2>Main Characteristics</h2>
+            <div class="row">
+                  <div class="col-sm">
+                      <img src="{% static 'accounts/images/main.jpg' %}" class="character">
+                  </div>
+                  <div class="col-sm">
+                      <div class="all">
+                          <h3 class="name">Nitrogen</h3>
+                          <span class="description">Lorel ipsum dolor sit amet. Lorel ipsum dolor sit amet</span>
+                      </div>
+                      <div class="all">
+                          <h3 class="name">Phosphorus</h3>
+                          <span class="description">Lorel ipsum dolor sit amet. Lorel ipsum dolor sit amet</span>
+                      </div>
+                          <div class="all">
+                          <h3 class="name">Potassium</h3>
+                         <span class="description">Lorel ipsum dolor sit amet. Lorel ipsum dolor sit amet</span>
+                      </div>
+                      <div class="all">
+                          <h3 class="name">pH</h3>
+                          <span class="description">Lorel ipsum dolor sit amet. Lorel ipsum dolor sit amet</span>
+                      </div>
+                      <div class="all">
+                          <h3 class="name">Temperature</h3>
+                          <span class="description">Lorel ipsum dolor sit amet. Lorel ipsum dolor sit amet</span>
+                      </div>
+                  </div>
+            </div>
+      </div>
+
+
+
+
+
+
+    <div class="container">
+          <h2>Vendor and Buyer</h2>
+            <div class="row">
+                  <div class="col-sm">
+                      <div class="allVendor">
+                          <span class="aboutVendor">Lorel ipsum dolor sit amet. Lorem ipsum, dolor sit amet consectetur
+                              adipisicing elit.Deleniti explicabo itaque nihil praesentium.Maxime tempora liquam quia
+                              sapiente laudantium expedita ipsum corporis. A quamut labore consectetur!Lorem ipsum,
+                              dolor sit consectetur adipisicing elit. Deleniti explicaboitaque nihil praesentium.
+                              Lorel ipsum dolor sit amet. Lorem ipsum, dolor sit amet consectetur
+                              adipisicing elit.Deleniti explicabo itaque nihil praesentium.Maxime tempora liquam quia
+                              sapiente laudantium expedita ipsum corporis. A quamut labore consectetur!Lorem ipsum,
+                              dolor sit consectetur adipisicing elit. Deleniti explicaboitaque nihil praesentium.
+                              Lorel ipsum dolor sit amet. Lorem ipsum, dolor sit amet consectetur
+                              adipisicing elit. Deleniti explicaboitaque nihil praesentium.Lorel ipsum dolor sit amet.
+                              Lorem ipsum, dolor sit amet consectetur adipisicing elit.</span>
+                      </div>
+                  </div>
+
+                  <div class="col-sm">
+                      <img src="{% static 'accounts/images/vendor.jpg' %}" class="vendor">
+                  </div>
+            </div>
+      </div>
+
+
+
+
+
+
+
+    <div class="container">
+            <div class="row">
+                  <div class="col-sm">
+                      <img src="{% static 'accounts/images/buyer.jpg' %}" class="character">
+                  </div>
+                  <div class="col-sm">
+                      <div class="all">
+                          <h3 class="name">Lorel ipsum</h3>
+                          <span class="description">Lorel ipsum dolor sit amet. Lorel ipsum dolor sit amet</span>
+                      </div>
+                      <div class="all">
+                          <h3 class="name">Lorel ipsum</h3>
+                          <span class="description">Lorel ipsum dolor sit amet. Lorel ipsum dolor sit amet</span>
+                      </div>
+                          <div class="all">
+                          <h3 class="name">Lorel ipsum</h3>
+                         <span class="description">Lorel ipsum dolor sit amet. Lorel ipsum dolor sit amet</span>
+                      </div>
+                      <div class="all">
+                          <h3 class="name">Lorel ipsum</h3>
+                          <span class="description">Lorel ipsum dolor sit amet. Lorel ipsum dolor sit amet</span>
+                      </div>
+                      <div class="all">
+                          <h3 class="name">Lorel ipsum</h3>
+                          <span class="description">Lorel ipsum dolor sit amet. Lorel ipsum dolor sit amet</span>
+                      </div>
+                  </div>
+            </div>
+      </div>
+
+<br>
+
+
+    </body>
+
+
+   <footer>
+
+      <div class="container">
+            <div class="sec aboutus">
+                <h4>About Us</h4>
+              <p1>
+                Lorem ipsum, dolor sit amet elit consectetur adipisicing elit. Deleniti itaque
+                nihil praesentium. Maxime tempora liquam quia sapiente olor laudantium expedita
+                corporis. A quam ut labore consectetur!Lorem ipsum, dolor sit consectetur elit.
+              </p1>
+            </div>
+
+
+            <div class="secLinks">
+                  <h4>Useful Links</h4>
+               <ul>
+                 <li><a href="#">Soil Test</a></li>
+                 <li><a href="#">Narc</a></li>
+                 <li><a href="#">Atlas</a></li>
+               </ul>
+            </div>
+
+            <div class="contact">
+               <h4>Contact Us</h4>
+               <ul class="info">
+                   <li>Soil Analyzer,Durbarmarg, Ktm</li>
+                   <li>+977-1234567890</li>
+                   <li>soilanalyzer101@gmail.com</li>
+               </ul>
+            </div>
+
+      </div>
+
+      <div class="last" >
+           <p>© 2021 Soil Analyzer.All rights reserved. Images taken from freepik</p>
+      </div>
+
+  </footer>
+
 </html>

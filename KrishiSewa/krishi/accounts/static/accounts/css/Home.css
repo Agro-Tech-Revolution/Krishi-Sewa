@@ -29,7 +29,7 @@ header{
     width: auto;
     float:left;
     margin-top: 20px;
-    margin-left: 0px;   
+    margin-left: 0px;
 }
 
 .main-nav{
@@ -43,14 +43,15 @@ header{
     margin-left: 40px;
 }
 
+/* ------------------------------------- button ---------------------------*/
+
 .btn{
     display: inline-block;
     list-style: none;
-    padding: 10px 30px;
     font-weight: lighter;
     text-decoration: none;
     text-transform: uppercase;
-    border-radius: 200px;
+    border-radius: 100px;
     transition: background-color 0.2s, border 0.2s, color 0.2s;
 
 }
@@ -58,17 +59,18 @@ header{
 .btn-full{
     background-color: transparent;
     color: orange;
-    margin-right: 15px;
+    padding: 10px;
     border: 1px solid orange;
 }
 
 .btn-full:hover{
-    background-color:green;
+    background-color:white;
 }
 
 .btn-nav{
     background-color: transparent;
     color:green;
+    padding: 10px;
     border: 1px solid green;
 }
 
@@ -108,25 +110,286 @@ h1{
 
 
 
+/* ----------------------------------- Motive --------------------------- */
 
-
-
-
-
-
-
-
-
-
-
-.container{
+.motive{
     color: black;
 }
 
-h1{
+
+h2{
     text-align: center;
+    margin-top: 20px;
+    height: 40px;
+    color: black;
 }
 
-.container p{
-    text-align: center;
+p{
+    margin-left: 150px;
+    margin-right: 170px;
+
 }
+
+
+/*------------------- value --------------------------------*/
+
+.text-success{
+color: orange;
+}
+
+.text-capitalize{
+color: black;
+}
+
+.column{
+display: inline-block;
+padding: 50px;
+margin-left: 120px;
+}
+
+/*--------------------------- seed image -----------------------------*/
+
+.seed{
+    background-image:linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)), url('../images/main.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 70vh;
+}
+
+.seed h3{
+color: white;
+margin-left: 700px;
+font-size: 30px;
+padding-top: 200px;
+
+}
+
+h5{
+margin-left: 730px;
+font-weight: lighter;
+}
+
+.btn-start{
+    background-color: transparent;
+    color: orange;
+    margin-left: 770px;
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid orange;
+}
+
+.btn-start:hover{
+    background-color:white;
+}
+
+
+/*---------------------------------- How to use -----------------*/
+.use{
+color: black;
+}
+
+.desc{
+display: inline-block;
+padding: 20px;
+margin-top: 30px;
+margin-left: 80px;
+width: 200px;
+}
+
+.account{
+ height: 70px;
+ width: auto;
+}
+
+
+/*--------------------------- Characteristics -----------------------------------------*/
+
+.col-sm{
+color: black;
+margin-top: 20px;
+}
+
+.name{
+color: orange;
+font-size: 19px;
+}
+
+.character{
+    height: 320px;
+    width: 500px;
+    float:left;
+    margin-top: 20px;
+    margin-left: 70px;
+    margin-bottom: 30px;
+}
+
+.all{
+margin-left: 650px;
+padding: 10px;
+margin-bottom: 10px;
+}
+
+.description{
+font-size: 16px;
+}
+
+
+.vendor{
+    height: 300px;
+    width: 500px;
+    float:right;
+    margin-top: 20px;
+    margin-left: 70px;
+    padding: 10px;
+    margin-bottom: 60px;
+}
+
+.allVendor{
+margin-left: 100px;
+float: left;
+padding: 15px;
+width: 500px;
+margin-bottom: 50px;
+}
+
+.aboutVendor{
+font-size: 16px;
+}
+
+
+/*----------------------------- Vendor -----------------------------------------------*/
+
+
+
+
+/*----------------------------Buyer -----------------------------------------------*/
+
+
+/*-----------------------  footer-------------------------------------*/
+
+footer{
+position: relative;
+width: 100%;
+height: auto;
+padding: 50px 100px;
+background: #111;
+display: flex;
+justify-content: space-between;
+flex-wrap: wrap;
+}
+
+/*--------------------------- About Us ----------------------------------------*/
+
+p1{
+color: #999;
+font-size: 15px;
+}
+
+footer .container{
+display: flex;
+justify-content: space-between;
+flex-wrap: wrap;
+flex-direction: row;
+}
+
+footer .container .sec{
+margin-right: 30px;
+}
+
+footer .container .sec.aboutus{
+width: 40%;
+}
+
+footer .container .sec h4
+{
+position: relative;
+color: white;
+font-weight: 500;
+margin-bottom:15px;
+}
+
+/*-----------------------------Links------------------*/
+
+.secLinks{
+position: relative;
+width: 25%;
+}
+
+.secLinks ul li{
+list-style: none;
+}
+
+.secLinks ul li a{
+color: #999;
+font-size: 15px;
+margin-top: 10px;
+text-decoration: none;
+margin-bottom: 10px;
+display: inline-block;
+}
+
+.secLinks ul li a:hover{
+color: white;
+}
+
+footer .container .secLinks h4
+{
+position: relative;
+color: white;
+}
+
+/*-------------------------------Contact----------------------------*/
+
+.contact{
+width: calc(35% - 60px);
+margin-right: 0 !important;
+}
+
+.contact .info{
+position: relative;
+}
+
+.contact .info li{
+display: flex;
+margin-bottom: 16px;
+color: #999;
+font-size: 15px;
+margin-top: 10px;
+}
+
+footer .container .contact h4
+{
+position: relative;
+color: white;
+}
+
+.contact ul li:hover{
+color: white;
+}
+
+
+.last p{
+text-align: center;
+color: #999;
+margin-top: 40px;
+font-size: 18px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

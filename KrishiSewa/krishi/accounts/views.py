@@ -7,6 +7,10 @@ from .auth import *
 
 # Create your views here.
 @unauthenticated_user
+def home(request):
+    return render(request,'accounts/Home.html')
+
+@unauthenticated_user
 def login_view(request):
     if request.method== 'POST':
         username = request.POST.get('username')
