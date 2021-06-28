@@ -26,7 +26,6 @@ class Products(models.Model):
         ("Others", "Others"),
     ]
 
-
     prod_name = models.CharField(max_length=100)
     quantity_in_kg = models.FloatField()
     prod_category = models.CharField(max_length=25, 
@@ -36,4 +35,33 @@ class Products(models.Model):
     prod_added_on = models.DateTimeField(auto_now_add=True)
     prod_added_by = models.ForeignKey(User, 
                                      on_delete=models.CASCADE, 
-                                     null=True)
+                                     null=True,
+                                     related_name='prod_added_by')
+    comments = models.ManyToManyField(User, 
+                                     through='ProductComment', 
+                                     related_name='comments')
+    reports = models.ManyToManyField(User, 
+                                     through='ProductReport', 
+                                     related_name='reports')
+    
+
+class ProductComment(models.Model):
+    comment_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    product = models.ForeignKey(Products, on_delete=models.CASCADE, null=True)
+    comment = models.CharField(max_length=200)
+    comment_date = models.DateTimeField(auto_now_add=True)
+
+
+class ProductReport(models.Model):
+    categories = [
+        ("False Information", "False Information"),
+        ("Fake Products", "Fake Products"),
+        ("Misinformation", "Misinformation"),
+        ("Something Else", "Something Else"),
+    ]
+
+    reported_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    reported_product = models.ForeignKey(Products, on_delete=models.CASCADE, null=True)
+    report_category = models.CharField(max_length=50, choices=categories, default="Misinformation")
+    report_description = models.CharField(max_length=200)
+    reported_date = models.DateTimeField(auto_now_add=True)

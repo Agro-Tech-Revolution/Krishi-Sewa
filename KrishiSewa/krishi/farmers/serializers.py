@@ -13,3 +13,16 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Products
         fields = ['id', 'prod_name', 'quantity_in_kg', 'prod_category', 
                   'prod_price', 'prod_added_on', 'prod_added_by']
+
+
+class ProductCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductComment
+        fields = ['id', 'comment_by', 'product', 'comment', 'comment_date']
+
+
+class ProductReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductReport
+        fields = ['id', 'reported_by', 'reported_product', 'report_category', 
+                  'report_description', 'reported_date']

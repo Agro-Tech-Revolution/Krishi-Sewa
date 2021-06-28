@@ -4,3 +4,5 @@ from .models import *
 # Register your models here.
 admin.site.register(Note)
 admin.site.register(Products)
+admin.site.register(ProductComment)
+admin.site.register(ProductReport)
