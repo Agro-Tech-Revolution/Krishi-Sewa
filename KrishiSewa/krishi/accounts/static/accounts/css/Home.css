@@ -1,27 +1,15 @@
-
-
 /*------------------------------ First image --------------------------*/
 .main{
-    background-image:linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)), url('../images/first.jpg);
+    background-image:linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)), url('../images/first.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
     height: 100vh;
 }
 
-
 /*--------------------------- Motive ----------------------------*/
 .motive{
     color: black;
-}
-
-h2{
-    height: 40px;
-}
-
-p{
-    margin-left: 150px;
-    margin-right: 170px;
 }
 
 /*------------------------ Seed image---------------------------*/
@@ -34,13 +22,15 @@ p{
 }
 
 /*----------------------- Main Characteristics image -------------------*/
-
 .characteristics{
-    height: 50px;
-    width: 100px;
+    height: 100%;
+    width: 100%;
     float: left;
-    margin-right: 80px;
 
 }
 
+/*--------------------------Footer---------------------------------*/
 
+.list{
+list-style: none;
+}
