@@ -10,3 +10,5 @@ class Profile(models.Model):
                                     null=True,
                                     default='static/profile_pic/default_profile.jpg')
 
+
+

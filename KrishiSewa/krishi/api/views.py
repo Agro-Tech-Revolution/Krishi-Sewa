@@ -5,10 +5,12 @@ from django.shortcuts import render, HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import *
+from vendors.models import *
 from farmers.models import *
 from rest_framework import status
 from .serializers import *
 from farmers.serializers import *
+from vendors.serializers import *
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
@@ -86,10 +88,11 @@ class GetProfileType(APIView):
 class NoteAPIView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = (TokenAuthentication,)
+
     def get(self, request):
         notes = Note.objects.all()
         serializer = NoteSerializers(notes, many=True)
-        
+
         return Response(serializer.data)
 
     def post(self, request):
@@ -105,6 +108,7 @@ class NoteAPIView(APIView):
 class NoteDetails(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = (TokenAuthentication,)
+
     def get_object(self, id):
         try:
             return Note.objects.get(id=id)
@@ -270,6 +274,7 @@ class CommentOfProduct(APIView):
 class CommentsOnMyProduct(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = (TokenAuthentication,)
+
     def get_object(self, user_id):
         try:
             return ProductComment.objects.filter(product__prod_added_by=user_id)
@@ -368,3 +373,44 @@ class ReportDetails(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             return Response({"Bad Request": "You are not allowed to update reports"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CreateEquipment(APIView):
+    def get(self, request):
+        equipments = Equipment.objects.all()
+        serializer = CreateEquipmentSerializer(equipments, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = CreateEquipmentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class EquipmentDetails(APIView):
+    def get_object(self, id):
+        try:
+            return Equipment.objects.get(id=id)
+        except Equipment.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, id):
+        equipment = self.get_object(id)
+        serializer = CreateEquipmentSerializer(equipment)
+        return Response(serializer.data)
+
+    def put(self, request, id):
+        equipment = self.get_object(id)
+        serializer = CreateEquipmentSerializer(equipment, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id):
+        equipment = self.get_object(id)
+        equipment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

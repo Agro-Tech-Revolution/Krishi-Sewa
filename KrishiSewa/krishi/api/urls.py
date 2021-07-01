@@ -1,4 +1,3 @@
-
 from django.urls import path, include
 from .views import *
 
@@ -27,4 +26,6 @@ urlpatterns = [
     path('products/<int:id>/reports', ReportsOnProduct.as_view()),
     path('products/reports/users/<int:user_id>', ProductReportByUser.as_view()),
     
+    path('equipment/', CreateEquipment.as_view()),
+    path('equipment/<int:id>', EquipmentDetails.as_view())
 ]
