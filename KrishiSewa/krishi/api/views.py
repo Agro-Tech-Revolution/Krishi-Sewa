@@ -283,8 +283,8 @@ class CommentsOnMyProduct(APIView):
 
 
 class ProductReportView(APIView):
-    permission_classes = [IsAuthenticated]
-    authentication_classes = (TokenAuthentication,)
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,)
     def get(self, request):
         reports = ProductReport.objects.all()
         serializer = ProductReportSerializer(reports, many=True)
@@ -305,8 +305,8 @@ class ProductReportView(APIView):
 
 
 class ReportsOnProduct(APIView):
-    permission_classes = [IsAuthenticated]
-    authentication_classes = (TokenAuthentication,)
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,)
     def get_object(self, id):
         try:
             return ProductReport.objects.filter(reported_product=id)
@@ -320,8 +320,8 @@ class ReportsOnProduct(APIView):
 
 
 class ProductReportByUser(APIView):
-    permission_classes = [IsAuthenticated]
-    authentication_classes = (TokenAuthentication,)
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,)
     def get_object(self, user_id):
         try:
             return ProductReport.objects.filter(reported_by=user_id)
@@ -335,8 +335,8 @@ class ProductReportByUser(APIView):
 
 
 class ReportDetails(APIView):
-    permission_classes = [IsAuthenticated]
-    authentication_classes = (TokenAuthentication,)
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,)
     def get_object(self, id):
         try:
             return ProductReport.objects.get(id=id)
