@@ -6,13 +6,20 @@ from django.contrib.auth.models import User
 from .auth import *
 
 # Create your views here.
+base_url = "http://127.0.0.1:8000"
+
+
+@unauthenticated_user
+def home(request):
+    return render(request,'accounts/Home.html')
+
 @unauthenticated_user
 def login_view(request):
     if request.method== 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
         
-        data = {
+        user_data = {
             'username': username,
             'password': password
         }
@@ -20,15 +27,20 @@ def login_view(request):
                             username=username,
                             password=password)
         if user is not None:
+            auth_endpoint = "/auth/"
+            auth_url = base_url + auth_endpoint
             
-            r = requests.post('http://127.0.0.1:8000/auth/', data=data)
+            r = requests.post(auth_url, data=user_data)
             if Response(r).status_code == 200:
                 login(request, user)
                 token = r.json().get('token')
                 request.session['token'] = token
 
                 headers = {'Authorization': 'Token ' + token}
-                profile_response = requests.get('http://127.0.0.1:8000/api/profile/'+str(user.id), headers=headers)
+                profile_endpoint = "/api/profile/"
+                profile_url = base_url + profile_endpoint + str(user.id)
+
+                profile_response = requests.get(profile_url, headers=headers)
                 user_type = profile_response.json().get('user_type')
                 
                 if user_type.upper() == 'BUYERS':
@@ -63,22 +75,28 @@ def register_view(request):
             "email": email,
             "password": password
         }
-                
-        r = requests.post('http://127.0.0.1:8000/api/users/', data=user_data)
+        
+        user_endpoint = "/api/users/"
+        user_url = base_url + user_endpoint
+        r = requests.post(user_url, data=user_data)
         if Response(r).status_code == 200:
             id = r.json().get('id')
             profile_data = {
                 "user": id,
                 "user_type": user_type
             }
-            profile_request = requests.post('http://127.0.0.1:8000/api/profile/', data=profile_data)
+
+            profile_endpoint = "/api/profile/"
+            profile_url = base_url + profile_endpoint
+            profile_request = requests.post(profile_url, data=profile_data)
+            
             if Response(profile_request).status_code == 200:
                 print("User successfully created")
                 return redirect('/login')
         else:
             print("Error in creating user")
 
-    return render(request, 'accounts/register.html')
+    return render(request, 'accounts/signup.html')
 
 
 def logout_user(request):
