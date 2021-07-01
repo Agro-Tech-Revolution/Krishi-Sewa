@@ -3,14 +3,11 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from requests.api import head
 from accounts.auth import *
-<<<<<<< HEAD
 from rest_framework.response import Response
 from .models import *
 from .utils import *
-=======
 import pickle
 
->>>>>>> 60329d801254211da2af477d781c56d9668430e4
 
 # Create your views here.
 base_url = 'http://127.0.0.1:8000'
@@ -22,7 +19,6 @@ def index(request):
     return render(request, 'farmers/farmers.html')
 
 
-<<<<<<< HEAD
 @login_required
 @farmers_only
 def products(request):
@@ -185,7 +181,6 @@ def delete_comment(request, id):
     if Response(comment_del_response).status_code == 200:
         print('Deleted Successfully')
     return redirect('/farmers/myProducts')
-=======
 """
 Soil testing part -----------------------------------------
 """
@@ -224,4 +219,3 @@ def result(request):
     result = getNPK_Prediction(N, P, K, temp, humidity, ph)
 
     return render(request, 'farmers/npk_result.html', {'result': result})
->>>>>>> 60329d801254211da2af477d781c56d9668430e4

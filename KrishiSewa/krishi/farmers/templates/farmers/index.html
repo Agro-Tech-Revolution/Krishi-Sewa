@@ -5,6 +5,15 @@
     <title>Test your soil</title>
 </head>
 <body>
+<div class="container">
+<h1>This is Farmers page.</h1>
+<ul>
+  <li><a href="/farmers/addProducts">Add Product</a></li>
+  <li><a href="/farmers/myProducts">My Products</a></li>
+  <li><a href="/farmers/test">NPK Test</a></li>
+</ul>
+<a href="/logout" class="btn btn-danger">Logout</a>
+</div>
   <form action="result">
     {% csrf_token %}
 
