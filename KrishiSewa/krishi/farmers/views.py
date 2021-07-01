@@ -3,9 +3,14 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from requests.api import head
 from accounts.auth import *
+<<<<<<< HEAD
 from rest_framework.response import Response
 from .models import *
 from .utils import *
+=======
+import pickle
+
+>>>>>>> 60329d801254211da2af477d781c56d9668430e4
 
 # Create your views here.
 base_url = 'http://127.0.0.1:8000'
@@ -17,6 +22,7 @@ def index(request):
     return render(request, 'farmers/farmers.html')
 
 
+<<<<<<< HEAD
 @login_required
 @farmers_only
 def products(request):
@@ -179,3 +185,43 @@ def delete_comment(request, id):
     if Response(comment_del_response).status_code == 200:
         print('Deleted Successfully')
     return redirect('/farmers/myProducts')
+=======
+"""
+Soil testing part -----------------------------------------
+"""
+
+
+def test(request):
+    return render(request, 'farmers/index.html')
+
+
+def getNPK_Prediction(N, P, K, temp, humidity, ph):
+    model = pickle.load(open('npk_model.sav', 'rb'))
+    scaler = pickle.load(open('scaler.sav', 'rb'))
+
+    prediction = model.predict(scaler.transform([
+        [N, P, K, temp, humidity, ph]
+    ]))
+
+    crops = {20: 'rice', 11: 'maize', 3: 'chickpea', 9: 'kidneybeans', 18: 'pigeonpeas', 13: 'mothbeans',
+             14: 'mungbean', 2: 'blackgram', 10: 'lentil', 19: 'pomegranate', 1: 'banana', 12: 'mango', 7: 'grapes',
+             21: 'watermelon', 15: 'muskmelon', 0: 'apple', 16: 'orange', 17: 'papaya', 4: 'coconut', 6: 'cotton',
+             8: 'jute', 5: 'coffee'}
+
+    for i in crops.keys():
+        if i == prediction:
+            return crops[i]
+
+
+def result(request):
+    N = int(request.GET['N'])
+    P = int(request.GET['P'])
+    K = int(request.GET['K'])
+    temp = int(request.GET['temp'])
+    humidity = int(request.GET['humidity'])
+    ph = int(request.GET['ph'])
+
+    result = getNPK_Prediction(N, P, K, temp, humidity, ph)
+
+    return render(request, 'farmers/npk_result.html', {'result': result})
+>>>>>>> 60329d801254211da2af477d781c56d9668430e4
