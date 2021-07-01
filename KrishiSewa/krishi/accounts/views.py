@@ -10,6 +10,10 @@ base_url = "http://127.0.0.1:8000"
 
 
 @unauthenticated_user
+def home(request):
+    return render(request,'accounts/Home.html')
+
+@unauthenticated_user
 def login_view(request):
     if request.method== 'POST':
         username = request.POST.get('username')
