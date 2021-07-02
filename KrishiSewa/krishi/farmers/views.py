@@ -1,10 +1,7 @@
-<<<<<<< HEAD
 import os
 
 import keras.models
-=======
 from django.db.models import base
->>>>>>> 6e1a9df215017e351e44400450da6393cffb3697
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from requests.api import head
