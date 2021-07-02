@@ -186,10 +186,14 @@ Soil testing part -----------------------------------------
 """
 
 
+@login_required
+@farmers_only
 def test(request):
     return render(request, 'farmers/index.html')
 
 
+@login_required
+@farmers_only
 def getNPK_Prediction(N, P, K, temp, humidity, ph):
     model = pickle.load(open('npk_model.sav', 'rb'))
     scaler = pickle.load(open('scaler.sav', 'rb'))
@@ -208,6 +212,8 @@ def getNPK_Prediction(N, P, K, temp, humidity, ph):
             return crops[i]
 
 
+@login_required
+@farmers_only
 def result(request):
     N = int(request.GET['N'])
     P = int(request.GET['P'])
@@ -219,3 +225,9 @@ def result(request):
     result = getNPK_Prediction(N, P, K, temp, humidity, ph)
 
     return render(request, 'farmers/npk_result.html', {'result': result})
+
+
+@login_required
+@farmers_only
+def image_test(request):
+    return render(request, 'farmers/nav.html')
