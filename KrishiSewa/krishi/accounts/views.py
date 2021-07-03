@@ -6,6 +6,12 @@ from django.contrib.auth.models import User
 from .auth import *
 
 # Create your views here.
+
+@unauthenticated_user
+def history(request):
+    return render(request,'accounts/History.html')
+
+
 @unauthenticated_user
 def home(request):
     return render(request,'accounts/Home.html')
