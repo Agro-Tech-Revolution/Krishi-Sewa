@@ -1,12 +1,11 @@
 from django.db.models import base
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from requests.api import head
 from accounts.auth import *
 from rest_framework.response import Response
 from .models import *
 from .utils import *
-import pickle
+
 
 
 # Create your views here.
@@ -29,6 +28,7 @@ def products(request):
         quantity_in_kg = data['quantity']
         prod_category = data['category']
         prod_price = data['price']
+        # prod_img = request.FILES["image"]
         prod_added_by = request.user.id
 
         product_data = {
@@ -36,8 +36,11 @@ def products(request):
             "quantity_in_kg": float(quantity_in_kg),
             "prod_category": prod_category,
             "prod_price": float(prod_price),
+            # "prod_img": prod_img,
             "prod_added_by": prod_added_by
         }
+        
+        
 
         product_endpoint = '/api/products/'
         product_url = base_url + product_endpoint
@@ -45,8 +48,10 @@ def products(request):
 
         product_response = requests.post(product_url, data=product_data, headers=headers)
         if Response(product_response).status_code == 200:
-
-            print('Product added successfully. Product id is: ' + str(product_response.json().get('id')))
+            print('Product added successfully. Product id is: ' )
+        else:
+            print("Error")
+            return redirect('/farmers/adppProducts')
         
     return render(request, 'farmers/addProducts.html')
 
@@ -114,6 +119,7 @@ def edit_products(request, id):
         quantity_in_kg = data['quantity']
         prod_category = data['category']
         prod_price = data['price']
+        # prod_img = data['image']
         prod_added_by = request.user.id
 
         product_post_data = {
@@ -121,8 +127,10 @@ def edit_products(request, id):
             "quantity_in_kg": float(quantity_in_kg),
             "prod_category": prod_category,
             "prod_price": float(prod_price),
+            # "prod_img": prod_img,
             "prod_added_by": prod_added_by
         }
+        
 
         product_post_endpoint = '/api/products/'+str(id)
         product_post_url = base_url + product_post_endpoint
@@ -166,8 +174,8 @@ def delete_product(request, id):
 @login_required
 @farmers_only
 def edit_comment(request):
-    comment_put_response = comment_edit(request)
     
+    comment_put_response = comment_edit(request)
     if Response(comment_put_response).status_code == 200:
         print('Comment Updated Successfully')
     return redirect('/farmers/myProducts')
@@ -194,26 +202,6 @@ def test(request):
 
 @login_required
 @farmers_only
-def getNPK_Prediction(N, P, K, temp, humidity, ph):
-    model = pickle.load(open('npk_model.sav', 'rb'))
-    scaler = pickle.load(open('scaler.sav', 'rb'))
-
-    prediction = model.predict(scaler.transform([
-        [N, P, K, temp, humidity, ph]
-    ]))
-
-    crops = {20: 'rice', 11: 'maize', 3: 'chickpea', 9: 'kidneybeans', 18: 'pigeonpeas', 13: 'mothbeans',
-             14: 'mungbean', 2: 'blackgram', 10: 'lentil', 19: 'pomegranate', 1: 'banana', 12: 'mango', 7: 'grapes',
-             21: 'watermelon', 15: 'muskmelon', 0: 'apple', 16: 'orange', 17: 'papaya', 4: 'coconut', 6: 'cotton',
-             8: 'jute', 5: 'coffee'}
-
-    for i in crops.keys():
-        if i == prediction:
-            return crops[i]
-
-
-@login_required
-@farmers_only
 def result(request):
     N = int(request.GET['N'])
     P = int(request.GET['P'])
@@ -230,4 +218,4 @@ def result(request):
 @login_required
 @farmers_only
 def image_test(request):
-    return render(request, 'farmers/nav.html')
+    return render(request, 'farmers/imagetest.html')

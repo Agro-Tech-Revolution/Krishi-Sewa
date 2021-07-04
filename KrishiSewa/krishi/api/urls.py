@@ -27,5 +27,16 @@ urlpatterns = [
     path('products/reports/users/<int:user_id>', ProductReportByUser.as_view()),
     
     path('equipment/', CreateEquipment.as_view()),
-    path('equipment/<int:id>', EquipmentDetails.as_view())
+    path('equipment/mine/<int:user_id>', MyEquipments.as_view()),
+    path('equipment/<int:id>', EquipmentDetails.as_view()),
+
+    path('equipment/comments', EquipmentCommentView.as_view()),
+    path('equipment/comments/<int:com_id>', EqpCommentDetails.as_view()),
+    path('equipment/<int:eqp_id>/comments', CommentOfEquipment.as_view()),
+    path('equipment/comments/user/<int:user_id>', CommentsOnMyEquipment.as_view()),
+
+    path('equipment/reports', EquipmentReportView.as_view()),
+    path('equipment/reports/<int:id>', EqpReportDetails.as_view()),
+    path('equipment/<int:id>/reports', ReportsOnEquipment.as_view()),
+    path('equipment/reports/users/<int:user_id>', EquipmentReportByUser.as_view()),
 ]

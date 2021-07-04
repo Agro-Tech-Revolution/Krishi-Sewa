@@ -1,10 +1,5 @@
 "use strict";
-//selecting all required elements
-$(document).ready(function () {
-  $(".sidebar-btn").click(function () {
-    $(".wrapper").toggleClass("collapse");
-  });
-});
+
 // ---------- This part is for Image testing-------------------------------*//
 
 const dropArea = document.querySelector(".drag-area"),

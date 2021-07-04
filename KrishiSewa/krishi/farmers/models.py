@@ -33,6 +33,7 @@ class Products(models.Model):
                                     default="Cereals")
     prod_price = models.FloatField()
     prod_added_on = models.DateTimeField(auto_now_add=True)
+    prod_img = models.ImageField(null=True, upload_to='static/product_images')
     prod_added_by = models.ForeignKey(User, 
                                      on_delete=models.CASCADE, 
                                      null=True,

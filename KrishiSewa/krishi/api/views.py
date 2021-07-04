@@ -13,6 +13,7 @@ from farmers.serializers import *
 from vendors.serializers import *
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import MultiPartParser, FormParser
 
 
 class UserAPIView(APIView):
@@ -136,15 +137,17 @@ class NoteDetails(APIView):
 
 
 class ProductAPIView(APIView):
-    permission_classes = [IsAuthenticated]
-    authentication_classes = (TokenAuthentication,)
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,)
     def get(self, request):
         products = Products.objects.all()
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
-    
+
+    parser_classes = (MultiPartParser, FormParser)        
     def post(self, request):
         serializer = ProductSerializer(data=request.data)
+        
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -153,8 +156,8 @@ class ProductAPIView(APIView):
 
 
 class MyProducts(APIView):
-    permission_classes = [IsAuthenticated]
-    authentication_classes = (TokenAuthentication,)
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,)
     def get_objects(self, user_id):
         try:
             return Products.objects.filter(prod_added_by=user_id)
@@ -168,8 +171,8 @@ class MyProducts(APIView):
 
 
 class ProductDetails(APIView):
-    permission_classes = [IsAuthenticated]
-    authentication_classes = (TokenAuthentication,)
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,)
     def get_object(self, prod_id):
         try:
             return Products.objects.get(id=prod_id)
@@ -204,8 +207,8 @@ class ProductDetails(APIView):
 
 
 class ProductCommentView(APIView):
-    permission_classes = [IsAuthenticated]
-    authentication_classes = (TokenAuthentication,)
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,)
     def get(self, request):
         comments = ProductComment.objects.all()
         serializer = ProductCommentSerializer(comments, many=True)
@@ -221,8 +224,8 @@ class ProductCommentView(APIView):
 
 
 class CommentDetails(APIView):
-    permission_classes = [IsAuthenticated]
-    authentication_classes = (TokenAuthentication,)
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,)
     def get_object(self, com_id):
         try:
             return ProductComment.objects.get(id=com_id)
@@ -236,29 +239,25 @@ class CommentDetails(APIView):
 
     def put(self, request, com_id):
         comment = self.get_object(com_id)
-        if comment.comment_by.id == request.user.id:
-            serializer = ProductCommentSerializer(comment, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response({"Bad Request": "Not your comment"}, status=status.HTTP_400_BAD_REQUEST)
+               
+        serializer = ProductCommentSerializer(comment, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
         
 
     def delete(self, request, com_id):
         comments = self.get_object(com_id)
-        
-        if comments.comment_by.id == request.user.id:
-            comments.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        else:
-            return Response({"Bad Request": "Not your comment"}, status=status.HTTP_400_BAD_REQUEST)
+        comments.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+       
 
 
 class CommentOfProduct(APIView):
-    permission_classes = [IsAuthenticated]
-    authentication_classes = (TokenAuthentication,)
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,)
     def get_object(self, prod_id):
         try:
             return ProductComment.objects.filter(product=prod_id)
@@ -272,8 +271,8 @@ class CommentOfProduct(APIView):
 
 
 class CommentsOnMyProduct(APIView):
-    permission_classes = [IsAuthenticated]
-    authentication_classes = (TokenAuthentication,)
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,)
 
     def get_object(self, user_id):
         try:
@@ -296,17 +295,15 @@ class ProductReportView(APIView):
         return Response(serializer.data)
     
     def post(self, request):
-        serializer = ProductReportSerializer(data=request.data)
         product_id = request.data['reported_product']
         product = Products.objects.get(id=product_id)
-        if product.prod_added_by.id == request.user.id:
-            return Response({"Bad Request": "Cannot report own products"}, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        serializer = ProductReportSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ReportsOnProduct(APIView):
@@ -355,25 +352,19 @@ class ReportDetails(APIView):
 
     def put(self, request, id):
         report = self.get_object(id)
-        if request.user.is_staff:
-            serializer = ProductReportSerializer(report, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response({"Bad Request": "You are not allowed to update reports"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        serializer = ProductReportSerializer(report, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
 
     def delete(self, request, id):
         report = self.get_object(id)
+        report.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
         
-        if request.user.is_staff:
-            report.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        else:
-            return Response({"Bad Request": "You are not allowed to update reports"}, status=status.HTTP_400_BAD_REQUEST)
-
 
 class CreateEquipment(APIView):
     def get(self, request):
@@ -388,7 +379,7 @@ class CreateEquipment(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+# equipments
 class EquipmentDetails(APIView):
     def get_object(self, id):
         try:
@@ -414,3 +405,178 @@ class EquipmentDetails(APIView):
         equipment = self.get_object(id)
         equipment.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class MyEquipments(APIView):
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,)
+    def get_objects(self, user_id):
+        try:
+            return Equipment.objects.filter(added_by=user_id)
+        except Equipment.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, user_id):
+        equipments = self.get_objects(user_id)
+        serializer = CreateEquipmentSerializer(equipments, many=True)
+        return Response(serializer.data)
+
+
+# equipments comments
+class EquipmentCommentView(APIView):
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,)
+    def get(self, request):
+        eqp_comments = EquipmentComment.objects.all()
+        serializer = EquipmentCommentSerializer(eqp_comments, many=True)
+        return Response(serializer.data)
+    
+    def post(self, request):
+        serializer = EquipmentCommentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class EqpCommentDetails(APIView):
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,)
+    def get_object(self, com_id):
+        try:
+            return EquipmentComment.objects.get(id=com_id)
+        except EquipmentComment.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+    
+    def get(self, request, com_id):
+        comment = self.get_object(com_id)
+        serializer = EquipmentCommentSerializer(comment)
+        return Response(serializer.data)
+
+    def put(self, request, com_id):
+        comment = self.get_object(com_id)
+        
+        serializer = EquipmentCommentSerializer(comment, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+
+    def delete(self, request, com_id):
+        comments = self.get_object(com_id)
+        comments.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class CommentOfEquipment(APIView):
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,)
+    def get_object(self, eqp_id):
+        try:
+            return EquipmentComment.objects.filter(equipment=eqp_id)
+        except EquipmentComment.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+    
+    def get(self, request, eqp_id):
+        comments = self.get_object(eqp_id)
+        serializer = EquipmentCommentSerializer(comments, many=True)
+        return Response(serializer.data)
+
+
+class CommentsOnMyEquipment(APIView):
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,)
+
+    def get_object(self, user_id):
+        try:
+            return EquipmentComment.objects.filter(equipment__added_by=user_id)
+        except EquipmentComment.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, user_id):
+        comments = self.get_object(user_id)
+        serializer = EquipmentCommentSerializer(comments, many=True)
+        return Response(serializer.data)
+
+# eqp report 
+class EquipmentReportView(APIView):
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,)
+    def get(self, request):
+        reports = EquipmentReport.objects.all()
+        serializer = EquipmentReportSerializer(reports, many=True)
+        return Response(serializer.data)
+    
+    def post(self, request):
+        equipment_id = request.data['reported_equipment']
+        equipment = Equipment.objects.get(id=equipment_id)
+        
+        serializer = EquipmentReportSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ReportsOnEquipment(APIView):
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,)
+    def get_object(self, id):
+        try:
+            return EquipmentReport.objects.filter(reported_equipment=id)
+        except EquipmentReport.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, id):
+        reports = self.get_object(id)
+        serializer = EquipmentReportSerializer(reports, many=True)
+        return Response(serializer.data)
+
+
+class EquipmentReportByUser(APIView):
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,)
+    def get_object(self, user_id):
+        try:
+            return EquipmentReport.objects.filter(reported_by=user_id)
+        except EquipmentReport.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, user_id):
+        reports = self.get_object(user_id)
+        serializer = EquipmentReportSerializer(reports, many=True)
+        return Response(serializer.data)
+
+
+class EqpReportDetails(APIView):
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,)
+    def get_object(self, id):
+        try:
+            return EquipmentReport.objects.get(id=id)
+        except EquipmentReport.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+    
+    def get(self, request, id):
+        report = self.get_object(id)
+        serializer = EquipmentReportSerializer(report)
+        return Response(serializer.data)
+
+    def put(self, request, id):
+        report = self.get_object(id)
+        
+        serializer = EquipmentReportSerializer(report, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+
+    def delete(self, request, id):
+        report = self.get_object(id)
+        report.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+        

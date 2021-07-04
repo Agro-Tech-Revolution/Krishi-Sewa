@@ -1,0 +1,99 @@
+/* -----------------------------------Image testing css starts from here-------------------------- */
+
+.main-container {
+  width: (100% - 250px);
+  margin-top: 10px;
+  margin-left: 250px;
+  padding: 10px;
+  /* background: url(background.jpg) no-repeat; */
+  background-size: cover;
+  height: 90vh;
+  transition: 0.3s;
+  /* --------for soil image testing------------- */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-container .drag-area {
+  border: 2px dashed #000;
+  height: 300px;
+  width: 450px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.main-container .drag-area.active {
+  border: 2px solid #000;
+}
+
+.main-container .drag-area .icon {
+  font-size: 100px;
+  color: #936a4a;
+}
+
+.main-container .drag-area header {
+  font-size: 30px;
+  color: #000;
+  font-weight: 700;
+}
+
+.main-container .drag-area span {
+  font-size: 25px;
+  color: #000;
+  font-weight: 500;
+  margin: 10px 0 15px 0;
+}
+.main-container .drag-area button {
+  padding: 12px 25px;
+  font-size: 25px;
+  font-weight: 500;
+  border: none;
+  outline: none;
+  background: #936a4a;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.main-container .drag-area img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.wrapper.collapse .sidebar {
+  width: 70px;
+}
+
+.main-container .card {
+  background: #fff;
+  padding: 15px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+.main-container .submit-btn button[type="submit"] {
+  padding: 15px;
+  position: relative;
+  right: 260%;
+  margin-top: 420px;
+  cursor: pointer;
+  border-radius: 5px;
+  background: #cc7722;
+  color: #fff;
+  font-size: 100%;
+  font-weight: bold;
+  letter-spacing: 0.1rem;
+  padding: 16px;
+}
+
+.main-container .title {
+  margin-bottom: 37%;
+  position: relative;
+  left: 20%;
+  font-weight: bold;
+  font-size: 35px;
+}
