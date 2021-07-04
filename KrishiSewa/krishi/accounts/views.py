@@ -8,6 +8,11 @@ from .auth import *
 # Create your views here.
 
 @unauthenticated_user
+def feedback(request):
+    return render(request,'accounts/Feedback.html')
+
+
+@unauthenticated_user
 def history(request):
     return render(request,'accounts/History.html')
 
