@@ -1,76 +1,43 @@
 {% load static %}
-
-<!--header menu start-->
-<div class="header">
-    <div class="header-menu">
-        <!-- <div class="title"> -->
-            <img src="{% static 'farmers/images/logo1.png' %}" alt="logo">
-        <!-- </div> -->
-        <div class="sidebar-btn">
-            <i class="fas fa-bars"></i>
-        </div>
-        <ul>
-            <li><a href="#"><i class="fas fa-power-off"></i></a></li>
-        </ul>
+<nav id="sidebar">
+    <div class="sidebar-header">
+        <img src="{% static 'farmers/images/logo1.png' %}" alt="logo">
     </div>
-</div>
-<!--header menu end-->
-<!--sidebar start-->
-<div class="sidebar">
-    <div class="sidebar-menu">
-        <li class="item" id="profile">
-            <a href="#profile" class="menu-btn">
-                <i class="fas fa-thermometer-quarter"></i><span>Soil Testing <i class="fas fa-chevron-down drop-down"></i></span>
+
+    <ul class="list-unstyled components">
+        
+        <li class="active">
+            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">
+                Soil Testing<i class="fas fa-chevron-down drop-down"></i></span>
             </a>
-            <div class="sub-menu">
-                <a href="#"><i class="fas fa-vial"></i><span>NPK Testing</span></a>
-                <a href="#"><i class="fas fa-address-card"></i><span>Image Testing</span></a>
-            </div>
+            <ul class="collapse list-unstyled" id="homeSubmenu">
+                <li><a href="#">NPK Testing</a></li>
+                <li><a href="#">Image Testing</a></li>
+                
+            </ul>
         </li>
-
-        <li class="item">
-            <a href="#" class="menu-btn">
-                <i class="far fa-clipboard"></i></i><span>Previous records</span>
-            </a>
+        <li>
+            <a href="#">Previous Records</a>
         </li>
-
-        <li class="item">
-            <a href="#" class="menu-btn">
-                <i class="far fa-comment"></i><span>Feedbacks</span>
-            </a>
+        <li>
+            <a href="#">Feedback</a>
         </li>
-
-        <li class="item">
-            <a href="#" class="menu-btn">
-                <i class="fas fa-pen"></i><span>Write Notes</span>
-            </a>
+        <li>
+            <a href="#">Write Notes</a>
         </li>
-        <li class="item">
-            <a href="/farmers/addProducts" class="menu-btn">
-                <i class="fas fa-pen"></i><span>Add Products</span>
-            </a>
+        <li>
+            <a href="#">Something</a>
         </li>
-
-        <li class="item">
-            <a href="/farmers/myProducts" class="menu-btn">
-                <i class="fas fa-chalkboard-teacher"></i><span>My Products</span>
-            </a>
+        <li>
+            <a href="#">Something</a>
         </li>
-
-        <li class="item">
-            <a href="#" class="menu-btn">
-                <i class="fas fa-chalkboard-teacher"></i><span>Instructions</span>
-            </a>
+        <li>
+            <a href="#">Something</a>
         </li>
+    </ul>
 
-        <li class="item">
-            <a href="#" class="menu-btn">
-                <i class="fas fa-phone-square-alt"></i><span>Contact us</span>
-            </a>
-        </li>
-    </div>
-</div>            
-    
-
-
-
+    <ul class="list-unstyled CTAs">
+        <li><a href="" class="download">Instruction</a></li>
+        <li><a href="" class="article">Logout</a></li>
+    </ul>
+</nav>

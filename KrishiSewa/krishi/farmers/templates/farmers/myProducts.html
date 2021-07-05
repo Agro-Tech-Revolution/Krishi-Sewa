@@ -29,14 +29,14 @@
                             <a href="/farmers/myProducts/edit/{{product.id}}" class="btn btn-primary">Edit</a>
                             <a href="/farmers/myProducts/delete/{{product.id}}" class="btn btn-danger">Delete</a>
                         </div>
-                        <h5 class="card-title">{{product.prod_name}}</h5>
-                        <h6>Price: NRs. {{product.prod_price}}</h6>
-                        <h6>Category: {{product.prod_category}}</h6>
+                        <h5 class="card-title">{{product.product.prod_name}}</h5>
+                        <h6>Price: NRs. {{product.price_per_kg}}</h6>
+                        <h6>Category: {{product.product.prod_category}}</h6>
                         <h6>Quantity: {{product.quantity_in_kg}} kg</h6>
-                        <h6>Date: {{product.prod_added_on}}</h6>
+                        <h6>Date: {{product.added_date}}</h6>
                         <form method="POST">
                             {% csrf_token %}
-                            <input type="number" hidden value="{{product.id}}" name="prod_id">
+                            <input type="number" hidden value="{{product.id}}" name="product">
                             <input type="text" placeholder="Enter comment" name="comment">
                             <button type="submit" class="btn btn-success">Submit</button>
                         </form>
@@ -46,7 +46,8 @@
                             </button>
                         </p>
                         <div class="collapse" id="collapseExample{{product.id}}">
-                            {% for comment in product.comments %}
+                            
+                            {% for comment in product.product_comments %}
                                 
                                 <div class="card card-body">   
                                     {{comment.comment}} 

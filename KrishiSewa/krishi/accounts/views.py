@@ -35,20 +35,22 @@ def login_view(request):
                 login(request, user)
                 token = r.json().get('token')
                 request.session['token'] = token
+                if user.is_staff:
+                    return redirect('/admins/')
+                else:
+                    headers = {'Authorization': 'Token ' + token}
+                    profile_endpoint = "/api/profile/"
+                    profile_url = base_url + profile_endpoint + str(user.id)
 
-                headers = {'Authorization': 'Token ' + token}
-                profile_endpoint = "/api/profile/"
-                profile_url = base_url + profile_endpoint + str(user.id)
-
-                profile_response = requests.get(profile_url, headers=headers)
-                user_type = profile_response.json().get('user_type')
-                
-                if user_type.upper() == 'BUYERS':
-                    return redirect('/buyers/')
-                elif user_type.upper() == 'FARMERS':
-                    return redirect('/farmers/')
-                elif user_type.upper() == 'VENDORS':
-                    return redirect('/vendors/')
+                    profile_response = requests.get(profile_url, headers=headers)
+                    user_type = profile_response.json().get('user_type')
+                    
+                    if user_type.upper() == 'BUYERS':
+                        return redirect('/buyers/')
+                    elif user_type.upper() == 'FARMERS':
+                        return redirect('/farmers/')
+                    elif user_type.upper() == 'VENDORS':
+                        return redirect('/vendors/')
             
         else:
             print("No user found")

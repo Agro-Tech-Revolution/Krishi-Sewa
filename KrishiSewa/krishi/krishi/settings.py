@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'farmers.apps.FarmersConfig',
     'vendors.apps.VendorsConfig',
     'buyers.apps.BuyersConfig',
+    'admins.apps.AdminsConfig',
     'rest_framework',
     'rest_framework.authtoken'
 ]

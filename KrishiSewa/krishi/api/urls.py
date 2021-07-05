@@ -9,23 +9,36 @@ urlpatterns = [
     path('profile/', CreateProfile.as_view()),
     path('profile/<int:user_id>', GetProfileType.as_view()),
 
-    path('notes/', NoteAPIView.as_view()),
-    path('notes/<int:id>', NoteDetails.as_view()),
+    # new additions
+    path('products/', ProductsAPIView.as_view()),
+    path('products/<int:id>', ProductDetails.as_view()),
 
-    path('products/', ProductAPIView.as_view()),
-    path('products/mine/<int:user_id>', MyProducts.as_view()),
-    path('products/<int:prod_id>', ProductDetails.as_view()),
+    path('productsOnSale/', ProductsForSaleView.as_view()),
+    path('productsOnSale/<int:id>', ProductsForSaleDetails.as_view()),
+    path('productsOnSale/mine/<int:user_id>', MyProductsOnSale.as_view()),
 
-    path('products/comments', ProductCommentView.as_view()),
-    path('products/comments/<int:com_id>', CommentDetails.as_view()),
-    path('products/<int:prod_id>/comments', CommentOfProduct.as_view()),
-    path('products/comments/user/<int:user_id>', CommentsOnMyProduct.as_view()),
+    path('products/production/', ProductionAPIView.as_view()),
+    path('products/production/<int:id>', ProductionDetails.as_view()),
+    path('products/production/mine/<int:user_id>', MyProductions.as_view()),
 
-    path('products/reports', ProductReportView.as_view()),
-    path('products/reports/<int:id>', ReportDetails.as_view()),
-    path('products/<int:id>/reports', ReportsOnProduct.as_view()),
-    path('products/reports/users/<int:user_id>', ProductReportByUser.as_view()),
+    path('products/stock/', ProductStockAPIView.as_view()),
+    path('products/stock/mine/<int:user_id>', MyProductStock.as_view()),
+    # end
+
+    # path('notes/', NoteAPIView.as_view()),
+    # path('notes/<int:id>', NoteDetails.as_view()),
+
+    path('productsOnSale/comments', ProductCommentView.as_view()),
+    path('productsOnSale/comments/<int:com_id>', CommentDetails.as_view()),
+
+    path('productsOnSale/reports', ProductReportView.as_view()),
+    path('productsOnSale/reports/<int:id>', ReportDetails.as_view()),
     
+    path('sellProducts/', ProductSoldView.as_view()),
+    path('sellProducts/<int:id>', ProductSoldDetails.as_view()),
+    path('sellProducts/seller/<int:id>', SellerSalesDetails.as_view()),
+    path('sellProducts/buyer/<int:id>', BuyerSalesDetails.as_view()),
+
     path('equipment/', CreateEquipment.as_view()),
     path('equipment/mine/<int:user_id>', MyEquipments.as_view()),
     path('equipment/<int:id>', EquipmentDetails.as_view()),

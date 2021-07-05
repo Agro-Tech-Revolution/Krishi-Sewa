@@ -1,3 +1,4 @@
+from farmers.models import ProductSold
 from django.contrib import admin
 from .models import *
 
