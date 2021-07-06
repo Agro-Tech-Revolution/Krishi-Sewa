@@ -1,5 +1,7 @@
+from django.db.models import base
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from requests.api import head
 from accounts.auth import *
 from rest_framework.response import Response
 from .models import *
@@ -166,6 +168,75 @@ def delete_comment(request, id):
     if Response(comment_del_response).status_code == 200:
         print('Deleted Successfully')
     return redirect('/farmers/myProducts')
+
+
+@login_required
+@farmers_only
+def add_production(request):
+    return render(request,'farmers/addProduction.html')
+
+
+@login_required
+@farmers_only
+def sell_product(request):
+    return render(request,'farmers/sellProducts.html')
+
+
+@login_required
+@farmers_only
+def add_expenses(request):
+    return render(request,'farmers/addExpenses.html')
+
+
+@login_required
+@farmers_only
+def my_production(request):
+    headers = {'Authorization': 'Token ' + request.session['token']}
+
+    my_production_endpoint = '/api/products/production/mine/' + str(request.user.id)
+    my_production_url = base_url + my_production_endpoint
+    my_production_request = requests.get(my_production_url, headers=headers)
+    context = {
+        "my_production": my_production_request.json()
+    }
+    return render(request, 'farmers/MyProduction.html', context)
+
+
+@login_required
+@farmers_only
+def my_stock(request):
+    headers = {'Authorization': 'Token ' + request.session['token']}
+
+    my_stock_endpoint = '/api/products/stock/mine/' + str(request.user.id)
+    my_stock_url = base_url + my_stock_endpoint
+    my_stock_request = requests.get(my_stock_url, headers=headers)
+    context = {
+        "my_stock": my_stock_request.json()
+    }
+    return render(request, 'farmers/Mystock.html', context)
+
+
+@login_required
+@farmers_only
+def my_sales(request):
+    headers = {'Authorization': 'Token ' + request.session['token']}
+
+    product_sales_endpoint = '/api/sellProducts/seller/' + str(request.user.id)
+    product_sales_url = base_url + product_sales_endpoint
+    product_sales_request = requests.get(product_sales_url, headers=headers)
+    context = {
+        "my_sales": product_sales_request.json()
+    }
+
+    return render(request, 'farmers/Mysales.html', context)
+
+
+@login_required
+@farmers_only
+def my_expenses(request):
+    return render(request, 'farmers/Myexpenses.html')
+
+
 """
 Soil testing part -----------------------------------------
 """

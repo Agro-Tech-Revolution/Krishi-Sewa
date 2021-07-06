@@ -1,0 +1,36 @@
+{% extends 'layout-farmers.html' %}
+
+{% block title %}
+<title>My Sales</title>
+{% endblock title %}
+
+{% block content %}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col">Product Name</th>
+      <th scope="col">Sold To</th>
+      <th scope="col">Sold Quantity</th>
+	    <th scope="col">Sold at</th>
+      <th scope="col">Sold Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if my_sales|length > 0 %}
+    {% for sale in my_sales %}
+    <tr>
+      <th scope="row">{{sale.id}}</td>
+      <td>{{sale.sold_product.product.prod_name}}</td>
+      <td>{{sale.sold_to.first_name}} {{sale.sold_to.last_name}}</td>
+      <td>{{sale.quantity_sold}} kg</td>
+	    <td>NRs. {{sale.sold_price}}</td>
+      <td>{{sale.sold_date}}</td>
+    </tr>
+    {% endfor %}
+    {% else %}
+    <h1 class="text-capitalize text-center">No sales present</h1>
+    {% endif %}
+  </tbody>
+</table>
+{% endblock content %}

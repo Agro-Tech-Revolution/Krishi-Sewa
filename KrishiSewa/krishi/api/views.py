@@ -11,89 +11,9 @@ from rest_framework import status
 from .serializers import *
 from farmers.serializers import *
 from vendors.serializers import *
-
+from .utils import *
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-
-
-def modify_product_details_data(product):
-    prod_id = product['id']
-
-    product_details = Products.objects.get(id=product['product'])
-    product_details_data = ProductSerializer(product_details).data
-
-    user_details = User.objects.get(id=product['added_by'])
-    user_details_data = UserSerializer(user_details).data
-
-    comments_details = ProductComment.objects.filter(product=prod_id)
-    comments_data = ProductCommentSerializer(comments_details, many=True).data
-
-    for comment in comments_data:
-        user_comment_details = User.objects.get(id=comment['comment_by'])
-        user_comment_data = UserSerializer(user_comment_details).data
-        comment['comment_by'] = user_comment_data
-
-    reports_details = ProductReport.objects.filter(reported_product=prod_id)
-    report_data = ProductReportSerializer(reports_details, many=True).data
-
-    for report in report_data:
-        user_report_details = User.objects.get(id=report['reported_by'])
-        user_report_data = UserSerializer(user_report_details).data
-        report['reported_by'] = user_report_data
-
-    product['product'] = product_details_data
-    product['added_by'] = user_details_data
-    product['product_comments'] = comments_data
-    product['product_reports'] = report_data
-
-    return product
-
-
-def get_product_details(products_for_sale):
-    product_data = ProductForSaleSerializer(products_for_sale, many=True).data
-        
-    for product in product_data:
-        product = modify_product_details_data(product)
-    return product_data
-
-
-def modify_production_details_data(production):
-    product_details = Products.objects.get(id=production['product_id'])
-    product_details_data = ProductSerializer(product_details).data
-
-    farmer_details = User.objects.get(id=production['farmer_id'])
-    farmer_details_data = UserSerializer(farmer_details).data
-
-    production['product_id'] = product_details_data
-    production['farmer_id'] = farmer_details_data
-    return production
-
-
-def get_production_details(all_production):
-    production_data = ProductionSerializer(all_production, many=True).data
-        
-    for production in production_data:
-        production = modify_production_details_data(production)
-    return production_data
-
-
-def modify_product_stock_data(stock_data):
-    product_details = Products.objects.get(id=stock_data['product_id'])
-    product_details_data = ProductSerializer(product_details).data
-
-    user_details = User.objects.get(id=stock_data['farmer_id'])
-    user_details_data = UserSerializer(user_details).data
-
-    stock_data['product_id'] = product_details_data
-    stock_data['farmer_id'] = user_details_data
-    return stock_data
-
-
-def get_product_stock_data(product_stock):
-    product_stock_data = ProductStockSerializer(product_stock, many=True).data
-    for stock_data in product_stock_data:
-        stock_data = modify_product_stock_data(stock_data)
-    return product_stock_data
 
 
 class UserAPIView(APIView):
@@ -220,8 +140,19 @@ class ProductsForSaleView(APIView):
     def post(self, request):
         serializer = ProductForSaleSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            product_id = request.data['product']
+            farmer_id = request.data['added_by']
+            quantity_in_kg = request.data['quantity_in_kg']
+            
+            stock_detail = ProductStock.objects.filter(product_id=product_id, farmer_id=farmer_id)
+            if len(stock_detail) != 0:
+                if quantity_in_kg < stock_detail[0].stock:
+                    serializer.save()
+                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+                else:
+                    return Response({"Bad Request": "The entered quantity is not available. Please check stock value"})
+            else:
+                return Response({"Bad Request": "The products are not added in production and there is no stock present."})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -243,10 +174,20 @@ class ProductsForSaleDetails(APIView):
         product_for_sale = self.get_object(id)
                
         serializer = ProductForSaleSerializer(product_for_sale, data=request.data)
+
+        product_id = request.data['product']
+        farmer_id = request.data['added_by']
+        quantity_in_kg = request.data['quantity_in_kg']
+        
+        stock_detail = ProductStock.objects.filter(product_id=product_id, farmer_id=farmer_id)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
+            if quantity_in_kg < stock_detail[0].stock:
+                serializer.save()
+                return Response(serializer.data)
+            else:
+                return Response({"Bad Request": "The entered quantity is higher than stock value"})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response()
 
     def delete(self, request, id):
         product_for_sale = self.get_object(id)
@@ -476,30 +417,6 @@ class MyProductStock(APIView):
         product_stock_data = get_product_stock_data(product_stock)
         return Response(product_stock_data)
 
-def modify_sold_data(sold_products):
-    product_for_sale_details = ProductsForSale.objects.get(id=sold_products['sold_product'])
-    product_for_sale_data = SerialzerForSold(product_for_sale_details).data # this is from ProductsForSale
-
-    product_details = Products.objects.get(id=product_for_sale_data['product'])
-    product_details_data = ProductSerializer(product_details).data  # this is from Products
-    
-    farmer_details = User.objects.get(id=sold_products['sold_by'])
-    farmer_data = UserSerializer(farmer_details).data
-
-    buyer_details = User.objects.get(id=sold_products['sold_to'])
-    buyer_data = UserSerializer(buyer_details).data
-
-    product_for_sale_data['product'] = product_details_data
-    sold_products['sold_product'] = product_for_sale_data
-    sold_products['sold_by'] = farmer_data
-    sold_products['sold_to'] = buyer_data
-    return sold_products
-
-def get_sold_details(all_products_sold):
-    products_sold_data = ProductSoldSerializer(all_products_sold, many=True).data
-    for sold_products in products_sold_data:
-        sold_products = modify_sold_data(sold_products)
-    return products_sold_data
 
 
 class ProductSoldView(APIView):
@@ -513,19 +430,28 @@ class ProductSoldView(APIView):
         if serializer.is_valid():
             farmer_id = request.data["sold_by"]
             product_id = serializer.validated_data["sold_product"].product.id
-            
+            sold_product = request.data["sold_product"]
+
+            product_to_be_sold = ProductsForSale.objects.filter(id=sold_product)
+            quantity_present = product_to_be_sold[0].quantity_in_kg
+
             product_stock = ProductStock.objects.filter(farmer_id=farmer_id, product_id=product_id)
 
             if len(product_stock) != 0:
                 quantity_sold = request.data['quantity_sold']
-                if quantity_sold < product_stock[0].stock:
-                    serializer.save()
-                    updated_stock = product_stock[0].stock - quantity_sold
-                    product_stock.update(stock=updated_stock)
-                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+                if quantity_sold < quantity_present:
+                    if quantity_sold < product_stock[0].stock:
+                        serializer.save()
+                        updated_stock = product_stock[0].stock - quantity_sold
+                        product_stock.update(stock=updated_stock)
+
+                        updated_quantity = quantity_present - quantity_sold
+                        product_to_be_sold.update(quantity_in_kg=updated_quantity)
+                        return Response(serializer.data, status=status.HTTP_201_CREATED)
                 else:
                     return Response({'Bad Request': "The quantity is not available"}, status=status.HTTP_400_BAD_REQUEST)
-                        
+                
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     
@@ -550,15 +476,26 @@ class ProductSoldDetails(APIView):
         if serializer.is_valid():
             farmer_id = request.data["sold_by"]
             product_id = serializer.validated_data["sold_product"].product.id
+            sold_product = request.data["sold_product"]
+
             product_stock = ProductStock.objects.filter(farmer_id=farmer_id, product_id=product_id)
+
+            product_to_be_sold = ProductsForSale.objects.filter(id=sold_product)
+            quantity_present = product_to_be_sold[0].quantity_in_kg
+            current_qty = quantity_present + product_sold.quantity_sold
             if len(product_stock) != 0:
                 current_stock = product_stock[0].stock + product_sold.quantity_sold
+                
                 quantity_sold = request.data['quantity_sold']
-                if quantity_sold < current_stock:
-                    serializer.save()
-                    updated_stock = current_stock - quantity_sold
-                    product_stock.update(stock=updated_stock)
-                    return Response(serializer.data)
+                if quantity_sold < current_qty:
+                    if quantity_sold < current_stock:
+                        serializer.save()
+                        updated_stock = current_stock - quantity_sold
+                        product_stock.update(stock=updated_stock)
+
+                        updated_quantity = current_qty - quantity_sold
+                        product_to_be_sold.update(quantity_in_kg=updated_quantity)
+                        return Response(serializer.data)
                 else:
                     return Response({'Bad Request': "Not enough stock"}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -568,41 +505,48 @@ class ProductSoldDetails(APIView):
         quantity_sold = product_sold.quantity_sold
         farmer_id = product_sold.sold_by
         product_id = product_sold.sold_product.product.id
+        sold_product = product_sold.sold_product.id
+
         product_stock = ProductStock.objects.filter(farmer_id=farmer_id, product_id=product_id)
+
+        product_to_be_sold = ProductsForSale.objects.filter(id=sold_product)
+        quantity_present = product_to_be_sold[0].quantity_in_kg
         if len(product_stock) != 0:
             current_stock = product_stock[0].stock
             updated_stock = current_stock + quantity_sold
+            updated_qty = quantity_present + quantity_sold
             product_sold.delete()
             product_stock.update(stock=updated_stock)
+            product_to_be_sold.update(quantity_in_kg=updated_qty)
         return Response(status=status.HTTP_204_NO_CONTENT) 
 
 
 class SellerSalesDetails(APIView):
     def get_object(self, id):
         try:
-            return ProductSold.objects.get(sold_by=id)
+            return ProductSold.objects.filter(sold_by=id)
         except ProductSold.DoesNotExist:
-            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+            return None
 
     def get(self, request, id):
         product_sold_detail = self.get_object(id)
-        product_sold = ProductSoldSerializer(product_sold_detail).data
-        product_sold_data = modify_sold_data(product_sold)
-        return Response(product_sold_data)
+        products_sold_data = get_sold_details(product_sold_detail)
+        return Response(products_sold_data)
+        
 
 
 class BuyerSalesDetails(APIView):
     def get_object(self, id):
         try:
-            return ProductSold.objects.get(sold_to=id)
+            return ProductSold.objects.filter(sold_to=id)
         except ProductSold.DoesNotExist:
             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
 
     def get(self, request, id):
         product_sold_detail = self.get_object(id)
-        product_sold = ProductSoldSerializer(product_sold_detail).data
-        product_sold_data = modify_sold_data(product_sold)
-        return Response(product_sold_data)
+        products_sold_data = get_sold_details(product_sold_detail)
+        return Response(products_sold_data)
+
 
 # equipments
 class CreateEquipment(APIView):
