@@ -1,3 +1,5 @@
+
+
 h1{
   color: #b67721;
 }
@@ -14,4 +16,8 @@ thead{
 
 .table{
     background-color: #f5c98b;
+}
+
+.fa-eye{
+font-color:black;
 }
