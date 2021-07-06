@@ -63,7 +63,7 @@ def my_products(request):
     if request.method=='POST':
         comment_post_response = comment_add(request)
         if comment_post_response.json().get('id') != None:
-            print('Product added successfully')
+            print('Comment added successfully')
         else:
             error = comment_post_response.json()
             print(error)
@@ -88,44 +88,44 @@ def edit_products(request, id):
 
     if request.method == 'POST':
         data = request.POST
-        prod_name = data['name']
+        product = data['product']
         quantity_in_kg = data['quantity']
-        prod_category = data['category']
-        prod_price = data['price']
-        # prod_img = data['image']
-        prod_added_by = request.user.id
+        price_per_kg = data['price']
+        added_by = request.user.id
 
-        product_post_data = {
-            "prod_name": prod_name,
+        product_put_data = {
+            "product": product,
             "quantity_in_kg": float(quantity_in_kg),
-            "prod_category": prod_category,
-            "prod_price": float(prod_price),
-            # "prod_img": prod_img,
-            "prod_added_by": prod_added_by
+            "price_per_kg": float(price_per_kg),
+            "added_by": added_by
         }
-        
 
-        product_post_endpoint = '/api/products/'+str(id)
-        product_post_url = base_url + product_post_endpoint
+        product_put_endpoint = '/api/productsOnSale/'+str(id)
+        product_put_url = base_url + product_put_endpoint
 
-        product_post_response = requests.put(product_post_url, data=product_post_data, headers=headers)
-        if Response(product_post_response).status_code == 200:
-
+        product_put_response = requests.put(product_put_url, data=product_put_data, headers=headers)
+        if product_put_response.json().get('id') != None:
             print('Product updated successfully')
             return redirect('/farmers/myProducts')
+        else:
+            error = product_put_response.json()
+            print(error)
+            return redirect('/farmers/myProducts')
+    
+    product_details_endpoint = '/api/products'
+    product_details_url = base_url + product_details_endpoint
+    product_details_response = requests.get(product_details_url, headers=headers)
 
-
-    product_get_endpoint = '/api/products/' + str(id)
+    product_get_endpoint = '/api/productsOnSale/' + str(id)
     product_get_url = base_url + product_get_endpoint
     product_get_response = requests.get(product_get_url, headers=headers)
-    if Response(product_get_response).status_code == 200:
-        product_get_data = product_get_response.json()
 
     categories = ['Cereals', 'Pulses', 'Vegetables', 'Nuts', 'Oilseeds',
                   'Sugars and Starches', 'Fibres', 'Beverages', 'Narcotics',
                   'Spices', 'Condiments', 'Others']
     context = {
-        'product': product_get_data,
+        'product_detail': product_details_response.json(),
+        'product': product_get_response.json(),
         'categories': categories
     }
     return render(request, 'farmers/editProducts.html', context)
@@ -136,9 +136,10 @@ def edit_products(request, id):
 def delete_product(request, id):
     headers = {'Authorization': 'Token ' + request.session['token']}
 
-    product_endpoint = '/api/products/' + str(id)
+    product_endpoint = '/api/productsOnSale/' + str(id)
     product_url = base_url + product_endpoint
     product_response = requests.delete(product_url, headers=headers)
+
     if Response(product_response).status_code == 200:
         print('Deleted Successfully')
     return redirect('/farmers/myProducts')
