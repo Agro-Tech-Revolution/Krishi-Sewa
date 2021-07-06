@@ -32,8 +32,8 @@ def products_for_sale(request):
 
         product_data = {
             "product": product,
-            "quantity_in_kg": float(quantity_in_kg),
-            "price_per_kg": float(price_per_kg),
+            "quantity_in_kg": quantity_in_kg,
+            "price_per_kg": price_per_kg,
             "added_by": added_by
         }
         
@@ -97,8 +97,8 @@ def edit_products(request, id):
 
         product_put_data = {
             "product": product,
-            "quantity_in_kg": float(quantity_in_kg),
-            "price_per_kg": float(price_per_kg),
+            "quantity_in_kg": quantity_in_kg,
+            "price_per_kg": price_per_kg,
             "added_by": added_by
         }
 
@@ -173,7 +173,101 @@ def delete_comment(request, id):
 @login_required
 @farmers_only
 def add_production(request):
-    return render(request,'farmers/addProduction.html')
+    headers = {'Authorization': 'Token ' + request.session['token']}
+    if request.method == 'POST':
+        data = request.POST
+        product_id = data['product_id']
+        farmer_id = request.user.id
+        production_qty = data['production_qty']
+        area = data['area']
+
+        production_data = {
+            "product_id": product_id,
+            "farmer_id": farmer_id,
+            "production_qty": production_qty,
+            "area": area
+        }
+
+        production_post_endpoint = '/api/products/production/'
+        production_post_url = base_url + production_post_endpoint
+
+        production_post_response = requests.post(production_post_url, data=production_data, headers=headers)
+        if production_post_response.json().get('id') != None:
+            print('Product added successfully')
+            return redirect('/farmers/addProduction')
+        else:
+            error = production_post_response.json()
+            print(error)
+            return redirect('/farmers/addProduction')
+
+
+    product_get_endpoint = '/api/products/'
+    product_get_url = base_url + product_get_endpoint
+    product_get_response = requests.get(product_get_url, headers=headers)
+    context = {
+        "products": product_get_response.json()
+    }
+    return render(request, 'farmers/addProduction.html', context)
+
+
+@login_required
+@farmers_only
+def edit_production(request, id):
+    headers = {'Authorization': 'Token ' + request.session['token']}
+    
+    if request.method == 'POST':
+        data = request.POST
+        product_id = data['product_id']
+        farmer_id = request.user.id
+        production_qty = data['production_qty']
+        area = data['area']
+
+        production_data = {
+            "product_id": product_id,
+            "farmer_id": farmer_id,
+            "production_qty": production_qty,
+            "area": area
+        }
+
+        production_put_endpoint = '/api/products/production/' + str(id)
+        production_put_url = base_url + production_put_endpoint
+
+        production_put_response = requests.put(production_put_url, data=production_data, headers=headers)
+        # if production_put_response.json().get('id') != None:
+        #     print('Product updated successfully')
+        #     return redirect('/farmers/myProduction')
+        # else:
+        #     error = production_put_response.json()
+        #     print(error)
+        #     return redirect('/farmers/myProduction')
+        return redirect('/farmers/myProduction')
+
+    production_get_endpoint = '/api/products/production/' + str(id)
+    production_get_url = base_url + production_get_endpoint
+    production_get_response = requests.get(production_get_url, headers=headers)
+
+    product_get_endpoint = '/api/products/'
+    product_get_url = base_url + product_get_endpoint
+    product_get_response = requests.get(product_get_url, headers=headers)
+    context = {
+        "production_data": production_get_response.json(),
+        "products": product_get_response.json(),
+    }
+    return render(request, 'farmers/editProduction.html', context)
+
+
+@login_required
+@farmers_only
+def delete_production(request, id):
+    headers = {'Authorization': 'Token ' + request.session['token']}
+    production_del_endpoint = '/api/products/production/' + str(id)
+    production_del_url = base_url + production_del_endpoint
+    production_del_response = requests.delete(production_del_url, headers=headers)
+
+    if Response(production_del_response).status_code == 200:
+        print('Deleted Successfully')
+    
+    return redirect('/farmers/myProduction')
 
 
 @login_required

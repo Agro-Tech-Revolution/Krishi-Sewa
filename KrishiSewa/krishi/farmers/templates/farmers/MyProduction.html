@@ -13,6 +13,7 @@
       <th scope="col">Production Quantity</th>
       <th scope="col">Area</th>
       <th scope="col">Production Date</th>
+      <th scope="col">Action</th>
     </tr>
   </thead>
   <tbody>
@@ -24,6 +25,10 @@
       <td>{{production.production_qty}} kg</td>
       <td>{{production.area}} sq. ft.</td>
       <td>{{production.production_date}}</td>
+      <td>
+        <a href="/farmers/editProduction/{{production.id}}" class="btn btn-success">Edit</a>
+        <a href="/farmers/deleteProduction/{{production.id}}" class="btn btn-danger">Delete</a>
+      </td>
     </tr>
     {% endfor %}
     {% else %}

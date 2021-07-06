@@ -142,7 +142,7 @@ class ProductsForSaleView(APIView):
         if serializer.is_valid():
             product_id = request.data['product']
             farmer_id = request.data['added_by']
-            quantity_in_kg = request.data['quantity_in_kg']
+            quantity_in_kg = float(request.data['quantity_in_kg'])
             
             stock_detail = ProductStock.objects.filter(product_id=product_id, farmer_id=farmer_id)
             if len(stock_detail) != 0:
@@ -177,7 +177,7 @@ class ProductsForSaleDetails(APIView):
 
         product_id = request.data['product']
         farmer_id = request.data['added_by']
-        quantity_in_kg = request.data['quantity_in_kg']
+        quantity_in_kg = float(request.data['quantity_in_kg'])
         
         stock_detail = ProductStock.objects.filter(product_id=product_id, farmer_id=farmer_id)
         if serializer.is_valid():
@@ -325,6 +325,8 @@ class ProductionAPIView(APIView):
         serializer = ProductionSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+
+            # if it is serializer.data no need to add float infront of numbers
             farmer_id = serializer.data['farmer_id']
             product_id = serializer.data['product_id']
             production_qty = serializer.data['production_qty']
@@ -358,17 +360,49 @@ class ProductionDetails(APIView):
     def put(self, request, id):
         production = self.get_object(id)
         prev_production_qty = production.production_qty
+        prev_production_product_id = production.product_id.id
         serializer = ProductionSerializer(production, data=request.data)
-        if serializer.is_valid():
+        if serializer.is_valid():  
+            farmer_id = request.data['farmer_id']
+            product_id = request.data['product_id']
+            
+            new_production_qty = float(request.data['production_qty'])
+            if int(product_id) == prev_production_product_id:
+                # if the product is same from previous production then get stock object and
+                # update stock value
+                product_stock = ProductStock.objects.filter(farmer_id=farmer_id, product_id=product_id)
+                
+                if len(product_stock) != 0:                
+                    updated_stock = product_stock[0].stock + new_production_qty - prev_production_qty
+                    product_stock.update(stock=updated_stock)
+    
+            else:
+                # if the product is not same from previous production
+                # updating stock of a previous prdouct which was increased. But now the product name is changed
+                # so previous added production quantity to stock is being subtracted
+                product_stock_to_update = ProductStock.objects.filter(
+                                                                     farmer_id=farmer_id, 
+                                                                     product_id=prev_production_product_id
+                                                                     )
+                stock_of_prev_to_update = product_stock_to_update[0].stock - prev_production_qty
+                product_stock_to_update.update(stock=stock_of_prev_to_update)
+    
+                # finding new product_stock object to update its stock
+                product_stock = ProductStock.objects.filter(farmer_id=farmer_id, product_id=product_id)
+                if len(product_stock) != 0:    
+                    # if the object exists, update its value            
+                    updated_stock = product_stock[0].stock + new_production_qty
+                    product_stock.update(stock=updated_stock)
+                else:
+                    # if the object does not exist, create new stock object
+                    farmer = User.objects.get(id=farmer_id)
+                    product = Products.objects.get(id=product_id)
+                    ProductStock.objects.create(farmer_id=farmer,
+                                                product_id=product,
+                                                stock=new_production_qty)
             serializer.save()
-            farmer_id = serializer.data['farmer_id']
-            product_id = serializer.data['product_id']
-            new_production_qty = serializer.data['production_qty']
-            product_stock = ProductStock.objects.filter(farmer_id=farmer_id, product_id=product_id)
-            if len(product_stock) != 0:                
-                updated_stock = product_stock[0].stock + new_production_qty - prev_production_qty
-                product_stock.update(stock=updated_stock)
-            return Response(serializer.data)
+            return Response([serializer.data])   
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, id):
@@ -438,7 +472,7 @@ class ProductSoldView(APIView):
             product_stock = ProductStock.objects.filter(farmer_id=farmer_id, product_id=product_id)
 
             if len(product_stock) != 0:
-                quantity_sold = request.data['quantity_sold']
+                quantity_sold = float(request.data['quantity_sold'])
                 if quantity_sold < quantity_present:
                     if quantity_sold < product_stock[0].stock:
                         serializer.save()
@@ -486,7 +520,7 @@ class ProductSoldDetails(APIView):
             if len(product_stock) != 0:
                 current_stock = product_stock[0].stock + product_sold.quantity_sold
                 
-                quantity_sold = request.data['quantity_sold']
+                quantity_sold = float(request.data['quantity_sold'])
                 if quantity_sold < current_qty:
                     if quantity_sold < current_stock:
                         serializer.save()
@@ -533,7 +567,6 @@ class SellerSalesDetails(APIView):
         products_sold_data = get_sold_details(product_sold_detail)
         return Response(products_sold_data)
         
-
 
 class BuyerSalesDetails(APIView):
     def get_object(self, id):
