@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'farmers.apps.FarmersConfig',
     'vendors.apps.VendorsConfig',
     'buyers.apps.BuyersConfig',
+    'admins.apps.AdminsConfig',
     'rest_framework',
     'rest_framework.authtoken'
 ]
@@ -62,7 +63,7 @@ ROOT_URLCONF = 'krishi.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

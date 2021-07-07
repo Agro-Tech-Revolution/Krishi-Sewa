@@ -8,14 +8,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
     
     <script
-      src="<script"
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
     ></script>
 </head>
 <body class="container">
     <div>
     <ul>
-        <li><a href="/farmers/addProducts">Add Product</a></li>
+        <li><a href="/farmers/addProductsForSale">Add Product</a></li>
         <li><a href="/farmers/myProducts">My Products</a></li>
     </ul>
     <a href="/logout" class="btn btn-danger">Logout</a>
@@ -30,14 +29,14 @@
                             <a href="/farmers/myProducts/edit/{{product.id}}" class="btn btn-primary">Edit</a>
                             <a href="/farmers/myProducts/delete/{{product.id}}" class="btn btn-danger">Delete</a>
                         </div>
-                        <h5 class="card-title">{{product.prod_name}}</h5>
-                        <h6>Price: NRs. {{product.prod_price}}</h6>
-                        <h6>Category: {{product.prod_category}}</h6>
+                        <h5 class="card-title">{{product.product.prod_name}}</h5>
+                        <h6>Price: NRs. {{product.price_per_kg}}</h6>
+                        <h6>Category: {{product.product.prod_category}}</h6>
                         <h6>Quantity: {{product.quantity_in_kg}} kg</h6>
-                        <h6>Date: {{product.prod_added_on}}</h6>
+                        <h6>Date: {{product.added_date}}</h6>
                         <form method="POST">
                             {% csrf_token %}
-                            <input type="number" hidden value="{{product.id}}" name="prod_id">
+                            <input type="number" hidden value="{{product.id}}" name="product">
                             <input type="text" placeholder="Enter comment" name="comment">
                             <button type="submit" class="btn btn-success">Submit</button>
                         </form>
@@ -47,7 +46,8 @@
                             </button>
                         </p>
                         <div class="collapse" id="collapseExample{{product.id}}">
-                            {% for comment in product.comments %}
+                            
+                            {% for comment in product.product_comments %}
                                 
                                 <div class="card card-body">   
                                     {{comment.comment}} 
