@@ -10,6 +10,8 @@
     <tr>
       <th scope="col"></th>
       <th scope="col">Product Name</th>
+      <th scope="col">Total Production</th>
+      <th scope="col">Total Sales</th>
       <th scope="col">Remaining Stock</th>
     </tr>
   </thead>
@@ -19,6 +21,8 @@
     <tr>
       <th scope="row">{{stock.id}}</th>
       <td>{{stock.product_id.prod_name}}</td>
+      <td>{{stock.total_production}} kg</td>
+      <td>{{stock.total_sales}} kg</td>
       <td>{{stock.stock}} kg</td>
     </tr>
     {% endfor %}

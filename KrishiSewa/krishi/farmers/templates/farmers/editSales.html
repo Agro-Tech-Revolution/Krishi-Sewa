@@ -1,12 +1,15 @@
 {% extends 'layout-farmers.html' %}
 
 {% block title %}
-<title>Sell Product</title>
+<title>Edit Sales</title>
 {% endblock title %}
 
 {% block content %}
  <div class="container mt-2" >
-   <div class="row ">
+	<p class="text-center">
+	<em><span class="text-danger">Note:</span> You cannot update product name. If you wish to update product name then first delete the current sale and enter proper values</em>
+   	</p>
+	<div class="row mt-3">
     <div class="col-md-6">
 		<h2 class="text-success text-center mb-4">Product Details:</h2>
 		<div class="card">
@@ -32,27 +35,28 @@
 				<input type="number" hidden class="form-control" required="" value="{{product_detail.id}}" name="sold_product">
 				<div class="form-group mb-2">
 					<label  class="form-label">Sell To:</label>
-					<input type="number" class="form-control" required="" name="sold_to">
+					<input type="number" class="form-control" required="" value="{{sales_data.sold_to.id}}" name="sold_to">
 				</div>
 
 				<div class="form-group mb-2">
 					<label  class="form-label">Quantity:</label>
-					<input type="number" class="form-control" required="" name="quantity_sold">
+					<input type="number" class="form-control" required="" value="{{sales_data.quantity_sold}}" name="quantity_sold">
 				</div>
 
 				<div class="form-group mb-2">
 					<label  class="form-label">Total Price:</label>
-					<input type="number" class="form-control" required="" name="sold_price">
+					<input type="number" class="form-control" required="" value="{{sales_data.sold_price}}" name="sold_price">
 				</div>
 
 				<div class="form-group mb-2">
 					<label  class="form-label">Remarks:</label>
-					<input type="text" class="form-control" required="" name="remarks">
+					<input type="text" class="form-control" required="" value="{{sales_data.remarks}}" name="remarks">
 				</div>
 
 				<div class="text-center">
 					<div class="d-inline-block mt-2">
-						<button type="submit" class="nav-link btn btn-success text-center">Submit</button>
+						<button type="submit" class="btn btn-success text-center">Submit</button>
+						<a href="/farmers/mySales" class="btn btn-danger text-center">Cancel</a>
 					</div>
 				</div>
             </div>

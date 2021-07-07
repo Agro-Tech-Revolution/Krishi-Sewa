@@ -233,13 +233,13 @@ def edit_production(request, id):
         production_put_url = base_url + production_put_endpoint
 
         production_put_response = requests.put(production_put_url, data=production_data, headers=headers)
-        # if production_put_response.json().get('id') != None:
-        #     print('Product updated successfully')
-        #     return redirect('/farmers/myProduction')
-        # else:
-        #     error = production_put_response.json()
-        #     print(error)
-        #     return redirect('/farmers/myProduction')
+        if production_put_response.json().get('id') != None:
+            print('Product updated successfully')
+            return redirect('/farmers/myProduction')
+        else:
+            error = production_put_response.json()
+            print(error)
+            return redirect('/farmers/myProduction')
         return redirect('/farmers/myProduction')
 
     production_get_endpoint = '/api/products/production/' + str(id)
@@ -272,8 +272,112 @@ def delete_production(request, id):
 
 @login_required
 @farmers_only
-def sell_product(request):
-    return render(request,'farmers/sellProducts.html')
+def sell_product(request, id):
+    headers = {'Authorization': 'Token ' + request.session['token']}
+    if request.method == 'POST':
+        data = request.POST
+        sold_product = data["sold_product"]
+        sold_by = request.user.id
+        sold_to = data["sold_to"]
+        quantity_sold = data["quantity_sold"]
+        sold_price = data["sold_price"]
+        remarks = data["remarks"]
+
+        sold_data = {
+            "sold_product": sold_product,
+            "sold_by": sold_by,
+            "sold_to": sold_to,
+            "quantity_sold": quantity_sold,
+            "sold_price": sold_price,
+            "remarks": remarks,
+        }
+
+        sell_product_endpoint = '/api/sellProducts/'
+        sell_product_url = base_url + sell_product_endpoint
+        sell_product_response = requests.post(sell_product_url, data=sold_data, headers=headers)
+
+        if sell_product_response.json().get('id') != None:
+            print('Product sold successfully')
+            return redirect('/farmers/myProducts')
+        else:
+            error = sell_product_response.json()
+            print(error)
+            return redirect('/farmers/myProducts/')
+
+    product_get_endpoint = '/api/productsOnSale/' + str(id)
+    product_get_url = base_url + product_get_endpoint
+    product_get_response = requests.get(product_get_url, headers=headers)
+
+    context = {
+        'product_detail': product_get_response.json(),
+    }
+
+    return render(request,'farmers/sellProducts.html', context)
+
+
+@login_required
+@farmers_only
+def edit_sales(request, id):
+    headers = {'Authorization': 'Token ' + request.session['token']}
+    if request.method == 'POST':
+        data = request.POST
+        sold_product = data["sold_product"]
+        sold_by = request.user.id
+        sold_to = data["sold_to"]
+        quantity_sold = data["quantity_sold"]
+        sold_price = data["sold_price"]
+        remarks = data["remarks"]
+
+        sold_data = {
+            "sold_product": sold_product,
+            "sold_by": sold_by,
+            "sold_to": sold_to,
+            "quantity_sold": quantity_sold,
+            "sold_price": sold_price,
+            "remarks": remarks,
+        }
+
+        edit_sell_product_endpoint = '/api/sellProducts/' + str(id)
+        edit_sell_product_url = base_url + edit_sell_product_endpoint
+        edit_sell_product_response = requests.put(edit_sell_product_url, data=sold_data, headers=headers)
+
+        if edit_sell_product_response.json().get('id') != None:
+            print('Product sold successfully')
+            return redirect('/farmers/mySales')
+        else:
+            error = edit_sell_product_response.json()
+            print(error)
+            return redirect('/farmers/mySales')
+
+    sales_get_endpoint = '/api/sellProducts/' + str(id)
+    sales_get_url = base_url + sales_get_endpoint
+    sales_get_response = requests.get(sales_get_url, headers=headers)
+
+    product_get_endpoint = '/api/productsOnSale/' + str(sales_get_response.json()["sold_product"]["id"])
+    product_get_url = base_url + product_get_endpoint
+    product_get_response = requests.get(product_get_url, headers=headers) 
+
+    context = {
+        "sales_data": sales_get_response.json(),
+        'product_detail': product_get_response.json(),
+    }
+
+
+    return render(request, 'farmers/editSales.html', context)
+
+
+@login_required
+@farmers_only
+def delete_sales(request, id):
+    headers = {'Authorization': 'Token ' + request.session['token']}
+    sales_del_endpoint = '/api/sellProducts/' + str(id)
+    sales_del_url = base_url + sales_del_endpoint
+    sales_del_response = requests.delete(sales_del_url, headers=headers)
+
+    if Response(sales_del_response).status_code == 200:
+        print('Deleted Successfully')
+    
+    return redirect('/farmers/mySales')
 
 
 @login_required

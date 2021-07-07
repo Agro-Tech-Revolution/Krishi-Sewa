@@ -401,7 +401,7 @@ class ProductionDetails(APIView):
                                                 product_id=product,
                                                 stock=new_production_qty)
             serializer.save()
-            return Response([serializer.data])   
+            return Response(serializer.data)   
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -450,7 +450,6 @@ class MyProductStock(APIView):
         product_stock = self.get_object(user_id)
         product_stock_data = get_product_stock_data(product_stock)
         return Response(product_stock_data)
-
 
 
 class ProductSoldView(APIView):

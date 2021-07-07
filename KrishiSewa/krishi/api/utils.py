@@ -71,6 +71,25 @@ def modify_product_stock_data(stock_data):
 
     stock_data['product_id'] = product_details_data
     stock_data['farmer_id'] = user_details_data
+
+    product_id = stock_data["product_id"]["id"]
+    farmer_id = stock_data["farmer_id"]["id"]
+
+    # total production
+    production_detail = Production.objects.filter(product_id=product_id, farmer_id=farmer_id)
+    total_produciton_qty = 0
+    for production_data in production_detail:
+        total_produciton_qty += production_data.production_qty
+    stock_data["total_production"] = total_produciton_qty
+
+    # total sales
+    sold_product_detail = ProductSold.objects.filter(sold_product__product__id=product_id, sold_by=farmer_id)
+    total_sales = 0
+    for sale in sold_product_detail:
+        total_sales += sale.quantity_sold
+    stock_data["total_sales"] = total_sales
+
+    
     return stock_data
 
 

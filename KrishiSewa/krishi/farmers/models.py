@@ -104,6 +104,7 @@ class ProductSold(models.Model):
     quantity_sold = models.FloatField()
     sold_price = models.FloatField()
     sold_date = models.DateTimeField(auto_now_add=True)
+    remarks = models.CharField(max_length=1250, null=True)
 
 
 
