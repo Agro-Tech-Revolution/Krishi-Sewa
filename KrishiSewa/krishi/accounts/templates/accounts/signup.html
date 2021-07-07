@@ -15,30 +15,31 @@
         <h1>Get Started</h1>
       </div>
       <div class="content">
-        <form action="#">
+        <form action="#" method="post">
+          {% csrf_token %}
           <div class="user-details">
             <div class="input-box">
               <span class="details">First Name</span>
-              <input type="text" placeholder="Enter your firstname" required />
+              <input name="fname" type="text" placeholder="Enter your firstname" required />
             </div>
             <div class="input-box">
               <span class="details">Last Name</span>
-              <input type="text" placeholder="Enter your lastname" required />
+              <input name="lname" type="text" placeholder="Enter your lastname" required />
             </div>
             <div class="input-box">
               <span class="details">Username</span>
-              <input type="text" placeholder="Create a Username" required />
+              <input name="username" type="text" placeholder="Create a Username" required />
             </div>
             <div class="input-box">
               <span class="details">Email</span>
-              <input type="text" placeholder="Enter your email" required />
+              <input name="email" type="text" placeholder="Enter your email" required />
             </div>
             <!--------------------------------------------------------radiobutton------------------------------- --------------- -->
             <div class="main-radiobutton">
               <h2>Are you?</h2>
               <div class="radiobuttons">
                 <label class="custom-radio">
-                  <input type="radio" name="radio" checked />
+                  <input type="radio" name="user_type" value="FARMERS" checked />
                   <span class="radio-btn"
                     ><i class="fas fa-check"></i>
                     <div class="person-check">
@@ -48,7 +49,7 @@
                   </span>
                 </label>
                 <label class="custom-radio">
-                  <input type="radio" name="radio" />
+                  <input type="radio" name="user_type" value="BUYERS" />
                   <span class="radio-btn"
                     ><i class="las la-check"></i>
                     <div class="person-check">
@@ -58,7 +59,7 @@
                   </span>
                 </label>
                 <label class="custom-radio">
-                  <input type="radio" name="radio" />
+                  <input type="radio" name="user_type" value="VENDORS" />
                   <span class="radio-btn"
                     ><i class="las la-check"></i>
                     <div class="person-check">
@@ -74,11 +75,11 @@
 
             <div class="input-box">
               <span class="details">Password</span>
-              <input type="text" placeholder="Enter your password" required />
+              <input name="password" type="text" placeholder="Enter your password" required />
             </div>
             <div class="input-box">
               <span class="details">Confirm Password</span>
-              <input type="text" placeholder="Confirm your password" required />
+              <input name="cpassword" type="text" placeholder="Confirm your password" required />
             </div>
           </div>
           <div class="button">

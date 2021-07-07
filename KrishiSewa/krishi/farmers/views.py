@@ -1,5 +1,4 @@
 import os
-
 import keras.models
 from django.db.models import base
 from django.shortcuts import render
@@ -193,10 +192,14 @@ Soil testing part -----------------------------------------
 """
 
 
+@login_required
+@farmers_only
 def test(request):
     return render(request, 'farmers/index.html')
 
 
+@login_required
+@farmers_only
 def getNPK_Prediction(N, P, K, temp, humidity, ph):
     model = pickle.load(open('npk_model.sav', 'rb'))
     scaler = pickle.load(open('scaler.sav', 'rb'))
@@ -213,6 +216,8 @@ def getNPK_Prediction(N, P, K, temp, humidity, ph):
     return crops[prediction]
 
 
+@login_required
+@farmers_only
 def result(request):
     N = int(request.GET['N'])
     P = int(request.GET['P'])
@@ -244,7 +249,7 @@ def get_image_model(image_path):
     return prediction
 
 
-def predict(request):
+def imageTest(request):
     if request.method == 'POST':
         file = request.files['image']  # fet input
         filename = file.filename
@@ -253,3 +258,9 @@ def predict(request):
         crop_predict = get_image_model(file_path)
 
         return redirect(request, {'result': crop_predict})
+
+@login_required
+@farmers_only
+def image_test(request):
+    return render(request, 'farmers/nav.html')
+

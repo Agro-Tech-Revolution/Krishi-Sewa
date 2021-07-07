@@ -1,0 +1,280 @@
+* {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-decoration: none;
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+}
+
+body {
+  background: #fff;
+}
+
+.wrapper .header {
+  z-index: 1;
+  background: #7b4a12;
+  position: fixed;
+  width: calc(100% - 0%);
+  height: 70px;
+  display: flex;
+  top: 0;
+}
+
+.wrapper .header .header-menu {
+  width: calc(100% - 0%);
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+/* ------------------------------------------LOGO------------------------------- */
+.wrapper .header .header-menu img {
+  height: 70px;
+  width: 140px;
+  padding: 2px;
+  /* color:#B67721;
+    font-size: 25px;
+    text-transform: uppercase;
+    font-weight: 900; */
+}
+
+.wrapper .header .header-menu .sidebar-btn {
+  color: #fff;
+  position: absolute;
+  margin-left: 200px;
+  font-size: 25px;
+  font-weight: 950;
+  cursor: pointer;
+  transition: 0.3s;
+  transition-property: color;
+}
+
+.wrapper .header .header-menu .sidebar-btn:hover {
+  color: #b67721;
+}
+
+.wrapper .header .header-menu ul {
+  display: flex;
+}
+
+.wrapper .header .header-menu ul li a {
+  background: #fff;
+  color: #936a4a;
+  display: block;
+  margin: 0 10px;
+  font-size: 18px;
+  width: 34px;
+  height: 34px;
+  line-height: 35px;
+  text-align: center;
+  border-radius: 50%;
+  transition: 0.3s;
+  transition-property: background, color;
+}
+
+.wrapper .header .header-menu ul li a:hover {
+  background: #b67721;
+  color: #fff;
+}
+
+.wrapper .sidebar {
+  z-index: 1;
+  background: #936a4a;
+  position: fixed;
+  top: 70px;
+  width: 250px;
+  height: calc(100% - 9%);
+  transition: 0.3s;
+  transition-property: width;
+  overflow-y: auto;
+}
+
+.wrapper .sidebar .sidebar-menu {
+  overflow: hidden;
+}
+
+.wrapper .sidebar .sidebar-menu .item {
+  width: 250px;
+  overflow: hidden;
+}
+
+.wrapper .sidebar .sidebar-menu .item .menu-btn {
+  display: block;
+  color: #fff;
+  position: relative;
+  padding: 25px 20px;
+  transition: 0.3s;
+  transition-property: color;
+}
+
+/* .wrapper .sidebar .sidebar-menu .item .menu-btn:hover {
+  color: #4cbb17;
+} */
+
+.wrapper .sidebar .sidebar-menu .item .menu-btn i {
+  margin-right: 20px;
+}
+
+.wrapper .sidebar .sidebar-menu .item .menu-btn .drop-down {
+  float: right;
+  font-size: 12px;
+  margin-top: 3px;
+}
+
+.wrapper .sidebar .sidebar-menu .item .sub-menu {
+  background: #c0a172;
+  overflow: hidden;
+  max-height: 0;
+  transition: 0.3s;
+  transition-property: background, max-height;
+}
+
+.wrapper .sidebar .sidebar-menu .item .sub-menu a {
+  display: block;
+  position: relative;
+  color: #fff;
+  white-space: nowrap;
+  font-size: 15px;
+  padding: 20px;
+  transition: 0.3s;
+  transition-property: background;
+}
+
+.wrapper .sidebar .sidebar-menu .item .sub-menu a:hover {
+  background: #b67721;
+}
+
+.wrapper .sidebar .sidebar-menu .item .sub-menu a:not(last-child) {
+  border-bottom: 1px solid #c0a172;
+}
+
+.wrapper .sidebar .sidebar-menu .item .sub-menu i {
+  padding-right: 20px;
+  font-size: 10px;
+}
+
+.wrapper .sidebar .sidebar-menu .item:target .sub-menu {
+  max-height: 500px;
+}
+
+/* -----------------------------------Image testing css starts from here-------------------------- */
+
+.wrapper .main-container {
+  width: (100% - 250px);
+  margin-top: 10px;
+  margin-left: 250px;
+  padding: 10px;
+  /* background: url(background.jpg) no-repeat; */
+  background-size: cover;
+  height: 90vh;
+  transition: 0.3s;
+  /* --------for soil image testing------------- */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wrapper .main-container .drag-area {
+  border: 2px dashed #000;
+  height: 300px;
+  width: 450px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.wrapper .main-container .drag-area.active {
+  border: 2px solid #000;
+}
+
+.wrapper .main-container .drag-area .icon {
+  font-size: 100px;
+  color: #936a4a;
+}
+
+.wrapper .main-container .drag-area header {
+  font-size: 30px;
+  color: #000;
+  font-weight: 700;
+}
+
+.wrapper .main-container .drag-area span {
+  font-size: 25px;
+  color: #000;
+  font-weight: 500;
+  margin: 10px 0 15px 0;
+}
+.wrapper .main-container .drag-area button {
+  padding: 12px 25px;
+  font-size: 25px;
+  font-weight: 500;
+  border: none;
+  outline: none;
+  background: #936a4a;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.wrapper .main-container .drag-area img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.wrapper.collapse .sidebar {
+  width: 70px;
+}
+
+.wrapper.collapse .sidebar .profile img,
+.wrapper.collapse .sidebar .profile p,
+.wrapper.collapse .sidebar a span {
+  display: none;
+}
+
+.wrapper.collapse .sidebar .sidebar-menu .item .menu-btn {
+  font-size: 23px;
+}
+
+.wrapper.collapse .sidebar .sidebar-menu .item .sub-menu i {
+  font-size: 18px;
+  padding-left: 3px;
+}
+
+.wrapper.collapse .main-container {
+  width: calc(100% - 70px);
+  margin-left: 70px;
+}
+
+.wrapper .main-container .card {
+  background: #fff;
+  padding: 15px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+.main-container .submit-btn button[type="submit"] {
+  padding: 15px;
+  position: relative;
+  right: 260%;
+  margin-top: 420px;
+  cursor: pointer;
+  border-radius: 5px;
+  background: #cc7722;
+  color: #fff;
+  font-size: 100%;
+  font-weight: bold;
+  letter-spacing: 0.1rem;
+  padding: 16px;
+}
+
+.main-container .title {
+  margin-bottom: 37%;
+  position: relative;
+  left: 20%;
+  font-weight: bold;
+  font-size: 35px;
+}
