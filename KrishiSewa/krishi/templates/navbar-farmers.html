@@ -1,0 +1,43 @@
+{% load static %}
+<nav id="sidebar">
+    <div class="sidebar-header">
+        <img src="{% static 'farmers/images/logo1.png' %}" alt="logo">
+    </div>
+
+    <ul class="list-unstyled components">
+        
+        <li class="active">
+            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">
+                Soil Testing<i class="fas fa-chevron-down drop-down"></i></span>
+            </a>
+            <ul class="collapse list-unstyled" id="homeSubmenu">
+                <li><a href="#">NPK Testing</a></li>
+                <li><a href="#">Image Testing</a></li>
+                
+            </ul>
+        </li>
+        <li>
+            <a href="#">Previous Records</a>
+        </li>
+        <li>
+            <a href="#">Feedback</a>
+        </li>
+        <li>
+            <a href="#">Write Notes</a>
+        </li>
+        <li>
+            <a href="#">Something</a>
+        </li>
+        <li>
+            <a href="#">Something</a>
+        </li>
+        <li>
+            <a href="#">Something</a>
+        </li>
+    </ul>
+
+    <ul class="list-unstyled CTAs">
+        <li><a href="" class="download">Instruction</a></li>
+        <li><a href="" class="article">Logout</a></li>
+    </ul>
+</nav>

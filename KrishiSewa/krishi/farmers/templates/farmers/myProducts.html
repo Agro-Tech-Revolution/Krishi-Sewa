@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Products</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    ></script>
+</head>
+<body class="container">
+    <div>
+    <ul>
+        <li><a href="/farmers/addProductsForSale">Add Product</a></li>
+        <li><a href="/farmers/myProducts">My Products</a></li>
+    </ul>
+    <a href="/logout" class="btn btn-danger">Logout</a>
+    </div>
+     <br>
+    <div class="row">
+        {% for product in my_products %}
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div>
+                            <a href="/farmers/myProducts/edit/{{product.id}}" class="btn btn-primary">Edit</a>
+                            <a href="/farmers/myProducts/delete/{{product.id}}" class="btn btn-danger">Delete</a>
+                        </div>
+                        <h5 class="card-title">{{product.product.prod_name}}</h5>
+                        <h6>Price: NRs. {{product.price_per_kg}}</h6>
+                        <h6>Category: {{product.product.prod_category}}</h6>
+                        <h6>Quantity: {{product.quantity_in_kg}} kg</h6>
+                        <h6>Date: {{product.added_date}}</h6>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="number" hidden value="{{product.id}}" name="product">
+                            <input type="text" placeholder="Enter comment" name="comment">
+                            <button type="submit" class="btn btn-success">Submit</button>
+                        </form>
+                        <p>
+                            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample{{product.id}}" aria-expanded="false" aria-controls="collapseExample">
+                                View Comment
+                            </button>
+                        </p>
+                        <div class="collapse" id="collapseExample{{product.id}}">
+                            
+                            {% for comment in product.product_comments %}
+                                
+                                <div class="card card-body">   
+                                    {{comment.comment}} 
+                                    <em>
+                                        Added By: {{comment.comment_by.first_name}} {{comment.comment_by.last_name}}
+                                    </em>
+                                    <em>
+                                        Added On: {{comment.comment_date}}
+                                    </em>
+                                    {% if comment.comment_by.id == user.id %}
+                                    <div>
+                                        <!-- <a href="/farmers/myProducts/edit/comment/{{comment.id}}" class="btn btn-primary">Edit</a> -->
+                                        <!-- Button trigger modal -->
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#comment{{comment.id}}">
+                                            Edit
+                                        </button>
+                                        <a href="/farmers/myProducts/delete/comment/{{comment.id}}" class="btn btn-danger">Delete</a>
+                                        
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="comment{{comment.id}}" tabindex="-1" aria-labelledby="comment{{comment.id}}Label" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                    <h5 class="modal-title" id="comment{{comment.id}}Label">Edit Comment</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form method="POST" action="myProducts/editComment">
+                                                            {% csrf_token %}
+                                                            <input type="number" hidden name="comment_id" value="{{comment.id}}">
+                                                            <input type="number" hidden name="prod_id" value="{{product.id}}">
+                                                            <input type="text" placeholder="Enter comment" name="comment" value="{{comment.comment}}">
+                                                            <button type="submit" class="btn btn-success">Submit</button>
+                                                        </form>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        
+                                        
+                                    </div>
+                                    {% endif %}
+
+                                </div>
+                                
+                                
+                                
+                                
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+
+        {% endfor %}
+
+        
+                
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+</body>
+</html>

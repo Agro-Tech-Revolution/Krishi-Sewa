@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Products</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+    />
+    
+    <script
+      src="<script"
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    ></script>
+</head>
+<body class="container">
+    <div>
+    <ul>
+        <li><a href="/farmers/addProductsForSale">Add Product</a></li>
+        <li><a href="/farmers/myProducts">My Products</a></li>
+    </ul>
+    <a href="/logout" class="btn btn-danger">Logout</a>
+    </div>
+     <br>
+    <form method="POST">
+        {% csrf_token %}
+        <select name="product">
+            {% for product_name in product_detail %}
+            {% if product_name.prod_name == product.product.prod_name %}
+            <option value="{{product_name.id}}" selected>{{product_name.prod_name}}</option>
+            {% else %}
+            <option value="{{product_name.id}}">{{product_name.prod_name}}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
+        <input type="number" placeholder="Enter quantity" name="quantity" value={{product.quantity_in_kg}}> kg
+        
+        <input type="number" placeholder="Enter Price" name="price" value={{product.price_per_kg}}> per kg
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <a href="/farmers/myProducts" class="btn btn-danger">Cancel</button>
+    </form>
+</body>
+</html>

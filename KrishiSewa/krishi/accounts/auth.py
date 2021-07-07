@@ -8,8 +8,7 @@ def unauthenticated_user(view_function):
             token = request.session.get('token')
             id = request.user.id
             if request.user.is_staff:
-                print('admin logged in')
-                # return redirect('/admins')
+                return redirect('/admins')
 
             elif not request.user.is_staff:
                 headers = {'Authorization': 'Token ' + token}
@@ -50,9 +49,8 @@ def admin_only(view_function):
 def buyers_only(view_function):
     def wrapper_function(request, *args, **kwargs):
         if request.user.is_staff:
-            # return redirect('/admin-dashboard')
-            # return redirect('/admins')
-            print("Admin logged in")
+            return redirect('/admins')
+            
         else:
             token = request.session.get('token')
             id = request.user.id
@@ -73,9 +71,8 @@ def buyers_only(view_function):
 def farmers_only(view_function):
     def wrapper_function(request, *args, **kwargs):
         if request.user.is_staff:
-            # return redirect('/admin-dashboard')
-            # return redirect('/admins')
-            print("Admin logged in")
+            return redirect('/admins')
+            
         else:
             token = request.session.get('token')
             id = request.user.id
@@ -96,9 +93,8 @@ def farmers_only(view_function):
 def vendors_only(view_function):
     def wrapper_function(request, *args, **kwargs):
         if request.user.is_staff:
-            # return redirect('/admin-dashboard')
-            # return redirect('/admins')
-            print("Admin logged in")
+            return redirect('/admins')
+            
         else:
             token = request.session.get('token')
             id = request.user.id
