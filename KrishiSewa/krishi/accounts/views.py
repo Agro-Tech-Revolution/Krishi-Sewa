@@ -7,6 +7,7 @@ from .auth import *
 
 # Create your views here.
 
+
 @unauthenticated_user
 def add_production(request):
     return render(request,'accounts/AddProduction.html')
@@ -31,6 +32,9 @@ def feedback(request):
 def history(request):
     return render(request,'accounts/History.html')
 
+base_url = "http://127.0.0.1:8000"
+
+
 
 @unauthenticated_user
 def home(request):
@@ -42,7 +46,7 @@ def login_view(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         
-        data = {
+        user_data = {
             'username': username,
             'password': password
         }
@@ -50,23 +54,30 @@ def login_view(request):
                             username=username,
                             password=password)
         if user is not None:
+            auth_endpoint = "/auth/"
+            auth_url = base_url + auth_endpoint
             
-            r = requests.post('http://127.0.0.1:8000/auth/', data=data)
+            r = requests.post(auth_url, data=user_data)
             if Response(r).status_code == 200:
                 login(request, user)
                 token = r.json().get('token')
                 request.session['token'] = token
+                if user.is_staff:
+                    return redirect('/admins/')
+                else:
+                    headers = {'Authorization': 'Token ' + token}
+                    profile_endpoint = "/api/profile/"
+                    profile_url = base_url + profile_endpoint + str(user.id)
 
-                headers = {'Authorization': 'Token ' + token}
-                profile_response = requests.get('http://127.0.0.1:8000/api/profile/'+str(user.id), headers=headers)
-                user_type = profile_response.json().get('user_type')
-                
-                if user_type.upper() == 'BUYERS':
-                    return redirect('/buyers/')
-                elif user_type.upper() == 'FARMERS':
-                    return redirect('/farmers/')
-                elif user_type.upper() == 'VENDORS':
-                    return redirect('/vendors/')
+                    profile_response = requests.get(profile_url, headers=headers)
+                    user_type = profile_response.json().get('user_type')
+                    
+                    if user_type.upper() == 'BUYERS':
+                        return redirect('/buyers/')
+                    elif user_type.upper() == 'FARMERS':
+                        return redirect('/farmers/')
+                    elif user_type.upper() == 'VENDORS':
+                        return redirect('/vendors/')
             
         else:
             print("No user found")
@@ -93,22 +104,28 @@ def register_view(request):
             "email": email,
             "password": password
         }
-                
-        r = requests.post('http://127.0.0.1:8000/api/users/', data=user_data)
+        
+        user_endpoint = "/api/users/"
+        user_url = base_url + user_endpoint
+        r = requests.post(user_url, data=user_data)
         if Response(r).status_code == 200:
             id = r.json().get('id')
             profile_data = {
                 "user": id,
                 "user_type": user_type
             }
-            profile_request = requests.post('http://127.0.0.1:8000/api/profile/', data=profile_data)
+
+            profile_endpoint = "/api/profile/"
+            profile_url = base_url + profile_endpoint
+            profile_request = requests.post(profile_url, data=profile_data)
+            
             if Response(profile_request).status_code == 200:
                 print("User successfully created")
                 return redirect('/login')
         else:
             print("Error in creating user")
 
-    return render(request, 'accounts/register.html')
+    return render(request, 'accounts/signup.html')
 
 
 def logout_user(request):

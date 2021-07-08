@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Products</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+    />
+    
+    <script
+      src="<script"
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    ></script>
+</head>
+<body class="container">
+    <div>
+    <ul>
+        <li><a href="/vendors/addEquipments">Add Equipments</a></li>
+        <li><a href="/vendors/myEquipments">My Equipments</a></li>
+    </ul>
+    <a href="/logout" class="btn btn-danger">Logout</a>
+    </div>
+     <br>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" placeholder="Enter equipment name" name="name" value={{equipment.name}}><br>
+        <input type="text" placeholder="Enter modal value" name="modal" value={{equipment.modal}}><br>        
+        <select name="category">
+            {% for item in categories %}
+            {% if item == equipment.category %}
+            <option value="{{item}}" selected>{{item}}</option>
+            {% else %}
+            <option value="{{item}}">{{item}}</option>
+            {% endif %}
+            {% endfor %}
+        </select><br>
+        <label>Available for rent:</label>
+        {% if equipment.available_for_rent %}
+            <input type="radio" id="for_rent_T" name="rent" value="True" checked>
+            <label for="for_rent_T">Yes</label>
+            <input type="radio" id="for_rent_F" name="rent" value="False">
+            <label for="for_rent_F">No</label><br>
+        {% else %}
+            <input type="radio" id="for_rent_T" name="rent" value="True">
+            <label for="for_rent_T">Yes</label>
+            <input type="radio" id="for_rent_F" name="rent" value="False" checked>
+            <label for="for_rent_F">No</label><br>
+        {% endif %}
+
+        <input type="number" placeholder="Enter price for rent" name="rent_price" value={{equipment.price_to_buy}}><br>
+        
+        <label>Available to buy:</label>
+        {% if equipment.available_to_buy %}
+            <input type="radio" id="for_buy_T" name="buy" value="True" checked>
+            <label for="for_buy_T">Yes</label>
+            <input type="radio" id="for_buy_F" name="buy" value="False">
+            <label for="for_buy_F">No</label><br>
+        {% else %}
+            <input type="radio" id="for_buy_T" name="buy" value="True">
+            <label for="for_buy_T">Yes</label>
+            <input type="radio" id="for_buy_F" name="buy" value="False" checked>
+            <label for="for_buy_F">No</label><br>
+        {% endif %}
+
+        
+        <input type="number" placeholder="Enter Price to buy" name="buy_price" value={{equipment.price_to_buy}}><br>
+        <input type="text" placeholder="Enter details" name="details" value={{equipment.details}}><br>
+
+        
+        
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <a href="/farmers/myProducts" class="btn btn-danger">Cancel</button>
+    </form>
+</body>
+</html>

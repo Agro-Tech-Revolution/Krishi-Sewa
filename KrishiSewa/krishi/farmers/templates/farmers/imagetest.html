@@ -1,0 +1,22 @@
+{% extends 'layout-farmers.html' %}
+{% load static %}
+
+{% block title %}
+<title>Image Test</title>
+<link rel="stylesheet" href="{% static 'farmers/css/imagetest.css' %}">
+{% endblock title %}
+
+{% block content %}
+    <h2 class="title text-center mt-4">Image Testing</h2>
+    <div class="drag-area">
+        <div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
+        <header>Drag & Drop Your Soil image </header>
+        <span>OR</span>
+        <button>Browse File</button>
+        <input type="file" hidden>
+    </div>
+    <div class="submit-btn">
+        <button type="submit" class="btn btn-block text-uppercase">SUBMIT</button>
+    </div>
+    <script src='{% static "farmers/js/script.js" %}'></script>
+{% endblock content %}
