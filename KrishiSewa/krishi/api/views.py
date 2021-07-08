@@ -114,7 +114,13 @@ class GetProfileType(APIView):
 
 
 class CreateEquipment(APIView):
+    
+    def get(self, request):
+        equipment = Equipment.objects.all()
+        serializer = CreateEquipmentSerializer(equipment, many=True)
 
+        return Response(serializer.data)
+    
     def post(self, request):
         serializer = CreateEquipmentSerializer(data=request.data)
         if serializer.is_valid():
