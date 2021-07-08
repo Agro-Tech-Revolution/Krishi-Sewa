@@ -1,17 +1,18 @@
+from django.db.models import fields
 from rest_framework import serializers
 from .models import *
 
-class CreateEquipmentSerializer(serializers.ModelSerializer):
+class EquipmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Equipment
-        fields = ['id', 'name', 'modal', 'category', 'available_for_rent', 'available_to_buy', 'price_to_buy',
-                  'price_to_rent', 'details', 'added_by', 'date', 'eqp_img']
+        fields = ['id', 'name', 'category']
 
 
-class EquipmentCommentSerializer(serializers.ModelSerializer):
+class EquipmentToDisplaySerializer(serializers.ModelSerializer):
     class Meta:
-        model = EquipmentComment
-        fields = ['id', 'comment_by', 'equipment', 'comment', 'comment_date']
+        model = EquipmentToDisplay
+        fields = ['id', 'equipment', 'modal', 'available_for_rent', 'available_to_buy', 'price_to_buy_per_item',
+                  'price_per_hour', 'duration', 'details', 'added_by', 'date', 'eqp_img', 'reports']
 
 
 class EquipmentReportSerializer(serializers.ModelSerializer):
@@ -19,3 +20,18 @@ class EquipmentReportSerializer(serializers.ModelSerializer):
         model = EquipmentReport
         fields = ['id', 'reported_by', 'reported_equipment', 'report_category', 
                   'report_description', 'reported_date']
+
+
+class BuyDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BuyDetails
+        fields = ['id', 'equipment', 'sold_by', 'sold_to', 'quantity', 
+                  'total_price', 'sold_date', 'remarks', 'approved']
+
+
+class RentDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RentDetails
+        fields = ['id', 'equipment', 'rented_by', 'rented_to', 'rented_quantity', 
+                  'rented_duration', 'total_price', 'rented_date', 'remarks', 'approved']
+    
