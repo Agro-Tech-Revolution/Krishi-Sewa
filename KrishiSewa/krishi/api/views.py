@@ -260,7 +260,7 @@ class MyProductsOnSale(APIView):
 
 class ProductCommentView(APIView):
     # permission_classes = [IsAuthenticated]
-    # authentication_classes = (TokenAuthentication,)    
+    # authentication_classes = (TokenAuthentication,)
     def post(self, request):
         serializer = ProductCommentSerializer(data=request.data)
         if serializer.is_valid():
@@ -439,7 +439,7 @@ class ProductionDetails(APIView):
                 # finding new product_stock object to update its stock
                 product_stock = ProductStock.objects.filter(farmer_id=farmer_id, product_id=product_id)
                 if len(product_stock) != 0:
-                    # if the object exists, update its value            
+                    # if the object exists, update its value
                     updated_stock = product_stock[0].stock + new_production_qty
                     product_stock.update(stock=updated_stock)
                 else:
@@ -635,7 +635,12 @@ class ExpenseAPIView(APIView):
     def get(self, request):
         all_expenses = Expenses.objects.all()
         expense_data = ExpenseSerializer(all_expenses, many=True).data
-        return Response(serializer.data)
+
+        for expense in expense_data:
+            user_details = User.objects.get(id=expense['expense_of'])
+            user_details_data = UserSerializer(user_details).data
+            expense['expense_of'] = user_details_data
+        return Response(expense_data)
 
     def post(self, request):
         serializer = ExpenseSerializer(data=request.data)
@@ -920,7 +925,7 @@ class MyEquipments(APIView):
         return Response(equipment_data)
 
 
-# eqp report 
+# eqp report
 class EquipmentReportView(APIView):
     # permission_classes = [IsAuthenticated]
     # authentication_classes = (TokenAuthentication,)
