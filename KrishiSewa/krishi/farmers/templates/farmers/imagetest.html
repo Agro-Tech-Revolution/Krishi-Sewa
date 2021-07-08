@@ -2,21 +2,45 @@
 {% load static %}
 
 {% block title %}
-<title>Image Test</title>
+<title>Image Testing</title>
 <link rel="stylesheet" href="{% static 'farmers/css/imagetest.css' %}">
+
 {% endblock title %}
 
 {% block content %}
-    <h2 class="title text-center mt-4">Image Testing</h2>
-    <div class="drag-area">
-        <div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
-        <header>Drag & Drop Your Soil image </header>
-        <span>OR</span>
-        <button>Browse File</button>
-        <input type="file" hidden>
-    </div>
-    <div class="submit-btn">
-        <button type="submit" class="btn btn-block text-uppercase">SUBMIT</button>
-    </div>
-    <script src='{% static "farmers/js/script.js" %}'></script>
+<div class="title">
+    <h1>Image Testing</h1>
+</div>
+<div class="main-container">
+  <div class="container">
+         <div class="wrapper-imgtest">
+               <img class="image" src="" alt="">
+
+            <div class="content">
+               <div class="icon">
+                  <i class="fas fa-cloud-upload-alt"></i>
+               </div>
+               <div class="text">
+                  No file chosen, yet!
+               </div>
+            </div>
+            <div id="cancel-btn">
+               <i class="fas fa-times"></i>
+            </div>
+            <div class="file-name">
+               File name here
+            </div>
+         </div>
+         <button onclick="defaultBtnActive()" id="custom-btn">Choose a file</button>
+         <input id="default-btn" type="file" hidden>
+
+        <div class="submit-button">
+       <button type="submit" class="btn btn-light">Submit</button>
+            </div>
+
+</div>
+</div>
+
+
+    <script src='{% static "farmers/js/image_script.js" %}'></script>
 {% endblock content %}
