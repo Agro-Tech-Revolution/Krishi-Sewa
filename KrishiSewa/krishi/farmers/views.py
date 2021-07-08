@@ -239,13 +239,25 @@ def get_image_model(image_path):
 
 def imageTest(request):
     if request.method == 'POST':
-        file = request.files['image']  # fet input
+        file = request.FILES['image']  # fet input
+        print(file)
         filename = file.filename
         file_path = os.path.join('static/user uploaded', filename)
         file.save(file_path)
         crop_predict = get_image_model(file_path)
+        return render(request,'farmers/imageTest_result.html', { 'img_result':crop_predict })
 
-        return redirect(request, {'result': crop_predict})
+def image_test1(request):
+    if request.method=='POST':
+        file = request.FILES['image']
+        print(file)
+        filename = file.filename
+
+        print(filename)
+        file_path = os.path.join('static/image_testing', filename)
+        file.save(file_path)
+
+    return render(request, 'farmers/img_test.html')
 
 @login_required
 @farmers_only
