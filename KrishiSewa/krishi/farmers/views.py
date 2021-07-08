@@ -497,25 +497,15 @@ def get_image_model(image_path):
     img_model = keras.models.load_model("farmers/model/SoilNet_93_86.h5")
     predict_crops = np.argmax(img_model.predict(image))
 
-    classes = {0: "Alluvial Soil:-{ Rice,Wheat,Sugarcane,Maize,Cotton,Soyabean,Jute }",
-               1: "Black Soil:-{ Virginia, Wheat , Jowar,Millets,Linseed,Castor,Sunflower} ",
-               2: "Clay Soil:-{ Rice,Lettuce,Chard,Broccoli,Cabbage,Snap Beans }",
-               3: "Red Soil:{ Cotton,Wheat,Pilses,Millets,OilSeeds,Potatoes }"}
+    classes = {0: "Alluvial Soil: Rice, Wheat, Sugarcane, Maize, Cotton, Soyabean, Jute",
+               1: "Black Soil: Virginia, Wheat, Jowar, Millet, Linseed, Castor, Sunflower",
+               2: "Clay Soil: Rice, Lettuce, Chard, Broccoli, Cabbage, Snap Beans",
+               3: "Red Soil: Cotton, Wheat, Pilses, Millet, OilSeeds, Potatoes"}
 
     prediction = classes[predict_crops]
 
     return prediction
 
-
-def imageTest(request):
-    if request.method == 'POST':
-        file = request.FILES['image']  # fet input
-        print(file)
-        filename = file.filename
-        file_path = os.path.join('static/user uploaded', filename)
-        file.save(file_path)
-        crop_predict = get_image_model(file_path)
-        return render(request,'farmers/imageTest_result.html', { 'img_result':crop_predict })
 
 def image_test1(request):
     predict=''
@@ -530,10 +520,10 @@ def image_test1(request):
         print(file_path)
         predict = get_image_model(file_path)
 
-    return render(request, 'farmers/img_test.html', { 'img_result': predict })
+    return render(request, 'farmers/imagetest.html', { 'img_result': predict })
 
-@login_required
-@farmers_only
-def image_test(request):
-    return render(request, 'farmers/imagetest.html')
+# @login_required
+# @farmers_only
+# def image_test(request):
+#     return render(request, 'farmers/imagetest.html')
 
