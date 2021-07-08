@@ -58,7 +58,7 @@ class UserById(APIView):
         serializer = UserSerializer(user)
         return Response(serializer.data)
 
-
+    
 class CreateProfile(APIView):
     def post(self, request):
         serializer = CreateProfileSerializer(data=request.data)
@@ -85,7 +85,7 @@ class GetProfileType(APIView):
         user_details = User.objects.get(id=user_id)
         user_data = UserSerializer(user_details).data
         profile_data['user'] = user_data
-
+        
         return Response(profile_data)
 
 
@@ -192,7 +192,7 @@ class ProductsForSaleView(APIView):
             product_id = request.data['product']
             farmer_id = request.data['added_by']
             quantity_in_kg = float(request.data['quantity_in_kg'])
-
+            
             stock_detail = ProductStock.objects.filter(product_id=product_id, farmer_id=farmer_id)
             if len(stock_detail) != 0:
                 if quantity_in_kg < stock_detail[0].stock:
@@ -201,8 +201,7 @@ class ProductsForSaleView(APIView):
                 else:
                     return Response({"Bad Request": "The entered quantity is not available. Please check stock value"})
             else:
-                return Response(
-                    {"Bad Request": "The products are not added in production and there is no stock present."})
+                return Response({"Bad Request": "The products are not added in production and there is no stock present."})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -212,23 +211,23 @@ class ProductsForSaleDetails(APIView):
             return ProductsForSale.objects.get(id=id)
         except ProductsForSale.DoesNotExist:
             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-
+    
     def get(self, request, id):
         products_for_sale = self.get_object(id)
         product_for_sale_data = ProductForSaleSerializer(products_for_sale).data
-
+    
         product_data = modify_product_details_data(product_for_sale_data)
         return Response(product_data, status=status.HTTP_200_OK)
-
+    
     def put(self, request, id):
         product_for_sale = self.get_object(id)
-
+               
         serializer = ProductForSaleSerializer(product_for_sale, data=request.data)
 
         product_id = request.data['product']
         farmer_id = request.data['added_by']
         quantity_in_kg = float(request.data['quantity_in_kg'])
-
+        
         stock_detail = ProductStock.objects.filter(product_id=product_id, farmer_id=farmer_id)
         if serializer.is_valid():
             if quantity_in_kg < stock_detail[0].stock:
@@ -260,7 +259,7 @@ class MyProductsOnSale(APIView):
 
 class ProductCommentView(APIView):
     # permission_classes = [IsAuthenticated]
-    # authentication_classes = (TokenAuthentication,)
+    # authentication_classes = (TokenAuthentication,)    
     def post(self, request):
         serializer = ProductCommentSerializer(data=request.data)
         if serializer.is_valid():
@@ -278,7 +277,7 @@ class CommentDetails(APIView):
             return ProductComment.objects.get(id=com_id)
         except ProductComment.DoesNotExist:
             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-
+    
     def get(self, request, com_id):
         comment = self.get_object(com_id)
         serializer = ProductCommentSerializer(comment)
@@ -286,7 +285,7 @@ class CommentDetails(APIView):
 
     def put(self, request, com_id):
         comment = self.get_object(com_id)
-
+               
         serializer = ProductCommentSerializer(comment, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -297,7 +296,7 @@ class CommentDetails(APIView):
         comments = self.get_object(com_id)
         comments.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
+       
 
 class ProductReportView(APIView):
     # permission_classes = [IsAuthenticated]
@@ -322,11 +321,11 @@ class ProductReportView(APIView):
             report['reported_product'] = product_report_data
 
         return Response(report_data)
-
+    
     def post(self, request):
         product_id = request.data['reported_product']
         product = Products.objects.get(id=product_id)
-
+        
         serializer = ProductReportSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -343,7 +342,7 @@ class ReportDetails(APIView):
             return ProductReport.objects.get(id=id)
         except ProductReport.DoesNotExist:
             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-
+    
     def get(self, request, id):
         report = self.get_object(id)
         serializer = ProductReportSerializer(report)
@@ -351,12 +350,13 @@ class ReportDetails(APIView):
 
     def put(self, request, id):
         report = self.get_object(id)
-
+        
         serializer = ProductReportSerializer(report, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
 
     def delete(self, request, id):
         report = self.get_object(id)
@@ -380,7 +380,7 @@ class ProductionAPIView(APIView):
             product_id = serializer.data['product_id']
             production_qty = serializer.data['production_qty']
             product_stock = ProductStock.objects.filter(farmer_id=farmer_id, product_id=product_id)
-            if len(product_stock) != 0:
+            if len(product_stock) != 0:                
                 updated_stock = product_stock[0].stock + production_qty
                 product_stock.update(stock=updated_stock)
             else:
@@ -399,47 +399,47 @@ class ProductionDetails(APIView):
             return Production.objects.get(id=id)
         except Production.DoesNotExist:
             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-
+    
     def get(self, request, id):
         production_detail = self.get_object(id)
         production_data = ProductionSerializer(production_detail).data
         production_data_to_display = modify_production_details_data(production_data)
         return Response(production_data_to_display, status=status.HTTP_200_OK)
-
+    
     def put(self, request, id):
         production = self.get_object(id)
         prev_production_qty = production.production_qty
         prev_production_product_id = production.product_id.id
         serializer = ProductionSerializer(production, data=request.data)
-        if serializer.is_valid():
+        if serializer.is_valid():  
             farmer_id = request.data['farmer_id']
             product_id = request.data['product_id']
-
+            
             new_production_qty = float(request.data['production_qty'])
             if int(product_id) == prev_production_product_id:
                 # if the product is same from previous production then get stock object and
                 # update stock value
                 product_stock = ProductStock.objects.filter(farmer_id=farmer_id, product_id=product_id)
-
-                if len(product_stock) != 0:
+                
+                if len(product_stock) != 0:                
                     updated_stock = product_stock[0].stock + new_production_qty - prev_production_qty
                     product_stock.update(stock=updated_stock)
-
+    
             else:
                 # if the product is not same from previous production
                 # updating stock of a previous prdouct which was increased. But now the product name is changed
                 # so previous added production quantity to stock is being subtracted
                 product_stock_to_update = ProductStock.objects.filter(
-                    farmer_id=farmer_id,
-                    product_id=prev_production_product_id
-                )
+                                                                     farmer_id=farmer_id, 
+                                                                     product_id=prev_production_product_id
+                                                                     )
                 stock_of_prev_to_update = product_stock_to_update[0].stock - prev_production_qty
                 product_stock_to_update.update(stock=stock_of_prev_to_update)
-
+    
                 # finding new product_stock object to update its stock
                 product_stock = ProductStock.objects.filter(farmer_id=farmer_id, product_id=product_id)
-                if len(product_stock) != 0:
-                    # if the object exists, update its value
+                if len(product_stock) != 0:    
+                    # if the object exists, update its value            
                     updated_stock = product_stock[0].stock + new_production_qty
                     product_stock.update(stock=updated_stock)
                 else:
@@ -450,7 +450,7 @@ class ProductionDetails(APIView):
                                                 product_id=product,
                                                 stock=new_production_qty)
             serializer.save()
-            return Response(serializer.data)
+            return Response(serializer.data)   
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -460,9 +460,9 @@ class ProductionDetails(APIView):
         farmer_id = production.farmer_id
         product_id = production.product_id
         production.delete()
-
+        
         product_stock = ProductStock.objects.filter(farmer_id=farmer_id, product_id=product_id)
-        if len(product_stock) != 0:
+        if len(product_stock) != 0:                
             updated_stock = product_stock[0].stock - prev_production_qty
             product_stock.update(stock=updated_stock)
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -494,7 +494,7 @@ class MyProductStock(APIView):
             return ProductStock.objects.filter(farmer_id=user_id)
         except ProductStock.DoesNotExist:
             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-
+    
     def get(self, request, user_id):
         product_stock = self.get_object(user_id)
         product_stock_data = get_product_stock_data(product_stock)
@@ -531,12 +531,12 @@ class ProductSoldView(APIView):
                         product_to_be_sold.update(quantity_in_kg=updated_quantity)
                         return Response(serializer.data, status=status.HTTP_201_CREATED)
                 else:
-                    return Response({'Bad Request': "The quantity is not available"},
-                                    status=status.HTTP_400_BAD_REQUEST)
+                    return Response({'Bad Request': "The quantity is not available"}, status=status.HTTP_400_BAD_REQUEST)
+                
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+    
 class ProductSoldDetails(APIView):
     def get_object(self, id):
         try:
@@ -549,6 +549,7 @@ class ProductSoldDetails(APIView):
         product_sold = ProductSoldSerializer(product_sold_detail).data
         product_sold_data = modify_sold_data(product_sold)
         return Response(product_sold_data)
+        
 
     def put(self, request, id):
         product_sold = self.get_object(id)
@@ -566,7 +567,7 @@ class ProductSoldDetails(APIView):
             current_qty = quantity_present + product_sold.quantity_sold
             if len(product_stock) != 0:
                 current_stock = product_stock[0].stock + product_sold.quantity_sold
-
+                
                 quantity_sold = float(request.data['quantity_sold'])
                 if quantity_sold < current_qty:
                     if quantity_sold < current_stock:
@@ -599,7 +600,7 @@ class ProductSoldDetails(APIView):
             product_sold.delete()
             product_stock.update(stock=updated_stock)
             product_to_be_sold.update(quantity_in_kg=updated_qty)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT) 
 
 
 class SellerSalesDetails(APIView):
@@ -613,7 +614,7 @@ class SellerSalesDetails(APIView):
         product_sold_detail = self.get_object(id)
         products_sold_data = get_sold_details(product_sold_detail)
         return Response(products_sold_data)
-
+        
 
 class BuyerSalesDetails(APIView):
     def get_object(self, id):
@@ -895,6 +896,7 @@ class EquipmentsToDisplayDetails(APIView):
         equipment_data = modify_equipment_detail_data(equipment_to_modify)
         return Response(equipment_data)
 
+
     def put(self, request, id):
         equipment_detail = self.get_object(id)
         serializer = EquipmentToDisplaySerializer(equipment_detail, data=request.data)
@@ -925,7 +927,7 @@ class MyEquipments(APIView):
         return Response(equipment_data)
 
 
-# eqp report
+# eqp report 
 class EquipmentReportView(APIView):
     # permission_classes = [IsAuthenticated]
     # authentication_classes = (TokenAuthentication,)
@@ -933,7 +935,7 @@ class EquipmentReportView(APIView):
         reports = EquipmentReport.objects.all()
         serializer = EquipmentReportSerializer(reports, many=True)
         return Response(serializer.data)
-
+    
     def post(self, request):
         serializer = EquipmentReportSerializer(data=request.data)
         if serializer.is_valid():
@@ -951,7 +953,7 @@ class EqpReportDetails(APIView):
             return EquipmentReport.objects.get(id=id)
         except EquipmentReport.DoesNotExist:
             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-
+    
     def get(self, request, id):
         report = self.get_object(id)
         serializer = EquipmentReportSerializer(report)
@@ -959,12 +961,13 @@ class EqpReportDetails(APIView):
 
     def put(self, request, id):
         report = self.get_object(id)
-
+        
         serializer = EquipmentReportSerializer(report, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
 
     def delete(self, request, id):
         report = self.get_object(id)
@@ -980,8 +983,8 @@ class BuyEquipmentView(APIView):
 
         all_buy_data = get_bought_details(all_buy_details)
         return Response(all_buy_data)
-
-    def post(self, request):
+    
+    def post(self, request):        
         serializer = BuyDetailsSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -1056,7 +1059,7 @@ class RentEquipmentView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
 
 
 class RentEquipmentDetails(APIView):
@@ -1111,3 +1114,4 @@ class RentedEquipmentSeller(APIView):
         equipment_rented_detail = self.get_object(id)
         equipment_rented_data = get_rent_details(equipment_rented_detail)
         return Response(equipment_rented_data)
+
