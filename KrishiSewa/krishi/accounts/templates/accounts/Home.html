@@ -1,0 +1,200 @@
+{% extends 'layout-normal.html' %}
+{% load static %}
+
+{% block title %}
+  <title>Home</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'accounts/css/Home.css' %}">
+{% endblock title %}
+
+{% block content %}
+
+<br>
+
+  <div class="main py-5">
+    <div class="my-5 py-5 text-center">
+      <h2 class="text-warning mt-5 pt-5 display-2">Krishi Sewa</h2>
+      <p class="text-light font-weight-light h4 mt-3">To reduce losses, to increase production</p>
+    </div>
+
+  </div>
+
+  <br>
+
+<!------------------------------------- Motive ----------------------------------->
+  <div class="motive container">
+    <h2 class="text-center display-4">Our Motive</h2>
+    <br>
+    <p class="text-center">
+      Lorem ipsum, dolor sit amet consectetur adipisicing elit.Deleniti explicabo itaque nihil praesentium.
+      Maxime tempora liquam quia sapiente laudantium expedita ipsum corporis. A quam
+      ut labore consectetur!Lorem ipsum, dolor sit consectetur adipisicing elit.
+    </p>
+</div>
+<br>
+
+<!----------------------------- Customer data ------------------------------------>
+<section class="counters">
+<div class="container text-center display-4 my-5">
+  <div class="row">
+    <div class="col-md-4" >
+      <div class="counter text-success" data-target="4500">0</div>
+      <h2 class="font-weight-light">Lorem Ipsum</h2>
+    </div>
+    <div class="col-md-4">
+      <div class="counter text-success" data-target="6000">0</div>
+      <h2 class="font-weight-light">Lorem Ipsum</h2>
+    </div>
+    <div class="col-md-4">
+      <div class="counter text-success" data-target="3500">0</div>
+      <h2 class="font-weight-light">Lorem Ipsum</h2>
+    </div>
+
+  </div>
+</div>
+</section>
+<br>
+
+<!--------------------------- Seed image ------------------------>
+
+
+<div class="seed">
+  <div class="container">
+    <div class="float-right py-5 my-5">
+      <div class="py-5">
+        <h1 class="text-warning text-center font-weight-light mb-3">Say no to less Production</h1>
+          <h5 class="text-light text-center font-weight-light mb-3">Signup today and see your crop flourish</h5>
+          <ul class="started text-center pr-5">
+            <li><button type="button" class="btn btn-warning">Get Started</button></li>
+          </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<br>
+
+<!--------------------------------- How to use ---------------------------->
+<br>
+<div class="container">
+        <h2 class="text-center display-4">How to Use</h2>
+        <br>
+        <div class="card-deck">
+            <div class="card d-inline-block text-center py-3">
+              <img src="{% static 'accounts/images/login.png' %}" class="card-img-top" style="width: 120px; height: 120px;" alt="...">
+              <div class="card-body">
+                <p class="card-text">Create an account then you can login to the system to get access</p>
+              </div>
+
+            </div>
+            <div class="card d-inline-block text-center py-3">
+              <img src="{% static 'accounts/images/test-tube.png' %}" class="card-img-top" style="width: 120px; height: 120px;" alt="...">
+              <div class="card-body">
+                <p class="card-text">Send your soil sample to the laboratory and then get the result</p>
+              </div>
+
+            </div>
+            <div class="card d-inline-block text-center py-3">
+              <img src="{% static 'accounts/images/report.png' %}" class="card-img-top" style="width: 120px; height: 120px;" alt="...">
+              <div class="card-body">
+                <p class="card-text">Insert your data as obtained from the report in respective fields</p>
+              </div>
+
+            </div>
+            <div class="card d-inline-block text-center py-3">
+                <img src="{% static 'accounts/images/crops.png' %}" class="card-img-top" style="width: 120px; height: 120px;" alt="...">
+                <div class="card-body">
+                  <p class="card-text">Plant your crop according to recommendation provided to you</p>
+                </div>
+
+              </div>
+          </div>
+</div>
+  <br>
+  <br>
+
+<!-------------------------------------- Main Characteristics ------------------------>
+
+<div class="container-fluid mb-5 bg-dark">
+  <br>
+  <h2 class="text-center display-4 mb-5 text-white">Main Characteristics</h2>
+  <div class="container pb-5">
+    <div class="row">
+      <div class="col-sm">
+         <img src="{% static 'accounts/images/first.jpg' %}" class="characteristics rounded img-fluid">
+  
+      </div>
+      <div class="col-sm pl-5">
+  
+        <div class="all">
+          <h4 class="text-warning">Nitrogen</h4>
+          <span class="description text-white">Lorel ipsum dolor sit amet. Lorel ipsum dolor sit amet.</span>
+        </div>
+        <div class="all">
+          <h4 class="text-warning">Phosphorus</h4>
+          <span class="description text-white">Lorel ipsum dolor sit amet. Lorel ipsum dolor sit amet</span>
+        </div>
+        <div class="all">
+          <h4 class="text-warning">Potassium</h4>
+          <span class="description text-white">Lorel ipsum dolor sit amet. Lorel ipsum dolor sit amet</span>
+        </div>
+        <div class="all">
+          <h4 class="text-warning">pH</h4>
+          <span class="description text-white">Lorel ipsum dolor sit amet. Lorel ipsum dolor sit amet</span>
+        </div>
+        <div class="all">
+          <h4 class="text-warning">Temperature</h4>
+          <span class="description text-white">Lorel ipsum dolor sit amet. Lorel ipsum dolor sit amet</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+
+
+
+<!---------------------------------------- Buyers and Vendors------------------------------->
+
+<div class="container mb-5">
+    <h2 class="text-center display-4">Buyers and Vendors</h2>
+    <br>
+  <div class="row">
+      <div class="col-sm">
+        <div class="all">
+          <h4 class="text-success">Lorem ipsum</h4>
+          <span class="description">Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet</span>
+        </div>
+        <div class="all">
+          <h4 class="text-success">Lorem ipsum</h4>
+          <span class="description">Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet</span>
+        </div>
+          <div class="all">
+          <h4 class="text-success">Lorem ipsum</h4>
+          <span class="description">Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet</span>
+        </div>
+        <div class="all">
+          <h4 class="text-success">Lorem ipsum</h4>
+          <span class="description">Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet</span>
+        </div>
+        <div class="all">
+          <h4 class="text-success">Lorem ipsum</h4>
+          <span class="description">Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet</span>
+        </div>
+          <div class="all">
+          <h4 class="text-success">Lorem ipsum</h4>
+          <span class="description">Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet</span>
+        </div>
+      </div>
+      <div class="col-sm">
+        <img src="{% static 'accounts/images/buyer.jpg' %}" class="character rounded w-100">
+      </div>
+  </div>
+</div>
+
+  <script src="{% static 'accounts/js/Home.js' %}"></script>
+  {% include 'footer.html' %}
+{% endblock content %}
+

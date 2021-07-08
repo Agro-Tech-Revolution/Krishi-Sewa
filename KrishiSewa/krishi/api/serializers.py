@@ -4,12 +4,6 @@ from django.contrib.auth.models import User
 from rest_framework.authtoken.views import Token
 
 
-class NoteSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = Note
-        fields = ['id', 'title', 'content']
-
-
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -43,12 +37,3 @@ class CreateProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ['user', 'user_type']
-
-
-class CreateEquipmentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Equipment
-        fields = ['id', 'name', 'modal', 'category', 'available_For_Rent', 'available_To_Buy', 'price_To_Buy',
-                  'price_To_Rent', 'details', 'added_by', 'date']
-
-
