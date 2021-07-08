@@ -18,7 +18,8 @@ class ProductSerializer(serializers.ModelSerializer):
 class ProductForSaleSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductsForSale
-        fields = ['id', 'product', 'added_by', 'quantity_in_kg', 'price_per_kg', 'added_date', 'product_comments', 'product_reports']
+        fields = ['id', 'product', 'added_by', 'quantity_in_kg', 'price_per_kg', 
+                  'added_date', 'details', 'product_comments', 'product_reports']
 
 
 class SerialzerForSold(serializers.ModelSerializer):
@@ -56,3 +57,15 @@ class ProductSoldSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductSold
         fields = ['id', 'sold_product', 'sold_by', 'sold_to', 'quantity_sold', 'sold_price', 'sold_date', 'remarks']
+
+
+class ExpenseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Expenses
+        fields = ['id', 'particular', 'category', 'amount', 'expense_date', 'remarks', 'expense_of']
+
+
+class HomeExpenseSerialer(serializers.ModelSerializer):
+    class Meta:
+        model = HomeExpenses
+        fields = ['id', 'category', 'quantity', 'estimated_price', 'date', 'expense_of', 'product']

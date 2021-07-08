@@ -42,6 +42,9 @@ class Products(models.Model):
     products_stock = models.ManyToManyField(User, 
                                             through='ProductStock', 
                                             related_name='products_stock')
+    product_home_expense = models.ManyToManyField(User,
+                                                  through='HomeExpenses',
+                                                  related_name='product_home_expense')
     
 
 # products for sale
@@ -51,6 +54,7 @@ class ProductsForSale(models.Model):
     quantity_in_kg = models.FloatField()
     price_per_kg = models.FloatField()
     added_date = models.DateTimeField(auto_now_add=True)
+    details = models.CharField(max_length=250, null=True)
 
     product_comments = models.ManyToManyField(User, 
                                               through='ProductComment', 
@@ -105,6 +109,30 @@ class ProductSold(models.Model):
     sold_price = models.FloatField()
     sold_date = models.DateTimeField(auto_now_add=True)
     remarks = models.CharField(max_length=1250, null=True)
+
+
+class Expenses(models.Model):
+    particular = models.CharField(max_length=75)
+    category = models.CharField(max_length=50)
+    amount = models.FloatField()
+    expense_date = models.DateTimeField(auto_now_add=True)
+    remarks = models.CharField(max_length=150, null=True)
+    expense_of = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+
+
+class HomeExpenses(models.Model):
+    categories = [
+        ("Consumed", "Consumed"),
+        ("Wastes", "Wastes")
+    ]
+
+    category = models.CharField(max_length=50, choices=categories, default="Consumed")
+    quantity = models.FloatField()
+    estimated_price = models.FloatField()
+    date = models.DateTimeField(auto_now_add=True)
+    expense_of = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    product = models.ForeignKey(Products, on_delete=models.SET_NULL, null=True)
+
 
 
 

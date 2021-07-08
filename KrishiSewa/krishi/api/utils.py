@@ -1,3 +1,6 @@
+from re import T
+from vendors.serializers import BuyDetailsSerializer, EquipmentReportSerializer, EquipmentSerializer, EquipmentToDisplaySerializer, RentDetailsSerializer
+from vendors.models import Equipment, EquipmentReport, EquipmentToDisplay
 from farmers.serializers import *
 from .serializers import *
 
@@ -40,6 +43,38 @@ def get_product_details(products_for_sale):
     for product in product_data:
         product = modify_product_details_data(product)
     return product_data
+
+
+def modify_equipment_detail_data(equipment):
+    eqp_id = equipment['id']
+
+    equipment_details = Equipment.objects.get(id=equipment['equipment'])
+    equipment_details_data = EquipmentSerializer(equipment_details).data
+
+    user_details = User.objects.get(id=equipment['added_by'])
+    user_details_data = UserSerializer(user_details).data
+
+    reports_details = EquipmentReport.objects.filter(reported_equipment=eqp_id)
+    report_data = EquipmentReportSerializer(reports_details, many=True).data
+
+    for report in report_data:
+        user_report_details = User.objects.get(id=report['reported_by'])
+        user_report_data = UserSerializer(user_report_details).data
+        report['reported_by'] = user_report_data
+
+    equipment['equipment'] = equipment_details_data
+    equipment['added_by'] = user_details_data
+    equipment['reports'] = report_data
+
+    return equipment
+
+
+def get_equipment_details(equipment_to_display):
+    equipment_data = EquipmentToDisplaySerializer(equipment_to_display, many=True).data
+
+    for equipment in equipment_data:
+        equipment = modify_equipment_detail_data(equipment)
+    return equipment_data
 
 
 def modify_production_details_data(production):
@@ -125,3 +160,57 @@ def get_sold_details(all_products_sold):
     for sold_products in products_sold_data:
         sold_products = modify_sold_data(sold_products)
     return products_sold_data
+
+
+def modify_bought_data(bought_equipment):
+    equipment_to_buy_details = EquipmentToDisplay.objects.get(id=bought_equipment['equipment'])
+    equipment_to_buy_data = EquipmentToDisplaySerializer(equipment_to_buy_details).data 
+
+    equipment_details = Equipment.objects.get(id=equipment_to_buy_data['equipment'])
+    equipment_details_data = EquipmentSerializer(equipment_details).data  
+    
+    vendor_details = User.objects.get(id=bought_equipment['sold_by'])
+    vendor_data = UserSerializer(vendor_details).data
+
+    buyer_details = User.objects.get(id=bought_equipment['sold_to'])
+    buyer_data = UserSerializer(buyer_details).data
+
+    equipment_to_buy_data['equipment'] = equipment_details_data
+    bought_equipment['equipment'] = equipment_to_buy_data
+    bought_equipment['sold_by'] = vendor_data
+    bought_equipment['sold_to'] = buyer_data
+    return bought_equipment
+
+
+def get_bought_details(all_bought_data):
+    equipment_bought_data = BuyDetailsSerializer(all_bought_data, many=True).data
+    for equipment_bought in equipment_bought_data:
+        equipment_bought = modify_bought_data(equipment_bought)
+    return equipment_bought_data
+
+
+def modify_rented_data(equipment_rented):
+    equipment_to_rent_details = EquipmentToDisplay.objects.get(id=equipment_rented['equipment'])
+    equipment_to_rent_data = EquipmentToDisplaySerializer(equipment_to_rent_details).data 
+
+    equipment_details = Equipment.objects.get(id=equipment_to_rent_data['equipment'])
+    equipment_details_data = EquipmentSerializer(equipment_details).data  
+    
+    vendor_details = User.objects.get(id=equipment_rented['rented_by'])
+    vendor_data = UserSerializer(vendor_details).data
+
+    buyer_details = User.objects.get(id=equipment_rented['rented_to'])
+    buyer_data = UserSerializer(buyer_details).data
+
+    equipment_to_rent_data['equipment'] = equipment_details_data
+    equipment_rented['equipment'] = equipment_to_rent_data
+    equipment_rented['rented_by'] = vendor_data
+    equipment_rented['rented_to'] = buyer_data
+    return equipment_rented
+
+
+def get_rent_details(all_rent_data):
+    equipment_rented_data = RentDetailsSerializer(all_rent_data, many=True).data
+    for equipment_rented in equipment_rented_data:
+        equipment_rented = modify_rented_data(equipment_rented)
+    return equipment_rented_data

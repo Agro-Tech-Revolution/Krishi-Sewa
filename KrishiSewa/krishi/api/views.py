@@ -1,4 +1,3 @@
-from rest_framework.serializers import Serializer
 from farmers.serializers import ProductSerializer
 from django.shortcuts import render, HttpResponse
 from rest_framework.views import APIView
@@ -88,6 +87,56 @@ class GetProfileType(APIView):
         profile_data['user'] = user_data
         
         return Response(profile_data)
+
+
+class NoteAPIView(APIView):
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,)
+
+    def get(self, request):
+        notes = Note.objects.all()
+        serializer = NoteSerializers(notes, many=True)
+
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = NoteSerializers(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class NoteDetails(APIView):
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,)
+
+    def get_object(self, id):
+        try:
+            return Note.objects.get(id=id)
+        except Note.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, id):
+        note = self.get_object(id)
+        serializer = NoteSerializers(note)
+        return Response(serializer.data)
+
+    def put(self, request, id):
+        note = self.get_object(id)
+        serializer = NoteSerializers(note, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id):
+        note = self.get_object(id)
+        note.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class ProductsAPIView(APIView):
@@ -580,15 +629,213 @@ class BuyerSalesDetails(APIView):
         return Response(products_sold_data)
 
 
+class ExpenseAPIView(APIView):
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,)
+
+    def get(self, request):
+        all_expenses = Expenses.objects.all()
+        expense_data = ExpenseSerializer(all_expenses, many=True).data
+
+        for expense in expense_data:
+            user_details = User.objects.get(id=expense['expense_of'])
+            user_details_data = UserSerializer(user_details).data
+            expense['expense_of'] = user_details_data
+        return Response(expense_data)
+
+    def post(self, request):
+        serializer = ExpenseSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ExpenseDetails(APIView):
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,)
+
+    def get_object(self, id):
+        try:
+            return Expenses.objects.get(id=id)
+        except Expenses.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, id):
+        expense_detail = self.get_object(id)
+
+        expense_data = ExpenseSerializer(expense_detail).data
+        user_details = User.objects.get(id=expense_data['expense_of'])
+        user_details_data = UserSerializer(user_details).data
+        expense_data['expense_of'] = user_details_data
+
+        return Response(expense_data)
+
+    def put(self, request, id):
+        expenses = self.get_object(id)
+        serializer = ExpenseSerializer(expenses, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id):
+        expenses = self.get_object(id)
+        expenses.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class MyExpenses(APIView):
+    def get_objects(self, user_id):
+        try:
+            return Expenses.objects.filter(expense_of=user_id)
+        except Expenses.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, user_id):
+        my_expenses = self.get_objects(user_id)
+        expense_data = ExpenseSerializer(my_expenses, many=True).data
+
+        for expense in expense_data:
+            user_details = User.objects.get(id=expense['expense_of'])
+            user_details_data = UserSerializer(user_details).data
+            expense['expense_of'] = user_details_data
+
+        return Response(expense_data)
+
+
+class HomeExpenseAPIView(APIView):
+    def get(self, request):
+        all_home_expenses = HomeExpenses.objects.all()
+        home_expense_data = HomeExpenseSerialer(all_home_expenses, many=True).data
+
+        for expense in home_expense_data:
+            user_details = User.objects.get(id=expense['expense_of'])
+            user_details_data = UserSerializer(user_details).data
+            expense['expense_of'] = user_details_data
+
+            product_details = Products.objects.get(id=expense['product'])
+            product_details_data = ProductSerializer(product_details).data
+            expense['product'] = product_details_data
+
+        return Response(home_expense_data)
+
+    def post(self, request):
+        serializer = HomeExpenseSerialer(data=request.data)
+
+        if serializer.is_valid():
+            product_id = request.data["product"]
+            farmer_id = request.data["expense_of"]
+            stock_detail = ProductStock.objects.filter(farmer_id=farmer_id, product_id=product_id)
+            if len(stock_detail) != 0:
+                available_stock = stock_detail[0].stock
+                entered_stock = request.data["quantity"]
+                if entered_stock < available_stock:
+                    updated_stock = available_stock - entered_stock
+                    stock_detail.update(stock=updated_stock)
+                    serializer.save()
+                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+                else:
+                    return Response({"Bad Request": "Available stock does not match"})
+            else:
+                return Response({"Bad Request": "No record of this product in production"})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class HomeExpenseDetails(APIView):
+    def get_object(self, id):
+        try:
+            return HomeExpenses.objects.get(id=id)
+        except HomeExpenses.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, id):
+        home_expense_detail = self.get_object(id)
+
+        home_expense_data = HomeExpenseSerialer(home_expense_detail).data
+
+        user_details = User.objects.get(id=home_expense_data['expense_of'])
+        user_details_data = UserSerializer(user_details).data
+        home_expense_data['expense_of'] = user_details_data
+
+        product_details = Products.objects.get(id=home_expense_data['product'])
+        product_details_data = ProductSerializer(product_details).data
+        home_expense_data['product'] = product_details_data
+
+        return Response(home_expense_data)
+
+    def put(self, request, id):
+        home_expense = self.get_object(id)
+        serializer = HomeExpenseSerialer(home_expense, data=request.data)
+
+        if serializer.is_valid():
+            product_id = request.data["product"]
+            farmer_id = request.data["expense_of"]
+            stock_detail = ProductStock.objects.filter(farmer_id=farmer_id, product_id=product_id)
+            if len(stock_detail) != 0:
+                available_stock = stock_detail[0].stock + home_expense.quantity
+                entered_stock = request.data["quantity"]
+                if entered_stock < available_stock:
+                    updated_stock = available_stock - entered_stock
+                    stock_detail.update(stock=updated_stock)
+                    serializer.save()
+                    return Response(serializer.data)
+                else:
+                    return Response({"Bad Request": "Available stock does not match"})
+            else:
+                return Response({"Bad Request": "No record of this product in production"})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id):
+        home_expenses = self.get_object(id)
+        farmer_id = home_expenses.expense_of
+        product_id = home_expenses.product
+        product_stock = ProductStock.objects.filter(farmer_id=farmer_id, product_id=product_id)
+        current_stock = product_stock[0].stock
+
+        qty_to_remove = home_expenses.quantity
+        updated_stock = current_stock + qty_to_remove
+        product_stock.update(stock=updated_stock)
+
+        home_expenses.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class MyHomeExpense(APIView):
+    def get_object(self, user_id):
+        try:
+            return HomeExpenses.objects.filter(expense_of=user_id)
+        except HomeExpenses.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, user_id):
+        my_home_expenses = self.get_objects(user_id)
+        home_expense_data = HomeExpenseSerialer(my_home_expenses, many=True).data
+
+        for expense in home_expense_data:
+            user_details = User.objects.get(id=expense['expense_of'])
+            user_details_data = UserSerializer(user_details).data
+            expense['expense_of'] = user_details_data
+
+            product_details = Products.objects.get(id=expense['product'])
+            product_details_data = ProductSerializer(product_details).data
+            expense['product'] = product_details_data
+
+        return Response(home_expense_data)
+
+
 # equipments
-class CreateEquipment(APIView):
+class EquipmentAPIView(APIView):
     def get(self, request):
         equipments = Equipment.objects.all()
-        serializer = CreateEquipmentSerializer(equipments, many=True)
+        serializer = EquipmentSerializer(equipments, many=True)
         return Response(serializer.data)
 
     def post(self, request):
-        serializer = CreateEquipmentSerializer(data=request.data)
+        serializer = EquipmentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -604,12 +851,12 @@ class EquipmentDetails(APIView):
 
     def get(self, request, id):
         equipment = self.get_object(id)
-        serializer = CreateEquipmentSerializer(equipment)
+        serializer = EquipmentSerializer(equipment)
         return Response(serializer.data)
 
     def put(self, request, id):
         equipment = self.get_object(id)
-        serializer = CreateEquipmentSerializer(equipment, data=request.data)
+        serializer = EquipmentSerializer(equipment, data=request.data)
 
         if serializer.is_valid():
             serializer.save()
@@ -622,98 +869,63 @@ class EquipmentDetails(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+class EquipmentsToDisplayView(APIView):
+    def get(self, request):
+        all_equipments = EquipmentToDisplay.objects.all()
+        equipment_data = get_equipment_details(all_equipments)
+        return Response(equipment_data)
+
+    def post(self, request):
+        serializer = EquipmentToDisplaySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class EquipmentsToDisplayDetails(APIView):
+    def get_object(self, id):
+        try:
+            return EquipmentToDisplay.objects.get(id=id)
+        except EquipmentToDisplay.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, id):
+        equipment_detail = self.get_object(id)
+        equipment_to_modify = EquipmentToDisplaySerializer(equipment_detail).data
+        equipment_data = modify_equipment_detail_data(equipment_to_modify)
+        return Response(equipment_data)
+
+
+    def put(self, request, id):
+        equipment_detail = self.get_object(id)
+        serializer = EquipmentToDisplaySerializer(equipment_detail, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id):
+        equipment_detail = self.get_object(id)
+        equipment_detail.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 class MyEquipments(APIView):
     # permission_classes = [IsAuthenticated]
     # authentication_classes = (TokenAuthentication,)
     def get_objects(self, user_id):
         try:
-            return Equipment.objects.filter(added_by=user_id)
+            return EquipmentToDisplay.objects.filter(added_by=user_id)
         except Equipment.DoesNotExist:
             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
 
     def get(self, request, user_id):
         equipments = self.get_objects(user_id)
-        serializer = CreateEquipmentSerializer(equipments, many=True)
-        return Response(serializer.data)
+        equipment_data = get_equipment_details(equipments)
+        return Response(equipment_data)
 
-
-# equipments comments
-class EquipmentCommentView(APIView):
-    # permission_classes = [IsAuthenticated]
-    # authentication_classes = (TokenAuthentication,)
-    def get(self, request):
-        eqp_comments = EquipmentComment.objects.all()
-        serializer = EquipmentCommentSerializer(eqp_comments, many=True)
-        return Response(serializer.data)
-    
-    def post(self, request):
-        serializer = EquipmentCommentSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class EqpCommentDetails(APIView):
-    # permission_classes = [IsAuthenticated]
-    # authentication_classes = (TokenAuthentication,)
-    def get_object(self, com_id):
-        try:
-            return EquipmentComment.objects.get(id=com_id)
-        except EquipmentComment.DoesNotExist:
-            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-    
-    def get(self, request, com_id):
-        comment = self.get_object(com_id)
-        serializer = EquipmentCommentSerializer(comment)
-        return Response(serializer.data)
-
-    def put(self, request, com_id):
-        comment = self.get_object(com_id)
-        
-        serializer = EquipmentCommentSerializer(comment, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-
-    def delete(self, request, com_id):
-        comments = self.get_object(com_id)
-        comments.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class CommentOfEquipment(APIView):
-    # permission_classes = [IsAuthenticated]
-    # authentication_classes = (TokenAuthentication,)
-    def get_object(self, eqp_id):
-        try:
-            return EquipmentComment.objects.filter(equipment=eqp_id)
-        except EquipmentComment.DoesNotExist:
-            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-    
-    def get(self, request, eqp_id):
-        comments = self.get_object(eqp_id)
-        serializer = EquipmentCommentSerializer(comments, many=True)
-        return Response(serializer.data)
-
-
-class CommentsOnMyEquipment(APIView):
-    # permission_classes = [IsAuthenticated]
-    # authentication_classes = (TokenAuthentication,)
-
-    def get_object(self, user_id):
-        try:
-            return EquipmentComment.objects.filter(equipment__added_by=user_id)
-        except EquipmentComment.DoesNotExist:
-            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-
-    def get(self, request, user_id):
-        comments = self.get_object(user_id)
-        serializer = EquipmentCommentSerializer(comments, many=True)
-        return Response(serializer.data)
 
 # eqp report 
 class EquipmentReportView(APIView):
@@ -725,45 +937,12 @@ class EquipmentReportView(APIView):
         return Response(serializer.data)
     
     def post(self, request):
-        equipment_id = request.data['reported_equipment']
-        equipment = Equipment.objects.get(id=equipment_id)
-        
         serializer = EquipmentReportSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class ReportsOnEquipment(APIView):
-    # permission_classes = [IsAuthenticated]
-    # authentication_classes = (TokenAuthentication,)
-    def get_object(self, id):
-        try:
-            return EquipmentReport.objects.filter(reported_equipment=id)
-        except EquipmentReport.DoesNotExist:
-            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-
-    def get(self, request, id):
-        reports = self.get_object(id)
-        serializer = EquipmentReportSerializer(reports, many=True)
-        return Response(serializer.data)
-
-
-class EquipmentReportByUser(APIView):
-    # permission_classes = [IsAuthenticated]
-    # authentication_classes = (TokenAuthentication,)
-    def get_object(self, user_id):
-        try:
-            return EquipmentReport.objects.filter(reported_by=user_id)
-        except EquipmentReport.DoesNotExist:
-            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-
-    def get(self, request, user_id):
-        reports = self.get_object(user_id)
-        serializer = EquipmentReportSerializer(reports, many=True)
-        return Response(serializer.data)
 
 
 class EqpReportDetails(APIView):
@@ -794,4 +973,145 @@ class EqpReportDetails(APIView):
         report = self.get_object(id)
         report.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-        
+
+
+class BuyEquipmentView(APIView):
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,)
+    def get(self, request):
+        all_buy_details = BuyDetails.objects.all()
+
+        all_buy_data = get_bought_details(all_buy_details)
+        return Response(all_buy_data)
+    
+    def post(self, request):        
+        serializer = BuyDetailsSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class BuyEquipmentDetails(APIView):
+    def get_object(self, id):
+        try:
+            return BuyDetails.objects.get(id=id)
+        except BuyDetails.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, id):
+        buy_detail = self.get_object(id)
+        buy_data_to_modify = BuyDetailsSerializer(buy_detail).data
+        buy_data = modify_bought_data(buy_data_to_modify)
+        return Response(buy_data)
+
+    def put(self, request, id):
+        buy_data = self.get_object(id)
+        serializer = BuyDetailsSerializer(buy_data, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id):
+        buy_data = self.get_object(id)
+        buy_data.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class BoughtEquipmentsBuyer(APIView):
+    def get_object(self, id):
+        try:
+            return BuyDetails.objects.filter(sold_to=id)
+        except BuyDetails.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, id):
+        equipment_bought_detail = self.get_object(id)
+        equipment_bought_data = get_bought_details(equipment_bought_detail)
+        return Response(equipment_bought_data)
+
+
+class SoldEquipmentSeller(APIView):
+    def get_object(self, id):
+        try:
+            return BuyDetails.objects.filter(sold_by=id)
+        except BuyDetails.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, id):
+        equipment_bought_detail = self.get_object(id)
+        equipment_bought_data = get_bought_details(equipment_bought_detail)
+        return Response(equipment_bought_data)
+
+
+class RentEquipmentView(APIView):
+    def get(self, request):
+        all_rent_details = RentDetails.objects.all()
+        print(all_rent_details[0].rented_by)
+        all_rent_data = get_rent_details(all_rent_details)
+        return Response(all_rent_data)
+
+    def post(self, request):
+        serializer = RentDetailsSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+
+
+class RentEquipmentDetails(APIView):
+    def get_object(self, id):
+        try:
+            return RentDetails.objects.get(id=id)
+        except RentDetails.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, id):
+        rent_detail = self.get_object(id)
+        rent_data_to_modify = RentDetailsSerializer(rent_detail).data
+        rent_data = modify_rented_data(rent_data_to_modify)
+        return Response(rent_data)
+
+    def put(self, request, id):
+        rent_data = self.get_object(id)
+        serializer = RentDetailsSerializer(rent_data, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id):
+        rent_data = self.get_object(id)
+        rent_data.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class RentedEquipmentsBuyer(APIView):
+    def get_object(self, id):
+        try:
+            return RentDetails.objects.filter(rented_to=id)
+        except RentDetails.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, id):
+        equipment_rented_detail = self.get_object(id)
+        equipment_rented_data = get_rent_details(equipment_rented_detail)
+        return Response(equipment_rented_data)
+
+
+class RentedEquipmentSeller(APIView):
+    def get_object(self, id):
+        try:
+            return RentDetails.objects.filter(rented_by=id)
+        except RentDetails.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, id):
+        equipment_rented_detail = self.get_object(id)
+        equipment_rented_data = get_rent_details(equipment_rented_detail)
+        return Response(equipment_rented_data)
+
