@@ -28,7 +28,7 @@ urlpatterns = [
     path('test/', test),
     path('test/result/', result),
     path('imagetest', image_test),
+    path('detailReport', profit_loss_report),
 
-    path('detailReport', profit_loss_report)
     
 ]
