@@ -92,6 +92,7 @@ class Production(models.Model):
     farmer_id = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     production_qty = models.FloatField()
     area = models.FloatField()
+    remarks = models.CharField(max_length=500, null=True)
     production_date = models.DateTimeField(auto_now_add=True)
 
 
@@ -112,8 +113,17 @@ class ProductSold(models.Model):
 
 
 class Expenses(models.Model):
+    type_of_expense = [
+        ("Before Harvesting", "Before Harvesting"),
+        ("During Harvesting", "During Harvesting"),
+        ("After Harvesting", "After Harvesting")
+    ]
+
+
     particular = models.CharField(max_length=75)
-    category = models.CharField(max_length=50)
+    expense_type = models.CharField(max_length=50, choices=type_of_expense, default="Before Harvesting")
+    unit = models.CharField(max_length=20)
+    quantity = models.FloatField()
     amount = models.FloatField()
     expense_date = models.DateTimeField(auto_now_add=True)
     remarks = models.CharField(max_length=150, null=True)
@@ -130,6 +140,7 @@ class HomeExpenses(models.Model):
     quantity = models.FloatField()
     estimated_price = models.FloatField()
     date = models.DateTimeField(auto_now_add=True)
+    remarks = models.CharField(max_length=500, null=True)
     expense_of = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     product = models.ForeignKey(Products, on_delete=models.SET_NULL, null=True)
 

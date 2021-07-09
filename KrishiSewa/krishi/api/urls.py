@@ -66,4 +66,6 @@ urlpatterns = [
     path('equipmentToDisplay/rent/<int:id>', RentEquipmentDetails.as_view()),
     path('equipmentToDisplay/rent/buyer/<int:id>', RentedEquipmentsBuyer.as_view()),
     path('equipmentToDisplay/rent/seller/<int:id>', RentedEquipmentSeller.as_view()),
+
+    path('profitloss/<int:id>', ProfitLossReportView.as_view()),
 ]

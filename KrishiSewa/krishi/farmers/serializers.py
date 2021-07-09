@@ -44,7 +44,7 @@ class ProductReportSerializer(serializers.ModelSerializer):
 class ProductionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Production
-        fields = ['id', 'product_id', 'farmer_id', 'production_qty', 'area', 'production_date']
+        fields = ['id', 'product_id', 'farmer_id', 'production_qty', 'area', 'production_date', 'remarks']
 
 
 class ProductStockSerializer(serializers.ModelSerializer):
@@ -62,10 +62,11 @@ class ProductSoldSerializer(serializers.ModelSerializer):
 class ExpenseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Expenses
-        fields = ['id', 'particular', 'category', 'amount', 'expense_date', 'remarks', 'expense_of']
+        fields = ['id', 'particular', 'expense_type', 'unit', 'quantity', 
+                  'amount', 'expense_date', 'remarks', 'expense_of']
 
 
-class HomeExpenseSerialer(serializers.ModelSerializer):
+class HomeExpenseSerializer(serializers.ModelSerializer):
     class Meta:
         model = HomeExpenses
-        fields = ['id', 'category', 'quantity', 'estimated_price', 'date', 'expense_of', 'product']
+        fields = ['id', 'category', 'quantity', 'estimated_price', 'date', 'expense_of', 'product', 'remarks']

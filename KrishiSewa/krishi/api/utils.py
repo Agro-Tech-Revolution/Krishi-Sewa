@@ -124,6 +124,13 @@ def modify_product_stock_data(stock_data):
         total_sales += sale.quantity_sold
     stock_data["total_sales"] = total_sales
 
+    # total home expense
+    home_expense_detail = HomeExpenses.objects.filter(product__id=product_id, expense_of=farmer_id)
+    total_home_expense = 0
+    for expense in home_expense_detail:
+        total_home_expense += expense.quantity
+    stock_data["total_expense"] = total_home_expense
+
     
     return stock_data
 
@@ -214,3 +221,37 @@ def get_rent_details(all_rent_data):
     for equipment_rented in equipment_rented_data:
         equipment_rented = modify_rented_data(equipment_rented)
     return equipment_rented_data
+
+
+def modify_expense_details(expense):
+    user_details = User.objects.get(id=expense['expense_of'])
+    user_details_data = UserSerializer(user_details).data
+    expense['expense_of'] = user_details_data
+    return expense
+
+
+def get_expense_details(all_expense_data):
+    expense_data = ExpenseSerializer(all_expense_data, many=True).data
+    for expense in expense_data:
+        expense = modify_expense_details(expense)
+    
+    return expense_data
+
+
+def modify_home_expense_data(expense_data):
+    user_details = User.objects.get(id=expense_data['expense_of'])
+    user_details_data = UserSerializer(user_details).data
+    expense_data['expense_of'] = user_details_data
+
+    product_details = Products.objects.get(id=expense_data['product'])
+    product_details_data = ProductSerializer(product_details).data
+    expense_data['product'] = product_details_data
+    return expense_data
+
+
+def get_home_expense_details(all_home_expense_data):
+    home_expense_data = HomeExpenseSerializer(all_home_expense_data, many=True).data
+    for expense in home_expense_data:
+        expense = modify_home_expense_data(expense)
+
+    return home_expense_data

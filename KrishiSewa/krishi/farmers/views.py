@@ -435,6 +435,23 @@ def my_expenses(request):
     return render(request, 'farmers/Myexpenses.html')
 
 
+@login_required
+@farmers_only
+def profit_loss_report(request):
+    headers = {'Authorization': 'Token ' + request.session['token']}
+    report_endpoint = '/api/profitloss/' + str(request.user.id)
+    report_url = base_url + report_endpoint
+    report_response = requests.get(report_url, headers=headers).json()
+    context = {
+        "all_details": report_response,
+        "net_amount": abs(report_response["NetAmount"])
+    }
+    
+    
+
+    return render(request, 'farmers/details.html', context)
+
+
 """
 Soil testing part -----------------------------------------
 """
