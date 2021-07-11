@@ -14,5 +14,6 @@ urlpatterns = [
     path('viewEquipments/delete/comment/<int:id>', delete_eqp_comment),
     path('viewEquipments/report', report_equipment),
 
+    path('reportForm', report_form),
     
 ]

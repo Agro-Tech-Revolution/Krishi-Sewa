@@ -7,22 +7,6 @@ from .auth import *
 
 # Create your views here.
 
-
-@unauthenticated_user
-def add_production(request):
-    return render(request,'accounts/AddProduction.html')
-
-
-@unauthenticated_user
-def sell_product(request):
-    return render(request,'accounts/SellProduct.html')
-
-
-@unauthenticated_user
-def add_expenses(request):
-    return render(request,'accounts/AddExpenses.html')
-
-
 @unauthenticated_user
 def feedback(request):
     return render(request,'accounts/Feedback.html')

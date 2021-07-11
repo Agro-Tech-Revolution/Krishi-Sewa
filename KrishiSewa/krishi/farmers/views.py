@@ -465,3 +465,17 @@ def result(request):
 @farmers_only
 def image_test(request):
     return render(request, 'farmers/imagetest.html')
+
+
+@login_required
+@farmers_only
+def general_table(request):
+    return render(request, 'farmers/GeneralTable.html')
+
+@login_required
+@farmers_only
+def details_table(request):
+    return render(request, 'farmers/DetailsTable.html')
+
+
+

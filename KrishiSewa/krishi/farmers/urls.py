@@ -28,5 +28,9 @@ urlpatterns = [
     path('test/', test),
     path('test/result/', result),
     path('imagetest', image_test),
+
+    path('generalTable', general_table),
+    path('detailsTable', details_table),
+
     
 ]
