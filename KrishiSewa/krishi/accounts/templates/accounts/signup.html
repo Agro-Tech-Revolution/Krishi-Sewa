@@ -1,17 +1,16 @@
+{% extends 'layout-normal.html' %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+{% block title %}
+<title>Signup</title>
+<link rel="stylesheet" href="{% static 'accounts/css/l.css' %}">
 
-    <link rel="stylesheet" href="{% static 'accounts/css/l.css' %}" />
-    <title>Document</title>
-  </head>
-  <body>
-    <div class="container">
+{% endblock title %}
+
+{% block content %}
+
+
+<div class="container">
       <div class="formWrapper">
         <div class="formDiv">
           <h1>Create Account</h1>
@@ -21,7 +20,8 @@
               type="text"
               name="fName"
               placeholder="Enter your firstname"
-              required/>
+              required
+            />
           </div>
           <div class="form-input">
             <input type="text" name="lname" placeholder="Enter your lastname" />
@@ -55,73 +55,6 @@
               required
             />
           </div>
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
-    integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
-  </head>
-  <body>
-    <div class="container">
-      <div class="titlelogo">
-        <!-- <img src="{% static 'accounts/images/logo.jpg' %}" class="logo" /> -->
-        <h1>Get Started</h1>
-      </div>
-      <div class="content">
-        <form action="#" method="post">
-          {% csrf_token %}
-          <div class="user-details">
-            <div class="input-box">
-              <span class="details">First Name</span>
-              <input name="fname" type="text" placeholder="Enter your firstname" required />
-            </div>
-            <div class="input-box">
-              <span class="details">Last Name</span>
-              <input name="lname" type="text" placeholder="Enter your lastname" required />
-            </div>
-            <div class="input-box">
-              <span class="details">Username</span>
-              <input name="username" type="text" placeholder="Create a Username" required />
-            </div>
-            <div class="input-box">
-              <span class="details">Email</span>
-              <input name="email" type="text" placeholder="Enter your email" required />
-            </div>
-            <!--------------------------------------------------------radiobutton------------------------------- --------------- -->
-            <div class="main-radiobutton">
-              <h2>Are you?</h2>
-              <div class="radiobuttons">
-                <label class="custom-radio">
-                  <input type="radio" name="user_type" value="FARMERS" checked />
-                  <span class="radio-btn"
-                    ><i class="fas fa-check"></i>
-                    <div class="person-check">
-                      <i class="fas fa-tractor"></i>
-                      <h3>Farmers</h3>
-                    </div>
-                  </span>
-                </label>
-                <label class="custom-radio">
-                  <input type="radio" name="user_type" value="BUYERS" />
-                  <span class="radio-btn"
-                    ><i class="las la-check"></i>
-                    <div class="person-check">
-                      <i class="fas fa-shopping-cart"></i>
-                      <h3>Buyers</h3>
-                    </div>
-                  </span>
-                </label>
-                <label class="custom-radio">
-                  <input type="radio" name="user_type" value="VENDORS" />
-                  <span class="radio-btn"
-                    ><i class="las la-check"></i>
-                    <div class="person-check">
-                      <i class="fas fa-handshake"></i>
-                      <h3>Vendors</h3>
-                    </div>
-                  </span>
-                </label>
-              </div>
-            </div>
-
 
           <div class="radio-container">
             <h3>Are you?</h3>
@@ -157,7 +90,6 @@
         </div>
       </div>
     </div>
-  </body>
-</html>
 
+{% endblock content %}
 

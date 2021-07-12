@@ -361,3 +361,7 @@ def result(request):
 @farmers_only
 def image_test(request):
     return render(request, 'farmers/imagetest.html')
+
+
+def npk_test(request):
+    return render(request, 'farmers/Npktest.html')

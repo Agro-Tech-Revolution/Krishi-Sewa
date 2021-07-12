@@ -1,0 +1,99 @@
+{% extends 'layout-farmers.html' %}
+{% load static %}
+
+{% block title %}
+<title>NPK Testing</title>
+<link rel="stylesheet" href="{% static 'farmers/css/Npktest.css' %}">
+
+{% endblock title %}
+
+{% block content %}
+    <div class="products">
+      <div class="container">
+        <h1 class="lg-title">NPK Testing</h1>
+
+        <div class="product-items">
+          <!-- Nitrogen -->
+          <div class="product">
+            <div class="product-content">
+              <div class="product-img">
+                <img src="{% static 'farmers/images/n.jpg' %}" alt="product image" />
+              </div>
+            </div>
+
+            <div class="product-info">
+              <div class="product-name">Insert your value here</div>
+              <input class="box" type="number" value="0" />
+            </div>
+          </div>
+
+            <!-- Phosphorus -->
+          <div class="product">
+            <div class="product-content">
+              <div class="product-img">
+                <img src="{% static 'farmers/images/p.jpg' %}" alt="product image" />
+              </div>
+            </div>
+
+            <div class="product-info">
+              <div class="product-name">Insert your value here</div>
+              <input class="box" type="number" value="0" />
+            </div>
+          </div>
+
+          <!-- Potassium -->
+
+          <div class="product">
+            <div class="product-content">
+              <div class="product-img">
+                <img src="{% static 'farmers/images/k.jpg' %}" alt="product image" />
+              </div>
+            </div>
+
+            <div class="product-info">
+              <div class="product-name">Insert your value here</div>
+              <input class="box" type="number" value="0" />
+            </div>
+          </div>
+
+          <!-- ph value--- -->
+
+          <div class="product">
+            <div class="product-content">
+              <div class="product-img">
+                <img src="{% static 'farmers/images/ph.jpg' %}" alt="product image" />
+              </div>
+            </div>
+
+            <div class="product-info">
+              <div class="product-name">Insert your value here</div>
+              <input class="box" type="number" value="0" />
+            </div>
+          </div>
+
+      <!--------Temperature----- -->
+          <div class="product">
+            <div class="product-content">
+              <div class="product-img">
+                <img src="{% static 'farmers/images/temperature.jpg' %}" alt="product image" />
+              </div>
+            </div>
+
+            <div class="product-info">
+              <div class="product-name">Insert your value here</div>
+              <input class="box" type="number" value="0" />
+            </div>
+          </div>
+        </div>
+
+    <!--Submit button-->
+
+        <div class="submit-button">
+          <button type="submit" class="btn btn-light">Submit</button>
+        </div>
+
+      </div>
+    </div>
+
+
+{% endblock content %}

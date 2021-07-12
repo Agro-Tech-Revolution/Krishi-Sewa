@@ -24,5 +24,6 @@ urlpatterns = [
     path('test/', test),
     path('test/result/', result),
     path('imagetest', image_test),
+    path('npktest',npk_test),
     
 ]
