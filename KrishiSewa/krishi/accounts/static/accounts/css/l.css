@@ -4,7 +4,7 @@ body {
   font-family: sans-serif;
   box-sizing: border-box;
   /* background-color: #d0f0c0; */
-  background: url("3.jpg") center;
+  background: url('../images/3.jpg') center;
   background-size: cover;
   background-attachment: fixed;
 }
