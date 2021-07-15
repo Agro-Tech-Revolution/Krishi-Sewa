@@ -513,7 +513,7 @@ def get_image_model(image_path):
     predict_crops = np.argmax(img_model.predict(image))
 
     classes = {0: "Alluvial Soil: Rice, Wheat, Sugarcane, Maize, Cotton, Soyabean, Jute",
-               1: "Black Soil: Virginia, Wheat, Jowar, Millet, Linseed, Castor, Sunflower",
+               1: "Black Soil: Wheat, Jowar, Millet, Linseed, Castor, Sunflower",
                2: "Clay Soil: Rice, Lettuce, Chard, Broccoli, Cabbage, Snap Beans",
                3: "Red Soil: Cotton, Wheat, Pilses, Millet, OilSeeds, Potatoes"}
 

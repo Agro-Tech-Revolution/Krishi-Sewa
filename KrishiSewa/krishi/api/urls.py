@@ -33,10 +33,10 @@ urlpatterns = [
     path('productsOnSale/reports', ProductReportView.as_view()),
     path('productsOnSale/reports/<int:id>', ReportDetails.as_view()),
     
-    path('sellProducts/', ProductSoldView.as_view()),
-    path('sellProducts/<int:id>', ProductSoldDetails.as_view()),
-    path('sellProducts/seller/<int:id>', SellerSalesDetails.as_view()),
-    path('sellProducts/buyer/<int:id>', BuyerSalesDetails.as_view()),
+    # path('sellProducts/', ProductSoldView.as_view()),
+    # path('sellProducts/<int:id>', ProductSoldDetails.as_view()),
+    # path('sellProducts/seller/<int:id>', SellerSalesDetails.as_view()),
+    # path('sellProducts/buyer/<int:id>', BuyerSalesDetails.as_view()),
 
     path('expenses/', ExpenseAPIView.as_view()),
     path('expenses/<int:id>', ExpenseDetails.as_view()),
@@ -68,4 +68,12 @@ urlpatterns = [
     path('equipmentToDisplay/rent/seller/<int:id>', RentedEquipmentSeller.as_view()),
 
     path('profitloss/<int:id>', ProfitLossReportView.as_view()),
+
+    path('buyProduct/', BuyProductRequest.as_view()),
+    path('editBuyRequest/<int:id>', ProductRequestDetails.as_view()),
+    path('myRequests/buyers/<int:id>', BuyersProductRequests.as_view()),
+    path('productRequests/<int:id>', FarmerProductRequests.as_view()),
+
+    path('changeRequestStatus/<int:id>', ChangeProductRequestStatus.as_view()),
+
 ]

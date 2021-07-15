@@ -110,6 +110,8 @@ class ProductSold(models.Model):
     sold_price = models.FloatField()
     sold_date = models.DateTimeField(auto_now_add=True)
     remarks = models.CharField(max_length=1250, null=True)
+    approved = models.BooleanField(default=False)
+    seen = models.BooleanField(default=False)
 
 
 class Expenses(models.Model):

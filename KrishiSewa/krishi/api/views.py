@@ -500,7 +500,7 @@ class MyProductStock(APIView):
         product_stock_data = get_product_stock_data(product_stock)
         return Response(product_stock_data)
 
-
+# sold product start
 class ProductSoldView(APIView):
     def get(self, request):
         all_products_sold = ProductSold.objects.all()
@@ -627,6 +627,8 @@ class BuyerSalesDetails(APIView):
         product_sold_detail = self.get_object(id)
         products_sold_data = get_sold_details(product_sold_detail)
         return Response(products_sold_data)
+# sold product end
+
 
 
 class ExpenseAPIView(APIView):
@@ -1180,7 +1182,7 @@ class ProfitLossReportView(APIView):
             rented_equipment["type"] = "Rent Detail"
             rented_equipment["particular"] = eqp_name + " from " + seller_fname + " " + seller_lname
             rented_equipment["amount"] = rented_equipment["total_price"]
-            rented_equipment["duration"] = rented_equipment["rented_duration"]
+            rented_equipment["duration"] = str(rented_equipment["rented_duration"]) + " hrs."
             rented_equipment["quantity"] = rented_equipment["rented_quantity"]
             rented_equipment["date"] = rented_equipment["rented_date"]
             rented_equipment["user"] = rented_equipment["rented_by"]
@@ -1203,3 +1205,113 @@ class ProfitLossReportView(APIView):
 
         return Response(data_to_display)
 
+
+# modified sold product
+class BuyProductRequest(APIView):
+    def get(self, request):
+        all_products_sold = ProductSold.objects.all()
+        products_sold_data = get_sold_details(all_products_sold)
+        return Response(products_sold_data)
+
+    def post(self, request):
+        serializer = ProductSoldSerializer(data=request.data)
+        if serializer.is_valid():
+            quantity_requested = float(request.data['quantity_sold'])
+            product_requested = request.data["sold_product"]
+
+            product_on_sale = ProductsForSale.objects.filter(id=product_requested)
+            if len(product_on_sale) != 0:
+                quantity_present = product_on_sale[0].quantity_in_kg
+                if quantity_requested < quantity_present:
+                    serializer.save()
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+                else:
+                    return Response({"Bad Request": "Not enough quantity present"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ProductRequestDetails(APIView):
+    def get_object(self, id):
+        try:
+            return ProductSold.objects.get(id=id)
+        except ProductSold.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, id):
+        product_sold_detail = self.get_object(id)
+        product_sold = ProductSoldSerializer(product_sold_detail).data
+        product_sold_data = modify_sold_data(product_sold)
+        return Response(product_sold_data)
+        
+
+    def put(self, request, id):
+        product_sold = self.get_object(id)
+        serializer = ProductSoldSerializer(product_sold, data=request.data)
+
+        if serializer.is_valid():
+            requested_quantity = request.data["quantity_sold"]
+            current_quantity = product_sold.sold_product.quantity_in_kg
+            if not product_sold.seen and not product_sold.approved:
+                if requested_quantity < current_quantity:
+                    serializer.save()
+                    return Response(serializer.data)
+                else:
+                    return Response({"Bad Request": "Not enough quantity present"}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({"Bad Request": "The request has been disapproved. You cannot update now."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id):
+        product_sold = self.get_object(id)
+        if not product_sold.approved:
+            product_sold.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({"Bad Request": "This request has already been approved. Cannot delete the request now"}, 
+                            status=status.HTTP_400_BAD_REQUEST)
+
+
+class BuyersProductRequests(APIView):
+    def get_object(self, id):
+        try:
+            return ProductSold.objects.filter(sold_to=id)
+        except ProductSold.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+    
+    def get(self, request, id):
+        product_bought = self.get_object(id)
+        products_bought_data = get_sold_details(product_bought)
+        return Response(products_bought_data)
+
+
+class FarmerProductRequests(APIView):
+    def get_object(self, id):
+        try:
+            return ProductSold.objects.filter(sold_by=id)
+        except ProductSold.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+    
+    def get(self, request, id):
+        product_sold = self.get_object(id)
+        products_sold_data = get_sold_details(product_sold)
+        return Response(products_sold_data)
+
+
+class ChangeProductRequestStatus(APIView):  
+    def get_object(self, id):
+        try:
+            return ProductSold.objects.get(id=id)
+        except ProductSold.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    def put(self, request, id):
+        product_request = self.get_object(id)
+        serializer = ProductSoldSerializer(product_request, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        
