@@ -8,7 +8,7 @@
 {% endblock title %}
 
 {% block content %}
-    <div class="products">
+<div class="products">
       <div class="container">
         <h1 class="lg-title">NPK Testing</h1>
 
@@ -17,17 +17,17 @@
           <div class="product">
             <div class="product-content">
               <div class="product-img">
-                <img src="{% static 'farmers/images/n.jpg' %}" alt="product image" />
+                <img src="{% static 'farmers/images/n.jpg' %}" alt="nitrogen image" />
               </div>
             </div>
 
             <div class="product-info">
               <div class="product-name">Insert your value here</div>
-              <input class="box" type="number" value="0" />
+              <input class="box" type="number" value="" />
             </div>
           </div>
 
-            <!-- Phosphorus -->
+        <!-- Phosphorus -->
           <div class="product">
             <div class="product-content">
               <div class="product-img">
@@ -37,12 +37,11 @@
 
             <div class="product-info">
               <div class="product-name">Insert your value here</div>
-              <input class="box" type="number" value="0" />
+              <input class="box" type="number" value="" />
             </div>
           </div>
 
-          <!-- Potassium -->
-
+        <!-- Potassium-->
           <div class="product">
             <div class="product-content">
               <div class="product-img">
@@ -52,12 +51,11 @@
 
             <div class="product-info">
               <div class="product-name">Insert your value here</div>
-              <input class="box" type="number" value="0" />
+              <input class="box" type="number" value="" />
             </div>
           </div>
 
-          <!-- ph value--- -->
-
+          <!-- pH----->
           <div class="product">
             <div class="product-content">
               <div class="product-img">
@@ -67,11 +65,12 @@
 
             <div class="product-info">
               <div class="product-name">Insert your value here</div>
-              <input class="box" type="number" value="0" />
+              <input class="box" type="number" value="" />
             </div>
           </div>
 
-      <!--------Temperature----- -->
+        <!-- Temperature-->
+
           <div class="product">
             <div class="product-content">
               <div class="product-img">
@@ -81,19 +80,31 @@
 
             <div class="product-info">
               <div class="product-name">Insert your value here</div>
-              <input class="box" type="number" value="0" />
+              <input class="box" type="number" value="" />
             </div>
           </div>
-        </div>
 
-    <!--Submit button-->
+          <!-- Humidity--->
 
-        <div class="submit-button">
-          <button type="submit" class="btn btn-light">Submit</button>
-        </div>
+          <div class="product">
+            <div class="product-content">
+              <div class="product-img">
+                <img src="{% static 'farmers/images/.jpg' %}" alt="product image" />
+              </div>
+            </div>
+
+            <div class="product-info">
+              <div class="product-name">Insert your value here</div>
+              <input class="box" type="number" value="" />
+            </div>
+          </div>
 
       </div>
     </div>
+</div>
 
+  <div class="submit-button">
+          <button type="submit" class="btn btn-light">Submit</button>
+        </div>
 
 {% endblock content %}
