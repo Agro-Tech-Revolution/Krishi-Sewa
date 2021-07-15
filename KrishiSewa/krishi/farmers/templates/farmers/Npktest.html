@@ -8,6 +8,12 @@
 {% endblock title %}
 
 {% block content %}
+<div class="justify-content-center">
+  <h1>{{ result }}</h1>
+
+</div>
+<form method="POST">
+  {% csrf_token %}
 <div class="products">
       <div class="container">
         <h1 class="lg-title">NPK Testing</h1>
@@ -23,7 +29,7 @@
 
             <div class="product-info">
               <div class="product-name">Insert your value here</div>
-              <input class="box" type="number" value="" />
+              <input class="box" type="number" name="N" />
             </div>
           </div>
 
@@ -37,7 +43,7 @@
 
             <div class="product-info">
               <div class="product-name">Insert your value here</div>
-              <input class="box" type="number" value="" />
+              <input class="box" type="number" name="P" />
             </div>
           </div>
 
@@ -51,7 +57,7 @@
 
             <div class="product-info">
               <div class="product-name">Insert your value here</div>
-              <input class="box" type="number" value="" />
+              <input class="box" type="number" name="K" />
             </div>
           </div>
 
@@ -65,7 +71,7 @@
 
             <div class="product-info">
               <div class="product-name">Insert your value here</div>
-              <input class="box" type="number" value="" />
+              <input class="box" type="number" name="ph" />
             </div>
           </div>
 
@@ -80,7 +86,7 @@
 
             <div class="product-info">
               <div class="product-name">Insert your value here</div>
-              <input class="box" type="number" value="" />
+              <input class="box" type="number" name="temp" />
             </div>
           </div>
 
@@ -95,16 +101,21 @@
 
             <div class="product-info">
               <div class="product-name">Insert your value here</div>
-              <input class="box" type="number" value="" />
+              <input class="box" type="number" name="humidity" />
             </div>
           </div>
+
 
       </div>
     </div>
 </div>
+    <div class="submit-button">
+                  <button type="submit" class="btn btn-light">Submit</button>
+                </div>
+</form>
 
-  <div class="submit-button">
-          <button type="submit" class="btn btn-light">Submit</button>
-        </div>
+<script>
+  <alert
+</script>
 
 {% endblock content %}
