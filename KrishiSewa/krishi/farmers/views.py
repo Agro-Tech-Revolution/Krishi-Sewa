@@ -478,4 +478,15 @@ def details_table(request):
     return render(request, 'farmers/DetailsTable.html')
 
 
+@login_required
+@farmers_only
+def profile(request):
+    return render(request, 'farmers/Profile.html')
+
+@login_required
+@farmers_only
+def edit_profile(request):
+    return render(request, 'farmers/EditProfile.html')
+
+
 

@@ -32,5 +32,9 @@ urlpatterns = [
     path('generalTable', general_table),
     path('detailsTable', details_table),
 
+    path('profile', profile),
+    path('editProfile', edit_profile),
+
+
     
 ]
