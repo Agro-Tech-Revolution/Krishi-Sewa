@@ -28,5 +28,9 @@ urlpatterns = [
     path('test/', test),
     path('test/result/', result),
     path('imagetest', image_test),
+
+    path('buyequipment/', farmerstovenders),
+    path('myproducts/', my_products),
+    path('equipmentdetails/', equipment_Details),
     
 ]
