@@ -48,3 +48,6 @@ def add_products(request):
             print(error)
      
     return render(request, 'admins/addProducts.html', context)
+
+def adminDashboard(request):
+    return render(request, 'admins/adminDashboard.html')

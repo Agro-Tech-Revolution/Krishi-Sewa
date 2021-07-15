@@ -1,0 +1,133 @@
+@import url("https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap");
+.title {
+    place-items: center;
+    text-align: center;
+    color: #ac7a55;
+    font-size: 2.5rem;
+    font-weight: 600;
+    padding: 0.1rem;
+    text-transform: uppercase;
+
+}
+.main-container {
+  display: grid;
+  height: 100%;
+  place-items: center;
+  text-align: center;
+}
+/*-----------within the box--------*/
+.main-container .container {
+  height: 650px;
+  width: 430px;
+  position: relative;
+}
+
+/*-----------within the box--------*/
+.main-container .container .wrapper-imgtest {
+  position: relative;
+  height: 300px;
+  width: 100%;
+  border-radius: 10px;
+  background: #fff;
+  border: 2px dashed #c2cdda;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+
+.main-container .container .active {
+  border: none;
+}
+.main-container .container .wrapper-imgtest .image {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.main-container .container .wrapper-imgtest img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+.main-container .container .wrapper-imgtest .icon {
+  font-size: 100px;
+  color: #d2b48c;
+}
+.main-container .container .wrapper-imgtest .text {
+  font-size: 20px;
+  font-weight: 500;
+  color: #5b5b7b;
+}
+.main-container .container .wrapper-imgtest #cancel-btn i {
+  position: absolute;
+  font-size: 20px;
+  right: 15px;
+  top: 15px;
+  color: #a67b5b;
+  cursor: pointer;
+  display: none;
+}
+.main-container .container .wrapper-imgtest.active:hover #cancel-btn i {
+  display: block;
+}
+.main-container .container .wrapper-imgtest #cancel-btn i:hover {
+  color: #e74c3c;
+}
+.main-container .container .wrapper-imgtest .file-name {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  padding: 8px 0;
+  font-size: 18px;
+  color: #fff;
+  display: none;
+  background: #d2b48c;
+}
+.main-container .container .wrapper-imgtest.active:hover .file-name {
+  display: block;
+}
+.main-container .container #custom-btn {
+  margin-top: 30px;
+  display: block;
+  width: 100%;
+  height: 50px;
+  border: none;
+  outline: none;
+  border-radius: 25px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  background: #d2b48c;
+}
+
+.main-container .container .submit-button button[type="submit"]{
+
+  margin-top: 30px;
+  display: block;
+  width: 45%;
+  height: 50px;
+  border-radius: 25px;
+  background:#A67B5B;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 500;
+
+}
+
+.main-container .container .submit-button{
+     padding-left: 130px;
+
+}
+
+
+
+
