@@ -44,10 +44,10 @@ def products_for_sale(request):
             "price_per_kg": price_per_kg,
             "added_by": added_by
         }
-        
+
         product_on_sale_endpoint = '/api/productsOnSale/'
         product_on_sale_url = base_url + product_on_sale_endpoint
-        
+
         product_on_sale_response = requests.post(product_on_sale_url, data=product_data, headers=headers)
         if product_on_sale_response.json().get('id') != None:
             print('Product added successfully')
@@ -68,27 +68,27 @@ def products_for_sale(request):
 @login_required
 @farmers_only
 def my_products(request):
-    headers = {'Authorization': 'Token ' + request.session['token']}
+    # headers = {'Authorization': 'Token ' + request.session['token']}
+    #
+    # if request.method == 'POST':
+    #     comment_post_response = comment_add(request)
+    #     if comment_post_response.json().get('id') != None:
+    #         print('Comment added successfully')
+    #     else:
+    #         error = comment_post_response.json()
+    #         print(error)
+    #         return redirect('/farmers/myProducts')
+    #
+    # # calling product api to get all the products added by me
+    # product_endpoint = '/api/productsOnSale/mine/' + str(request.user.id)
+    # product_url = base_url + product_endpoint
+    # product_response = requests.get(product_url, headers=headers)
+    #
+    # context = {
+    #     "my_products": product_response.json(),
+    # }
 
-    if request.method=='POST':
-        comment_post_response = comment_add(request)
-        if comment_post_response.json().get('id') != None:
-            print('Comment added successfully')
-        else:
-            error = comment_post_response.json()
-            print(error)
-            return redirect('/farmers/myProducts')
-
-    # calling product api to get all the products added by me
-    product_endpoint = '/api/productsOnSale/mine/' + str(request.user.id)
-    product_url = base_url + product_endpoint
-    product_response = requests.get(product_url, headers=headers)  
-        
-    context = {
-        "my_products": product_response.json(),
-    }    
-
-    return render(request, 'farmers/myProducts.html', context)
+    return render(request, 'farmers/myProducts.html')
 
 
 @login_required
@@ -110,7 +110,7 @@ def edit_products(request, id):
             "added_by": added_by
         }
 
-        product_put_endpoint = '/api/productsOnSale/'+str(id)
+        product_put_endpoint = '/api/productsOnSale/' + str(id)
         product_put_url = base_url + product_put_endpoint
 
         product_put_response = requests.put(product_put_url, data=product_put_data, headers=headers)
@@ -121,7 +121,7 @@ def edit_products(request, id):
             error = product_put_response.json()
             print(error)
             return redirect('/farmers/myProducts')
-    
+
     product_details_endpoint = '/api/products'
     product_details_url = base_url + product_details_endpoint
     product_details_response = requests.get(product_details_url, headers=headers)
@@ -158,7 +158,6 @@ def delete_product(request, id):
 @login_required
 @farmers_only
 def edit_comment(request):
-    
     comment_put_response = comment_edit(request)
     if comment_put_response.json().get('id') != None:
         print('Product added successfully')
@@ -172,7 +171,7 @@ def edit_comment(request):
 @farmers_only
 def delete_comment(request, id):
     comment_del_response = comment_delete(request, id)
-    
+
     if Response(comment_del_response).status_code == 200:
         print('Deleted Successfully')
     return redirect('/farmers/myProducts')
@@ -208,7 +207,6 @@ def add_production(request):
             print(error)
             return redirect('/farmers/addProduction')
 
-
     product_get_endpoint = '/api/products/'
     product_get_url = base_url + product_get_endpoint
     product_get_response = requests.get(product_get_url, headers=headers)
@@ -222,7 +220,7 @@ def add_production(request):
 @farmers_only
 def edit_production(request, id):
     headers = {'Authorization': 'Token ' + request.session['token']}
-    
+
     if request.method == 'POST':
         data = request.POST
         product_id = data['product_id']
@@ -274,7 +272,7 @@ def delete_production(request, id):
 
     if Response(production_del_response).status_code == 200:
         print('Deleted Successfully')
-    
+
     return redirect('/farmers/myProduction')
 
 
@@ -320,7 +318,7 @@ def sell_product(request, id):
         'product_detail': product_get_response.json(),
     }
 
-    return render(request,'farmers/sellProducts.html', context)
+    return render(request, 'farmers/sellProducts.html', context)
 
 
 @login_required
@@ -363,13 +361,12 @@ def edit_sales(request, id):
 
     product_get_endpoint = '/api/productsOnSale/' + str(sales_get_response.json()["sold_product"]["id"])
     product_get_url = base_url + product_get_endpoint
-    product_get_response = requests.get(product_get_url, headers=headers) 
+    product_get_response = requests.get(product_get_url, headers=headers)
 
     context = {
         "sales_data": sales_get_response.json(),
         'product_detail': product_get_response.json(),
     }
-
 
     return render(request, 'farmers/editSales.html', context)
 
@@ -384,14 +381,14 @@ def delete_sales(request, id):
 
     if Response(sales_del_response).status_code == 200:
         print('Deleted Successfully')
-    
+
     return redirect('/farmers/mySales')
 
 
 @login_required
 @farmers_only
 def add_expenses(request):
-    return render(request,'farmers/addExpenses.html')
+    return render(request, 'farmers/addExpenses.html')
 
 
 @login_required
@@ -601,3 +598,12 @@ def edit_profile(request):
 
 
 
+@login_required
+@farmers_only
+def farmerstovenders(request):
+    return render(request, 'farmers/farmersToVender.html')
+
+@login_required
+@farmers_only
+def equipment_Details(request):
+    return render(request, 'farmers/equipmentDetails.html')
