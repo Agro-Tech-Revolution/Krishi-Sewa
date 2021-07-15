@@ -504,9 +504,12 @@ def npk_result(request):
         humidity = int(data['humidity'])
         ph = int(data['ph'])
 
+        print(N)
         result = getNPK_Prediction(N, P, K, temp, humidity, ph)
         context = {'result': result}
-    return render(request, 'farmers/Npktest.html', context)
+        return render(request, 'farmers/Npktest.html', context)
+    else:
+        return render(request, 'farmers/Npktest.html')
 
 
 
