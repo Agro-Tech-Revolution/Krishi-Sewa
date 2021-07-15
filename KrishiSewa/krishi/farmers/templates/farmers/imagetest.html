@@ -10,7 +10,16 @@
 {% block content %}
 <div class="title">
     <h1>Image Testing</h1>
+    <br>
+    <br>
+    <div class="result">
+    <h3>The recommended crops according to soil image:</h3>
+        <h2>{{ img_result }}</h2>
+
 </div>
+
+</div>
+
 <div class="main-container">
   <div class="container">
          <div class="wrapper-imgtest">
@@ -32,10 +41,14 @@
             </div>
          </div>
          <button onclick="defaultBtnActive()" id="custom-btn">Choose a file</button>
-         <input id="default-btn" type="file" hidden>
 
-        <div class="submit-button">
-       <button type="submit" class="btn btn-light">Submit</button>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+             <input id="default-btn" type="file" name="image" hidden>
+
+            <div class="submit-button">
+            <button type="submit" class="btn btn-light">Predict</button>
+        </form>
             </div>
 
 </div>

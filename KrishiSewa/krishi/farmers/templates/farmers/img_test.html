@@ -1,0 +1,22 @@
+<head>
+    <title>Image Test</title>
+</head>
+
+<body>
+    <div class="imag_input">
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <input type="file" name="image" class="upload">
+            <input type="submit" value="Predict">
+
+        </form>
+        <h3>The recommended crops:</h3>
+        <h2>{{ img_result }}</h2>
+
+
+
+    </div>
+
+</body>

@@ -1,3 +1,5 @@
+import os
+import keras.models
 from django.db.models import base
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
@@ -6,6 +8,14 @@ from accounts.auth import *
 from rest_framework.response import Response
 from .models import *
 from .utils import *
+import pickle
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing.image import load_img, img_to_array
+import numpy as np
+from flask import Flask, request, render_template
+from django.core.files.storage import  default_storage
+from django.core.files.base import ContentFile
+from django.conf import settings
 
 
 
@@ -240,7 +250,7 @@ def edit_production(request, id):
             error = production_put_response.json()
             print(error)
             return redirect('/farmers/myProduction')
-        return redirect('/farmers/myProduction')
+
 
     production_get_endpoint = '/api/products/production/' + str(id)
     production_get_url = base_url + production_get_endpoint
@@ -440,10 +450,10 @@ Soil testing part -----------------------------------------
 """
 
 
-@login_required
-@farmers_only
-def test(request):
-    return render(request, 'farmers/Npktest.html')
+# @login_required
+# @farmers_only
+# def test(request):
+#     return render(request, 'farmers/Npktest.html')
 
 
 @login_required
@@ -466,18 +476,38 @@ def getNPK_Prediction(N, P, K, temp, humidity, ph):
 
 @login_required
 @farmers_only
-def result(request):
+def getNPK_Prediction(N, P, K, temp, humidity, ph):
+    model = pickle.load(open('npk_model.sav', 'rb'))
+    scaler = pickle.load(open('scaler.sav', 'rb'))
 
-    N = int(request.GET['N'])
-    P = int(request.GET['P'])
-    K = int(request.GET['K'])
-    temp = int(request.GET['temp'])
-    humidity = int(request.GET['humidity'])
-    ph = int(request.GET['ph'])
+    prediction = model.predict(scaler.transform([
+        [N, P, K, temp, humidity, ph]
+    ]))
 
-    result = getNPK_Prediction(N, P, K, temp, humidity, ph)
+    crops = {20: 'rice', 11: 'maize', 3: 'chickpea', 9: 'kidneybeans', 18: 'pigeonpeas', 13: 'mothbeans',
+             14: 'mungbean', 2: 'blackgram', 10: 'lentil', 19: 'pomegranate', 1: 'banana', 12: 'mango', 7: 'grapes',
+             21: 'watermelon', 15: 'muskmelon', 0: 'apple', 16: 'orange', 17: 'papaya', 4: 'coconut', 6: 'cotton',
+             8: 'jute', 5: 'coffee'}
 
-    return render(request, 'farmers/npk_result.html', {'result': result})
+    return crops[prediction]
+
+
+@login_required
+@farmers_only
+def npk_result(request):
+    if request.method == 'POST':
+        data = request.POST
+        N = int(data['N'])
+        P = int(data['P'])
+        K = int(data['K'])
+        temp = int(data['temp'])
+        humidity = int(data['humidity'])
+        ph = int(data['ph'])
+
+        result = getNPK_Prediction(N, P, K, temp, humidity, ph)
+        context = {'result': result}
+    return render(request, 'farmers/Npktest.html', context)
+
 
 
 @login_required
@@ -486,5 +516,45 @@ def image_test(request):
     return render(request, 'farmers/imagetest.html')
 
 
-def npk_test(request):
-    return render(request, 'farmers/Npktest.html')
+# def npk_test(request):
+#     return render(request, 'farmers/Npktest.html')
+
+def get_image_model(image_path):
+    image = load_img(image_path, target_size=(224, 224))
+    image = img_to_array(image)
+    image = image / 255
+    image = np.expand_dims(image, axis=0)
+    img_model = keras.models.load_model("farmers/model/SoilNet_93_86.h5")
+    predict_crops = np.argmax(img_model.predict(image))
+
+    classes = {0: "Alluvial Soil: Rice, Wheat, Sugarcane, Maize, Cotton, Soyabean, Jute",
+               1: "Black Soil: Virginia, Wheat, Jowar, Millet, Linseed, Castor, Sunflower",
+               2: "Clay Soil: Rice, Lettuce, Chard, Broccoli, Cabbage, Snap Beans",
+               3: "Red Soil: Cotton, Wheat, Pilses, Millet, OilSeeds, Potatoes"}
+
+    prediction = classes[predict_crops]
+
+    return prediction
+
+
+def image_test1(request):
+    predict=''
+    if request.method =='POST':
+        image_url = ''
+        file = request.FILES['image']
+        print(file)
+        path = default_storage.save('farmers/model/image_testing/'+str(file), ContentFile(file.read()))
+        print(path)
+
+        file_path = os.path.join('', path)
+        print(file_path)
+        predict = get_image_model(file_path)
+
+    return render(request, 'farmers/imagetest.html', { 'img_result': predict })
+
+# @login_required
+# @farmers_only
+# def image_test(request):
+#     return render(request, 'farmers/imagetest.html')
+
+

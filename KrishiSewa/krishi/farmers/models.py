@@ -28,7 +28,7 @@ class Products(models.Model):
         ("Others", "Others"),
     ]
 
-    prod_name = models.CharField(max_length=100, unique=True)
+    prod_name = models.CharField(max_length=100)
     prod_category = models.CharField(max_length=25, 
                                     choices=types_of_product_choices, 
                                     default="Cereals")

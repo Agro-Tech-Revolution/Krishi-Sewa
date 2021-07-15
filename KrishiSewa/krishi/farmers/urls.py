@@ -25,9 +25,16 @@ urlpatterns = [
     path('myStock', my_stock),
     
     path('myExpenses', my_expenses),
-    path('test/', test),
-    path('test/result/', result),
+
+    # path('test/result/', result),
+
     path('imagetest', image_test),
-    path('npktest',npk_test),
+    path('npktest',npk_result),
+
+
+    path('imagetest/', image_test1),
+    # path('imagetest_result/', get_image_model)
+    # path('test_img', imageTest),
+
     
 ]
