@@ -25,8 +25,6 @@ urlpatterns = [
     path('myStock', my_stock),
     
     path('myExpenses', my_expenses),
-    path('test/', test),
-    path('test/result/', result),
     path('imagetest', image_test),
     path('detailReport', profit_loss_report),
 
@@ -35,6 +33,10 @@ urlpatterns = [
 
     path('profile', profile),
     path('editProfile', edit_profile),
+
+
+    # path('test/result/', result),
+    path('npktest',npk_result),
 
 
     

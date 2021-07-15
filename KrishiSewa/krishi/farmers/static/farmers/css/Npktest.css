@@ -1,0 +1,166 @@
+/* Utility stylings */
+img {
+  width: 100%;
+  display: block;
+}
+.container {
+  width: 88vw;
+}
+
+.lg-title {
+  font-size: 2.5rem;
+  font-weight: 600;
+  text-align: center;
+  padding: 0.6rem ;
+  color: #c5814c;
+  text-transform: uppercase;
+
+
+}
+
+/* product section */
+.products {
+  padding: 0.1rem ;
+}
+
+.product {
+  margin: 0.4rem;
+  position: relative;
+}
+.product-content {
+  background: rgb(253, 251, 251);
+
+  padding: 0.8rem 0.2rem 1rem 0.2rem;
+  cursor: pointer;
+}
+.product-img {
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+  border-radius: 50%;
+  /* transition: background 0.5s ease; */
+}
+
+.product-info {
+  background: #dfc4a6;
+  padding: 1rem;
+}
+
+.product-name {
+  text-align: center;
+  color: rgb(110, 109, 109);
+  display: block;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-family: sans-serif;
+  text-transform: uppercase;
+  padding-bottom: 10px;
+}
+
+.product-img img {
+  transition: transform 0.5s ease;
+}
+.product:hover .product-img img {
+  transform: scale(1.1);
+}
+
+input {
+  border: none;
+  outline: none;
+  padding: 8px;
+  font-size: large;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px;
+  width: 100px;
+}
+
+.product-info .box input:hover,
+input:focus {
+  background: rgba(134, 129, 129, 0.5);
+  color: #fff;
+}
+
+.box {
+  padding-left: 45px;
+  position: relative;
+  left: 32%;
+}
+
+.btn {
+  border: none;
+  background-color: rgb(231, 165, 79);
+  color: #222;
+  font-size: medium;
+  border-radius: 5%;
+  padding: 25px 15px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #ccc;
+}
+
+.submit-button button[type="submit"] {
+
+  width: 23%;
+  height: 40px;
+  border-radius: 25px;
+  background: #a67b5b;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 500;
+  align-items: center;
+  padding-bottom: 38px;
+}
+
+.submit-button {
+    margin-top: 5px;
+    display:flex;
+    justify-content:center;
+    align-items: center;
+
+}
+
+
+
+/* Media Queries */
+@media screen and (min-width: 992px) {
+  .product-items {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .product-col-r-bottom {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media screen and (min-width: 1200px) {
+  .product-items {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .product {
+    margin-right: 1rem;
+    margin-left: 1rem;
+  }
+  .products .text-light {
+    width: 50%;
+  }
+}
+
+@media screen and (min-width: 1336px) {
+  .product-items {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  /* .product-collection-wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  } */
+  .flex {
+    height: 60vh;
+  }
+  .product-col-left {
+    height: 121.5vh;
+  }
+}

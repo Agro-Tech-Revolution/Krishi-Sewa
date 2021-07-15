@@ -465,10 +465,10 @@ Soil testing part -----------------------------------------
 """
 
 
-@login_required
-@farmers_only
-def test(request):
-    return render(request, 'farmers/index.html')
+# @login_required
+# @farmers_only
+# def test(request):
+#     return render(request, 'farmers/Npktest.html')
 
 
 @login_required
@@ -491,18 +491,51 @@ def getNPK_Prediction(N, P, K, temp, humidity, ph):
 
 @login_required
 @farmers_only
-def result(request):
-    N = int(request.GET['N'])
-    P = int(request.GET['P'])
-    K = int(request.GET['K'])
-    temp = int(request.GET['temp'])
-    humidity = int(request.GET['humidity'])
-    ph = int(request.GET['ph'])
+def getNPK_Prediction(N, P, K, temp, humidity, ph):
+    model = pickle.load(open('npk_model.sav', 'rb'))
+    scaler = pickle.load(open('scaler.sav', 'rb'))
 
-    result = getNPK_Prediction(N, P, K, temp, humidity, ph)
+    prediction = model.predict(scaler.transform([
+        [N, P, K, temp, humidity, ph]
+    ]))
 
-    return render(request, 'farmers/npk_result.html', {'result': result})
+    crops = {20: 'rice', 11: 'maize', 3: 'chickpea', 9: 'kidneybeans', 18: 'pigeonpeas', 13: 'mothbeans',
+             14: 'mungbean', 2: 'blackgram', 10: 'lentil', 19: 'pomegranate', 1: 'banana', 12: 'mango', 7: 'grapes',
+             21: 'watermelon', 15: 'muskmelon', 0: 'apple', 16: 'orange', 17: 'papaya', 4: 'coconut', 6: 'cotton',
+             8: 'jute', 5: 'coffee'}
 
+    return crops[prediction]
+
+
+@login_required
+@farmers_only
+def npk_result(request):
+    if request.method == 'POST':
+        data = request.POST
+        N = int(data['N'])
+        P = int(data['P'])
+        K = int(data['K'])
+        temp = int(data['temp'])
+        humidity = int(data['humidity'])
+        ph = int(data['ph'])
+
+        print(N)
+        result = getNPK_Prediction(N, P, K, temp, humidity, ph)
+        context = {'result': result}
+        return render(request, 'farmers/Npktest.html', context)
+    else:
+        return render(request, 'farmers/Npktest.html')
+
+
+
+@login_required
+@farmers_only
+def image_test(request):
+    return render(request, 'farmers/imagetest.html')
+
+
+# def npk_test(request):
+#     return render(request, 'farmers/Npktest.html')
 
 def get_image_model(image_path):
     image = load_img(image_path, target_size=(224, 224))
@@ -526,7 +559,7 @@ def get_image_model(image_path):
 @farmers_only
 def image_test(request):
     predict=''
-    if request.method=='POST':
+    if request.method =='POST':
         image_url = ''
         file = request.FILES['image']
         print(file)
