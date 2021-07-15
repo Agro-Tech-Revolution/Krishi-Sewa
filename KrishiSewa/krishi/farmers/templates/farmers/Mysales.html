@@ -5,7 +5,7 @@
 {% endblock title %}
 
 {% block content %}
-<table class="table">
+<table class="table text-center">
   <thead>
     <tr>
       <th scope="col"></th>
@@ -14,6 +14,8 @@
       <th scope="col">Sold Quantity</th>
 	    <th scope="col">Sold at</th>
       <th scope="col">Sold Date</th>
+      <th scope="col">Remarks</th>
+      <th scope="col">Action</th>
     </tr>
   </thead>
   <tbody>
@@ -26,6 +28,17 @@
       <td>{{sale.quantity_sold}} kg</td>
 	    <td>NRs. {{sale.sold_price}}</td>
       <td>{{sale.sold_date}}</td>
+      <td>
+        {% if sale.remarks %}
+          {{sale.remarks}}
+        {% else %}
+          -
+        {% endif %}
+      </td>
+      <td>
+        <a href="/farmers/editSales/{{sale.id}}" class="btn btn-success">Edit</a>
+        <a href="/farmers/deleteSales/{{sale.id}}" class="btn btn-danger">Delete</a>
+      </td>
     </tr>
     {% endfor %}
     {% else %}

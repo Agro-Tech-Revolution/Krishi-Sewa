@@ -15,11 +15,15 @@ urlpatterns = [
     path('editProduction/<int:id>', edit_production),
     path('deleteProduction/<int:id>', delete_production),
     
-    path('sellProduct', sell_product),
+    path('myProducts/sell/<int:id>', sell_product),
+    path('mySales', my_sales),
+    path('editSales/<int:id>', edit_sales),
+    path('deleteSales/<int:id>', delete_sales),
+
     path('addExpenses', add_expenses),
     path('myProduction', my_production),
     path('myStock', my_stock),
-    path('mySales', my_sales),
+    
     path('myExpenses', my_expenses),
     path('test/', test),
     path('test/result/', result),
