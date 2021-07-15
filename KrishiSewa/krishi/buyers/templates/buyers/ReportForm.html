@@ -1,0 +1,66 @@
+<!DOCTYPE html>  
+<html>  
+<head>  
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Report Form</title>  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+
+</head>
+<body>
+ <div class="container mt-1" >
+   <div class="row ">
+    <div class="col-md-3"></div>
+      <div class="col-md-6">
+        <h2 class="text-danger text-center mb-4">Report Form</h2>
+
+		<form>
+            <div class="border border-danger rounded w-75 p-4 mx-auto">
+
+            <div class="form-group mt-2 mb-3" >
+                <label class="form-label">Category:</label>
+                    <div class="input-group mb-3">
+                        <select class="custom-select" id="inputGroupSelect02">
+                          <option value="1">Abc</option>
+                          <option value="2">Xyz</option>
+                          <option value="3">Pqr</option>
+                        </select>
+                    </div>
+            </div>
+
+            <div class="form-group mb-2">
+		    	<label  class="form-label"></label>
+		    	<input type="number" hidden class="form-control" required="">
+		  	</div>
+
+            <div class="form-group mb-2">
+		    	<label  class="form-label"></label>
+		    	<input type="number" hidden class="form-control" required="">
+		  	</div>
+
+            <div class="form-group mb-2">
+		    	<label  class="form-label">Title:</label>
+		    	<input type="text" class="form-control " required="">
+		  	</div>
+
+            <div class="form-group mb-2">
+		    	<label  class="form-label">Reason:</label>
+		    	<textarea style="margin-top:5px;" rows="3" class="form-control" placeholder="Write reason here..." required=""></textarea>
+			</div>
+
+              <div class="row justify-content-center mt-4">
+                <a class="nav-link btn btn-danger text-center" href="#">Back</a>
+                <a class="nav-link btn btn-success text-center ml-5" href="#">Report</a>
+            </div>
+
+
+		</form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+</body>  
+</html>

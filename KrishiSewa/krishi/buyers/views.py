@@ -10,6 +10,11 @@ from vendors.utils import *
 def index(request):
     return render(request, 'buyers/buyers.html')
 
+@login_required
+@buyers_only
+def report_form(request):
+    return render(request, 'buyers/ReportForm.html')
+
 
 @login_required
 @buyers_only

@@ -1,0 +1,257 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Details Table</title>
+    <link rel="stylesheet" href="Details.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'farmers/css/DetailsTable.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+    integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+
+
+
+</head>
+<body>
+
+  <div class="row justify-content-center">
+
+    <div class="form-div mt-5">
+      <label class="form-check-label" for="gridCheck">With Opening</label>
+      <input class="form-check-input ml-3" type="checkbox" id="gridCheck">
+    </div>
+    </div>
+
+    <br>
+
+    <div class="row justify-content-center mb-4">
+    <div class="form-div ">
+      <label>Start Date: </label>
+          <input type="date" name="date" value="" />
+
+      <label class="ml-4">End Date: </label>
+        <input type="date" name="date" value="" />
+
+      <button type="button" class="btn btn-m btn-success ml-5">Submit</button>
+
+
+    </div>
+  </div>
+
+
+
+
+<div class="row">
+<div class="container">
+    <h3 class="text-center mt-3">Income Details Table</h3>
+    <div class="row justify-content-center mt-3">
+      <div style="height:40vh; overflow-y: scroll;">
+      <table class="table table-striped table-bordered table-sm w-auto text-center mt-2 ">
+            <thead>
+              <tr>
+                <th scope="col">S.N.</th>
+                <th scope="col">Date</th>
+                <th scope="col">Particular</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Price</th>
+                <th scope="col">Remarks</th>
+              </tr>
+
+
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>17/7/2020</td>
+                <td>Abc</td>
+                <td>200</td>
+                <td>50000</td>
+                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
+              </tr>
+
+              <tr>
+                <th scope="row">2</th>
+
+                <td>17/7/2020</td>
+                <td>Abc</td>
+                <td>200</td>
+                <td>50000</td>
+                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
+              </tr>
+
+              <tr>
+                <th scope="row">3</th>
+
+                <td>17/7/2020</td>
+                <td>Abc</td>
+                <td>200</td>
+                <td>50000</td>
+                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
+              </tr>
+
+              <tr>
+                <th scope="row">4</th>
+
+                <td>17/7/2020</td>
+                <td>Abc</td>
+                <td>200</td>
+                <td>50000</td>
+                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
+              </tr>
+
+              <tr>
+                <th scope="row">5</th>
+
+                <td>17/7/2020</td>
+                <td>Abc</td>
+                <td>200</td>
+                <td>50000</td>
+                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
+              </tr>
+
+              <tr>
+                <th scope="row">6</th>
+
+                <td>17/7/2020</td>
+                <td>Abc</td>
+                <td>200</td>
+                <td>50000</td>
+                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
+              </tr>
+            </div>
+            </tbody>
+          </table>
+          </div>
+          </div>
+          </div>
+
+
+
+
+        <div class="row mt-4">
+          <div class="container">
+          <h3 class="text-center">Expense Details Table</h3>
+            <div class="row justify-content-center mt-3">
+              <div style="height:40vh; overflow-y: scroll;">
+                <table class="table table-striped table-bordered table-sm w-auto text-center mt-2 ">
+                    <thead>
+                      <tr>
+                        <th scope="col">S.N.</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Particular</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Duration</th>
+                        <th scope="col">Remarks</th>
+                      </tr>
+
+
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">1</th>
+                        <td>17/7/2020</td>
+                        <td>Abc</td>
+                        <td>200</td>
+                        <td>50000</td>
+                        <td>2 days</td>
+                        <td>Lorem ipsum dolor sit amet consectetur elit.</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row">2</th>
+
+                        <td>17/7/2020</td>
+                        <td>Abc</td>
+                        <td>200</td>
+                        <td>50000</td>
+                        <td>2 days</td>
+                        <td>Lorem ipsum dolor sit amet consectetur elit.</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row">3</th>
+
+                        <td>17/7/2020</td>
+                        <td>Abc</td>
+                        <td>200</td>
+                        <td>50000</td>
+                        <td>2 days</td>
+                        <td>Lorem ipsum dolor sit amet consectetur elit.</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row">4</th>
+
+                        <td>17/7/2020</td>
+                        <td>Abc</td>
+                        <td>200</td>
+                        <td>50000</td>
+                        <td>2 days</td>
+                        <td>Lorem ipsum dolor sit amet consectetur elit.</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row">5</th>
+
+                        <td>17/7/2020</td>
+                        <td>Abc</td>
+                        <td>200</td>
+                        <td>50000</td>
+                        <td>2 days</td>
+                        <td>Lorem ipsum dolor sit amet consectetur elit.</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row">6</th>
+
+                        <td>17/7/2020</td>
+                        <td>Abc</td>
+                        <td>200</td>
+                        <td>50000</td>
+                        <td>2 days</td>
+                        <td>Lorem ipsum dolor sit amet consectetur elit.</td>
+                      </tr>
+                    </div>
+                    </tbody>
+                  </table>
+                  </div>
+                 </div>
+                 </div>
+
+
+
+                <div class="justify-content-center mt-2">
+                <div class="row">
+                    <div class="form-div ml-5 p-3 ">
+                        <div class="form-group p-5 d-inline-block ">
+                            <label  class="form-label h6 font-weight-bold">Total Income:</label>
+
+                        </div>
+
+                        <div class="form-group p-5 d-inline-block ml-5">
+                            <label  class="form-label h6 font-weight-bold">Total Expense:</label>
+
+                        </div>
+
+                        <div class="form-group p-5 d-inline-block ml-5 ">
+                            <label  class="form-label h6 font-weight-bold">Net Amount:</label>
+
+                        </div>
+
+                    </div>
+                </div>
+                </div>
+
+
+
+
+
+
+
+
+</body>
+</html>

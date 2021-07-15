@@ -6,7 +6,18 @@ from django.contrib.auth.models import User
 from .auth import *
 
 # Create your views here.
+
+@unauthenticated_user
+def feedback(request):
+    return render(request,'accounts/Feedback.html')
+
+
+@unauthenticated_user
+def history(request):
+    return render(request,'accounts/History.html')
+
 base_url = "http://127.0.0.1:8000"
+
 
 
 @unauthenticated_user

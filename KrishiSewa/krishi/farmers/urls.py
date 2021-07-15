@@ -30,5 +30,12 @@ urlpatterns = [
     path('imagetest', image_test),
     path('detailReport', profit_loss_report),
 
+    # path('generalTable', general_table),
+    # path('detailsTable', details_table),
+
+    path('profile', profile),
+    path('editProfile', edit_profile),
+
+
     
 ]
