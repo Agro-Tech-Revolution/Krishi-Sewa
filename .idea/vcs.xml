@@ -2,5 +2,9 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+<<<<<<< HEAD
+    <mapping directory="$PROJECT_DIR$/Soil-Analyzer-main/Soil-Analyzer-main/KrishiSewa" vcs="Git" />
+=======
+>>>>>>> bcfe04734fec3e5c12803ec520620b0d756e0713
   </component>
 </project>
