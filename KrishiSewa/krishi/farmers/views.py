@@ -470,3 +470,8 @@ def farmerstovenders(request):
 @farmers_only
 def equipment_Details(request):
     return render(request, 'farmers/equipmentDetails.html')
+
+@login_required
+@farmers_only
+def rent_product(request):
+    return render(request, 'farmers/rentProduct.html')

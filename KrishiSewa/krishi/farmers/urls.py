@@ -32,5 +32,6 @@ urlpatterns = [
     path('buyequipment/', farmerstovenders),
     path('myproducts/', my_products),
     path('equipmentdetails/', equipment_Details),
+    path('rentproduct/', rent_product)
     
 ]
