@@ -500,7 +500,7 @@ class MyProductStock(APIView):
         product_stock_data = get_product_stock_data(product_stock)
         return Response(product_stock_data)
 
-
+# sold product start
 class ProductSoldView(APIView):
     def get(self, request):
         all_products_sold = ProductSold.objects.all()
@@ -627,6 +627,8 @@ class BuyerSalesDetails(APIView):
         product_sold_detail = self.get_object(id)
         products_sold_data = get_sold_details(product_sold_detail)
         return Response(products_sold_data)
+# sold product end
+
 
 
 class ExpenseAPIView(APIView):
@@ -635,12 +637,7 @@ class ExpenseAPIView(APIView):
 
     def get(self, request):
         all_expenses = Expenses.objects.all()
-        expense_data = ExpenseSerializer(all_expenses, many=True).data
-
-        for expense in expense_data:
-            user_details = User.objects.get(id=expense['expense_of'])
-            user_details_data = UserSerializer(user_details).data
-            expense['expense_of'] = user_details_data
+        expense_data = get_expense_details(all_expenses)
         return Response(expense_data)
 
     def post(self, request):
@@ -667,9 +664,7 @@ class ExpenseDetails(APIView):
         expense_detail = self.get_object(id)
 
         expense_data = ExpenseSerializer(expense_detail).data
-        user_details = User.objects.get(id=expense_data['expense_of'])
-        user_details_data = UserSerializer(user_details).data
-        expense_data['expense_of'] = user_details_data
+        expense_data = modify_expense_details(expense_data)
 
         return Response(expense_data)
 
@@ -697,12 +692,7 @@ class MyExpenses(APIView):
 
     def get(self, request, user_id):
         my_expenses = self.get_objects(user_id)
-        expense_data = ExpenseSerializer(my_expenses, many=True).data
-
-        for expense in expense_data:
-            user_details = User.objects.get(id=expense['expense_of'])
-            user_details_data = UserSerializer(user_details).data
-            expense['expense_of'] = user_details_data
+        expense_data = get_expense_details(my_expenses)
 
         return Response(expense_data)
 
@@ -710,21 +700,12 @@ class MyExpenses(APIView):
 class HomeExpenseAPIView(APIView):
     def get(self, request):
         all_home_expenses = HomeExpenses.objects.all()
-        home_expense_data = HomeExpenseSerialer(all_home_expenses, many=True).data
-
-        for expense in home_expense_data:
-            user_details = User.objects.get(id=expense['expense_of'])
-            user_details_data = UserSerializer(user_details).data
-            expense['expense_of'] = user_details_data
-
-            product_details = Products.objects.get(id=expense['product'])
-            product_details_data = ProductSerializer(product_details).data
-            expense['product'] = product_details_data
+        home_expense_data = get_home_expense_details(all_home_expenses)
 
         return Response(home_expense_data)
 
     def post(self, request):
-        serializer = HomeExpenseSerialer(data=request.data)
+        serializer = HomeExpenseSerializer(data=request.data)
 
         if serializer.is_valid():
             product_id = request.data["product"]
@@ -755,21 +736,15 @@ class HomeExpenseDetails(APIView):
     def get(self, request, id):
         home_expense_detail = self.get_object(id)
 
-        home_expense_data = HomeExpenseSerialer(home_expense_detail).data
+        home_expense_data = HomeExpenseSerializer(home_expense_detail).data
 
-        user_details = User.objects.get(id=home_expense_data['expense_of'])
-        user_details_data = UserSerializer(user_details).data
-        home_expense_data['expense_of'] = user_details_data
-
-        product_details = Products.objects.get(id=home_expense_data['product'])
-        product_details_data = ProductSerializer(product_details).data
-        home_expense_data['product'] = product_details_data
+        home_expense_data = modify_home_expense_data(home_expense_data)
 
         return Response(home_expense_data)
 
     def put(self, request, id):
         home_expense = self.get_object(id)
-        serializer = HomeExpenseSerialer(home_expense, data=request.data)
+        serializer = HomeExpenseSerializer(home_expense, data=request.data)
 
         if serializer.is_valid():
             product_id = request.data["product"]
@@ -813,16 +788,7 @@ class MyHomeExpense(APIView):
 
     def get(self, request, user_id):
         my_home_expenses = self.get_objects(user_id)
-        home_expense_data = HomeExpenseSerialer(my_home_expenses, many=True).data
-
-        for expense in home_expense_data:
-            user_details = User.objects.get(id=expense['expense_of'])
-            user_details_data = UserSerializer(user_details).data
-            expense['expense_of'] = user_details_data
-
-            product_details = Products.objects.get(id=expense['product'])
-            product_details_data = ProductSerializer(product_details).data
-            expense['product'] = product_details_data
+        home_expense_data = get_home_expense_details(my_home_expenses)
 
         return Response(home_expense_data)
 
@@ -1115,3 +1081,237 @@ class RentedEquipmentSeller(APIView):
         equipment_rented_data = get_rent_details(equipment_rented_detail)
         return Response(equipment_rented_data)
 
+
+class ProfitLossReportView(APIView):
+    def get(self, request, id):
+        # income
+        product_sales_details = ProductSold.objects.filter(sold_by=id)
+        product_sold_data = get_sold_details(product_sales_details)
+        total_income = 0
+        for sale in product_sold_data:
+            product_name = sale["sold_product"]["product"]["prod_name"]
+            prod_seller_fname = sale["sold_to"]["first_name"]
+            prod_seller_lname = sale["sold_to"]["last_name"]
+
+            sale["date"] = sale["sold_date"]
+            sale["particular"] = product_name + " to " + prod_seller_fname + " " + prod_seller_lname
+            sale["quantity"] = sale["quantity_sold"]
+            sale["price"] = sale["sold_price"]
+            sale["user"] = sale["sold_by"]
+            
+            total_income += sale["sold_price"]
+
+            sale.pop("sold_product", None)
+            sale.pop("sold_by", None)
+            sale.pop("sold_to", None)
+            sale.pop("quantity_sold", None)
+            sale.pop("sold_price", None)
+            sale.pop("sold_date", None)
+
+        # all expenses
+        # all other expenses
+        total_expenses = 0
+        expenses_details = Expenses.objects.filter(expense_of=id)
+        expense_data = get_expense_details(expenses_details)
+
+        for expense in expense_data:
+            expense["type"] = "Expenses"
+            expense["particular"] = expense["particular"] + " for " + expense["expense_type"]
+            expense["quantity"] = str(expense["quantity"]) + " " + expense["unit"]
+            expense["duration"] = "-"
+            expense["date"] = expense["expense_date"]
+            expense["user"] = expense["expense_of"]
+
+            total_expenses += expense["amount"]
+
+            expense.pop("expense_type", None)
+            expense.pop("unit", None)
+            expense.pop("expense_date", None)
+            expense.pop("expense_of", None)
+
+        # all home expenses 
+        home_expenses_details = HomeExpenses.objects.filter(expense_of=id)
+        home_expenses_data = get_home_expense_details(home_expenses_details)
+        
+        for home_expense in home_expenses_data:
+            home_expense["type"] = "Home Expense"
+            home_expense["particular"] = home_expense["product"]["prod_name"] + " " + home_expense["category"]
+            home_expense["amount"] = home_expense["estimated_price"]
+            home_expense["duration"] = "-"
+            home_expense["quantity"] = str(home_expense["quantity"]) + " kg"
+            home_expense["user"] = home_expense["expense_of"]
+
+            total_expenses += home_expense["amount"]
+
+            home_expense.pop("category", None)
+            home_expense.pop("estimated_price", None)
+            home_expense.pop("product", None)
+            home_expense.pop("expense_of", None)
+
+        # all bought details
+        buy_details = BuyDetails.objects.filter(sold_to=id)
+        all_bought_data = get_bought_details(buy_details)
+        for bought_equipment in all_bought_data:
+            eqp_name = bought_equipment["equipment"]["equipment"]["name"]
+            seller_fname = bought_equipment["sold_by"]["first_name"] 
+            seller_lname = bought_equipment["sold_by"]["last_name"]
+
+            bought_equipment["type"] = "Bought Detail"
+            bought_equipment["particular"] = eqp_name + " from " + seller_fname + " " + seller_lname
+            bought_equipment["amount"] = bought_equipment["total_price"]
+            bought_equipment["duration"] = "-"
+            bought_equipment["date"] = bought_equipment["sold_date"]
+            bought_equipment["user"] = bought_equipment["sold_to"]
+
+            total_expenses += bought_equipment["amount"]
+
+            bought_equipment.pop("equipment", None)
+            bought_equipment.pop("sold_by", None)
+            bought_equipment.pop("total_price", None)
+            bought_equipment.pop("sold_date", None)
+            bought_equipment.pop("sold_to", None)
+
+        # all rent details
+        rent_details = RentDetails.objects.filter(rented_to=id)
+        all_rent_data = get_rent_details(rent_details)
+        for rented_equipment in all_rent_data:
+            eqp_name = rented_equipment["equipment"]["equipment"]["name"]
+            seller_fname = rented_equipment["rented_by"]["first_name"] 
+            seller_lname = rented_equipment["rented_by"]["last_name"]
+
+            rented_equipment["type"] = "Rent Detail"
+            rented_equipment["particular"] = eqp_name + " from " + seller_fname + " " + seller_lname
+            rented_equipment["amount"] = rented_equipment["total_price"]
+            rented_equipment["duration"] = str(rented_equipment["rented_duration"]) + " hrs."
+            rented_equipment["quantity"] = rented_equipment["rented_quantity"]
+            rented_equipment["date"] = rented_equipment["rented_date"]
+            rented_equipment["user"] = rented_equipment["rented_by"]
+
+            total_expenses += rented_equipment["amount"]
+
+            rented_equipment.pop("equipment", None)
+            rented_equipment.pop("rented_to", None)
+            rented_equipment.pop("total_price", None)
+            rented_equipment.pop("rented_date", None)
+            rented_equipment.pop("rented_duration", None)
+            rented_equipment.pop("rented_quantity", None)
+            rented_equipment.pop("rented_by", None)
+
+        # concatenating all expenses
+        all_expenses = expense_data + home_expenses_data + all_bought_data + all_rent_data
+        data_to_display = {"Expenses": all_expenses, "Income":product_sold_data, 
+                           "TotalIncome": total_income, "TotalExpense": total_expenses, 
+                           "NetAmount": total_income - total_expenses}
+
+        return Response(data_to_display)
+
+
+# modified sold product
+class BuyProductRequest(APIView):
+    def get(self, request):
+        all_products_sold = ProductSold.objects.all()
+        products_sold_data = get_sold_details(all_products_sold)
+        return Response(products_sold_data)
+
+    def post(self, request):
+        serializer = ProductSoldSerializer(data=request.data)
+        if serializer.is_valid():
+            quantity_requested = float(request.data['quantity_sold'])
+            product_requested = request.data["sold_product"]
+
+            product_on_sale = ProductsForSale.objects.filter(id=product_requested)
+            if len(product_on_sale) != 0:
+                quantity_present = product_on_sale[0].quantity_in_kg
+                if quantity_requested < quantity_present:
+                    serializer.save()
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+                else:
+                    return Response({"Bad Request": "Not enough quantity present"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ProductRequestDetails(APIView):
+    def get_object(self, id):
+        try:
+            return ProductSold.objects.get(id=id)
+        except ProductSold.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, id):
+        product_sold_detail = self.get_object(id)
+        product_sold = ProductSoldSerializer(product_sold_detail).data
+        product_sold_data = modify_sold_data(product_sold)
+        return Response(product_sold_data)
+        
+
+    def put(self, request, id):
+        product_sold = self.get_object(id)
+        serializer = ProductSoldSerializer(product_sold, data=request.data)
+
+        if serializer.is_valid():
+            requested_quantity = request.data["quantity_sold"]
+            current_quantity = product_sold.sold_product.quantity_in_kg
+            if not product_sold.seen and not product_sold.approved:
+                if requested_quantity < current_quantity:
+                    serializer.save()
+                    return Response(serializer.data)
+                else:
+                    return Response({"Bad Request": "Not enough quantity present"}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({"Bad Request": "The request has been disapproved. You cannot update now."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id):
+        product_sold = self.get_object(id)
+        if not product_sold.approved:
+            product_sold.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({"Bad Request": "This request has already been approved. Cannot delete the request now"}, 
+                            status=status.HTTP_400_BAD_REQUEST)
+
+
+class BuyersProductRequests(APIView):
+    def get_object(self, id):
+        try:
+            return ProductSold.objects.filter(sold_to=id)
+        except ProductSold.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+    
+    def get(self, request, id):
+        product_bought = self.get_object(id)
+        products_bought_data = get_sold_details(product_bought)
+        return Response(products_bought_data)
+
+
+class FarmerProductRequests(APIView):
+    def get_object(self, id):
+        try:
+            return ProductSold.objects.filter(sold_by=id)
+        except ProductSold.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+    
+    def get(self, request, id):
+        product_sold = self.get_object(id)
+        products_sold_data = get_sold_details(product_sold)
+        return Response(products_sold_data)
+
+
+class ChangeProductRequestStatus(APIView):  
+    def get_object(self, id):
+        try:
+            return ProductSold.objects.get(id=id)
+        except ProductSold.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    def put(self, request, id):
+        product_request = self.get_object(id)
+        serializer = ProductSoldSerializer(product_request, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        

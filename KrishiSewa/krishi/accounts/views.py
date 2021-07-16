@@ -109,7 +109,7 @@ def register_view(request):
         else:
             print("Error in creating user")
 
-    return render(request, 'accounts/signup.html')
+    return render(request, 'accounts/register.html')
 
 
 def logout_user(request):
