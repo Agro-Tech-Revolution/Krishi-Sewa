@@ -567,7 +567,7 @@ def image_test(request):
         print(file_path)
         predict = get_image_model(file_path)
 
-    return render(request, 'farmers/imagetest.html', { 'img_result': predict })
+    return render(request, 'farmers/imagetest.html', {'img_result': predict })
 
 # @login_required
 # @farmers_only
@@ -607,3 +607,8 @@ def farmerstovenders(request):
 @farmers_only
 def equipment_Details(request):
     return render(request, 'farmers/equipmentDetails.html')
+
+@login_required
+@farmers_only
+def edit_product(request):
+    return render(request, 'farmers/editProduct.html')

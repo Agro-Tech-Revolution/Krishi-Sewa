@@ -40,5 +40,6 @@ urlpatterns = [
     path('buyequipment/', farmerstovenders),
     path('myproducts/', my_products),
     path('equipmentdetails/', equipment_Details),
+    path('editproduct/', edit_product)
     
 ]

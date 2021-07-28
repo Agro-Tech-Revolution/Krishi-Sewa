@@ -1,0 +1,37 @@
+{% extends 'layout-farmers.html' %}
+
+{% load static %}
+
+{% block title %}
+<title>Buy Product Farmers</title>
+<link href="{% static 'farmers/css/editproduct.css' %}" rel="stylesheet">
+{% endblock title %}
+
+{% block content %}
+
+    <div class="testbox">
+      <form action="/">
+        <div class="banner">
+          <img class="rounded image-fluid" style="height:8rem; width: 50%;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToDOR6Lah3jlphwUwpKPDymrkBCfBGhnho6Q&usqp=CAU">
+        </div>
+        <div class="item photobutton">
+          <input type="file"  />
+        </div>
+        <div class="item">
+          <label for="title">Title<span>*</span></label>
+          <input id="title" type="text" name="title" required/>
+        </div>
+        <div class="item">
+          <label for="PurchasePrice">Purchase Price<span>*</span></label>
+          <input id="PurchasePrice" type="number" name="PurchasePrice" required/>
+        </div>
+        <div class="item">
+          <label for="RentPrice">Rent Price<span>*</span></label>
+          <input id="RentPrice" type="number" name="RentPrice" required/>
+        </div>
+        <div class="btn-block">
+          <button type="submit">UPDATE</button>
+        </div>
+      </form>
+    </div>
+  {% endblock content %}
