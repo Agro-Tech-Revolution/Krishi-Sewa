@@ -28,7 +28,7 @@ class EquipmentToDisplay(models.Model):
     available_to_buy = models.BooleanField(default=False, null=True)
     price_to_buy_per_item = models.FloatField(null=True)
     price_per_hour = models.FloatField(null=True)
-    duration = models.FloatField(null=True)
+    duration = models.FloatField(null=True) # this can be removed
     details = models.CharField(max_length=200)
     date = models.DateTimeField(auto_now_add=True)
     eqp_img = models.ImageField(null=True, upload_to='static/equipment_images')

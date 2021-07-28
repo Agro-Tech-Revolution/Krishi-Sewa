@@ -105,10 +105,10 @@ a, a:hover, a:focus {
     background: #D2B48C;
 }
 
-
+/* 
 a[data-toggle="collapse"] {
     position: relative;
-}
+} */
 
 /* a[aria-expanded="false"]::before, a[aria-expanded="true"]::before {
     content: '\e259';
