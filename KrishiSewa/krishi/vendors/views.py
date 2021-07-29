@@ -199,3 +199,26 @@ def delete_comment(request, id):
     if Response(comment_del_response).status_code == 200:
         print('Deleted Successfully')
     return redirect('/vendors/myEquipments')
+
+
+
+@login_required
+@vendors_only
+def sell_details(request):
+    return render(request, 'vendors/SellDetails.html')
+
+@login_required
+@vendors_only
+def rent_details(request):
+    return render(request, 'vendors/RentDetails.html')
+
+@login_required
+@vendors_only
+def vendor_profile(request):
+    return render(request, 'vendors/Profile.html')
+
+@login_required
+@vendors_only
+def vendor_update_profile(request):
+    return render(request, 'vendors/UpdateProfile.html')
+

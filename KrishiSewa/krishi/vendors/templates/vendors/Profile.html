@@ -1,6 +1,6 @@
-{% extends 'layout-farmers.html' %}
+{% extends 'layout-vendors.html' %}
 {% block title %}
-<title>Farmers</title>
+<title>Vendor Profile</title>
 <!-- insert css of this page here -->
 {% endblock title %}
 
@@ -8,24 +8,14 @@
 {% block content %}
 
 
-
-    <div class=" row justify-content-center mt-3">
-    <div class="card mb-3 shadow-lg p-3 mb-4 rounded" style="width: 40rem; height:42rem;">
+<div class=" row justify-content-center">
+    <div class="card mb-3 shadow-lg p-3 mb-4 rounded" style="width: 40rem; height:39rem;">
         <div class=" row justify-content-center">
         <img src="https://img.favpng.com/0/15/12/computer-icons-avatar-male-user-profile-png-favpng-ycgruUsQBHhtGyGKfw7fWCtgN.jpg"  class="card-img-top w-25" alt="image">
         </div>
         <div class="card-body">
-            <p class="card-text h5 text-center">Farmer</p>
+            <p class="card-text h5 text-center">Vendor</p>
             <p class="card-text font-weight-light text-center">Bio: Lorem ipsum dolor sit amet consectetur.</p>
-
-            <div class="row justify-content-center">
-            <button type="button" class="btn btn-md btn-outline-dark" data-toggle="popover" title="Total Sales"
-            data-content="15,050">Sell</button>
-
-            <button type="button" class="btn btn-md btn-outline-dark ml-3" data-toggle="popover" title="Total Purchase"
-            data-content="10,000">Purchase</button>
-            </div>
-            <br>
 
 
         <div class="bg-light">
@@ -73,7 +63,7 @@
         </div>
 
         <div class=" row justify-content-center">
-          <a href="/farmers/editProfile" class="btn btn-primary ml-4" style="border-radius: 25px; padding: 7px; font-size: 17px; width:150px">Edit Profile</a>
+          <a href="/vendors/vendorUpdateProfile" class="btn btn-primary ml-4" style="border-radius: 25px; padding: 7px; font-size: 17px; width:150px">Edit Profile</a>
         </div>
 
         </div>
@@ -81,10 +71,6 @@
       </div>
 
 
-    <script>
-      $(function () {
-  $('[data-toggle="popover"]').popover()
-})
-    </script>
-
 {% endblock content %}
+
+

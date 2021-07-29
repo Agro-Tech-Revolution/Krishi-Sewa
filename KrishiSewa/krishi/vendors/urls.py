@@ -9,5 +9,11 @@ urlpatterns = [
     path('myEquipments/delete/<int:id>', delete_equipment),
     path('myEquipments/editComment', edit_comment),
     path('myEquipments/delete/comment/<int:id>', delete_comment),
+
+    path('sellDetails', sell_details),
+    path('rentDetails', rent_details),
+    path('vendorProfile', vendor_profile),
+    path('vendorUpdateProfile', vendor_update_profile),
+
     
 ]

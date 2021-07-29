@@ -1,0 +1,57 @@
+{% load static %}
+<nav id="sidebar">
+    <div class="sidebar-header">
+        <img src="{% static 'vendors/images/logo.png' %}" alt="logo">
+    </div>
+
+    <ul class="list-unstyled components">
+
+        <li>
+            <a href="/">Home</a>
+        </li>
+
+        <li>
+            <a href="/vendors/vendorProfile">Profile</a>
+        </li>
+
+
+        <!--<li class="active">
+            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">
+                Equipment<i class="fas fa-chevron-down drop-down"></i>
+            </a>
+
+            <ul class="collapse list-unstyled" id="homeSubmenu">
+                <li><a href="#">Add Equipment</a></li>
+                <li><a href="#">Update Equipment</a></li>
+                <li><a href="#">View Equipment</a></li>
+
+            </ul>
+        </li>-->
+
+        <li>
+            <a href="#">Add Equipment</a>
+        </li>
+        <li>
+            <a href="#">Update Equipment</a>
+        </li>
+
+        <li>
+            <a href="#">View Equipment</a>
+        </li>
+
+
+
+        <li>
+            <a href="/vendors/sellDetails">Sell Details</a>
+        </li>
+        <li>
+            <a href="/vendors/rentDetails">Rent Details</a>
+        </li>
+
+    </ul>
+
+    <ul class="list-unstyled CTAs">
+
+        <li><a href="/logout" class="article">Logout</a></li>
+    </ul>
+</nav>
