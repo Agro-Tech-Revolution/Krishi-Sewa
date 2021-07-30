@@ -10,12 +10,13 @@
 {% block content %}
 
     <div class="testbox">
-      <form action="/">
+      <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
         <div class="banner">
           <img class="rounded image-fluid" style="height:8rem; width: 50%;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToDOR6Lah3jlphwUwpKPDymrkBCfBGhnho6Q&usqp=CAU">
         </div>
         <div class="item photobutton">
-          <input type="file"  />
+          <input type="file"/>
         </div>
         <div class="item">
           <label for="title">Title<span>*</span></label>

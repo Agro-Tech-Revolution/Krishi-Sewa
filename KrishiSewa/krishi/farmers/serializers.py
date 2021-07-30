@@ -25,7 +25,7 @@ class ProductForSaleSerializer(serializers.ModelSerializer):
 class SerialzerForSold(serializers.ModelSerializer):
     class Meta:
         model = ProductsForSale
-        fields = ['id', 'product', 'quantity_in_kg', 'price_per_kg']
+        fields = ['id', 'product', 'quantity_in_kg', 'price_per_kg', 'added_by']
 
 
 class ProductCommentSerializer(serializers.ModelSerializer):
@@ -56,7 +56,7 @@ class ProductStockSerializer(serializers.ModelSerializer):
 class ProductSoldSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductSold
-        fields = ['id', 'sold_product', 'sold_by', 'sold_to', 'quantity_sold', 'sold_price', 'sold_date', 'remarks', 'approved', 'seen']
+        fields = ['id', 'sold_product', 'sold_to', 'quantity_sold', 'sold_price', 'sold_date', 'remarks', 'approved', 'seen']
 
 
 class ExpenseSerializer(serializers.ModelSerializer):

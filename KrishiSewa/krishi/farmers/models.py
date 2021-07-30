@@ -104,7 +104,7 @@ class ProductStock(models.Model):
 
 class ProductSold(models.Model):
     sold_product = models.ForeignKey(ProductsForSale, on_delete=models.SET_NULL, null=True)      # this product_id from ProductsOnSale
-    sold_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='farmer_id')
+
     sold_to = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='buyer_id')
     quantity_sold = models.FloatField()
     sold_price = models.FloatField()

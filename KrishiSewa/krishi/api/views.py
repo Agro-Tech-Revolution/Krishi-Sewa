@@ -510,9 +510,11 @@ class ProductSoldView(APIView):
     def post(self, request):
         serializer = ProductSoldSerializer(data=request.data)
         if serializer.is_valid():
-            farmer_id = request.data["sold_by"]
+            # farmer_id = request.data["sold_by"]
+            
             product_id = serializer.validated_data["sold_product"].product.id
             sold_product = request.data["sold_product"]
+            farmer_id = serializer.validated_data["sold_product"].added_by.id
 
             product_to_be_sold = ProductsForSale.objects.filter(id=sold_product)
             quantity_present = product_to_be_sold[0].quantity_in_kg
@@ -556,9 +558,10 @@ class ProductSoldDetails(APIView):
         serializer = ProductSoldSerializer(product_sold, data=request.data)
 
         if serializer.is_valid():
-            farmer_id = request.data["sold_by"]
+            # farmer_id = request.data["sold_by"]
             product_id = serializer.validated_data["sold_product"].product.id
             sold_product = request.data["sold_product"]
+            farmer_id = serializer.validated_data["sold_product"].added_by.id
 
             product_stock = ProductStock.objects.filter(farmer_id=farmer_id, product_id=product_id)
 
@@ -585,7 +588,7 @@ class ProductSoldDetails(APIView):
     def delete(self, request, id):
         product_sold = self.get_object(id)
         quantity_sold = product_sold.quantity_sold
-        farmer_id = product_sold.sold_by
+        farmer_id = product_sold.sold_product.added_by.id
         product_id = product_sold.sold_product.product.id
         sold_product = product_sold.sold_product.id
 
@@ -606,7 +609,7 @@ class ProductSoldDetails(APIView):
 class SellerSalesDetails(APIView):
     def get_object(self, id):
         try:
-            return ProductSold.objects.filter(sold_by=id)
+            return ProductSold.objects.filter(sold_product__added_by=id)
         except ProductSold.DoesNotExist:
             return None
 
@@ -1003,7 +1006,7 @@ class BoughtEquipmentsBuyer(APIView):
 class SoldEquipmentSeller(APIView):
     def get_object(self, id):
         try:
-            return BuyDetails.objects.filter(sold_by=id)
+            return BuyDetails.objects.filter(equipment__added_by=id)
         except BuyDetails.DoesNotExist:
             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
 
@@ -1016,7 +1019,7 @@ class SoldEquipmentSeller(APIView):
 class RentEquipmentView(APIView):
     def get(self, request):
         all_rent_details = RentDetails.objects.all()
-        print(all_rent_details[0].rented_by)
+        # print(all_rent_details[0].rented_by)
         all_rent_data = get_rent_details(all_rent_details)
         return Response(all_rent_data)
 
@@ -1072,7 +1075,7 @@ class RentedEquipmentsBuyer(APIView):
 class RentedEquipmentSeller(APIView):
     def get_object(self, id):
         try:
-            return RentDetails.objects.filter(rented_by=id)
+            return RentDetails.objects.filter(equipment__added_by=id)
         except RentDetails.DoesNotExist:
             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
 
@@ -1085,7 +1088,7 @@ class RentedEquipmentSeller(APIView):
 class ProfitLossReportView(APIView):
     def get(self, request, id):
         # income
-        product_sales_details = ProductSold.objects.filter(sold_by=id)
+        product_sales_details = ProductSold.objects.filter(sold_product__added_by=id)
         product_sold_data = get_sold_details(product_sales_details)
         total_income = 0
         for sale in product_sold_data:
@@ -1107,7 +1110,7 @@ class ProfitLossReportView(APIView):
             sale.pop("quantity_sold", None)
             sale.pop("sold_price", None)
             sale.pop("sold_date", None)
-
+        
         # all expenses
         # all other expenses
         total_expenses = 0
@@ -1288,7 +1291,7 @@ class BuyersProductRequests(APIView):
 class FarmerProductRequests(APIView):
     def get_object(self, id):
         try:
-            return ProductSold.objects.filter(sold_by=id)
+            return ProductSold.objects.filter(sold_product__added_by=id)
         except ProductSold.DoesNotExist:
             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
     

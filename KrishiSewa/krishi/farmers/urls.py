@@ -16,6 +16,8 @@ urlpatterns = [
     path('deleteProduction/<int:id>', delete_production),
     
     path('myProducts/sell/<int:id>', sell_product),
+    path('editproduct/<int:prod_id>', edit_product),
+
     path('mySales', my_sales),
     path('editSales/<int:id>', edit_sales),
     path('deleteSales/<int:id>', delete_sales),
@@ -37,9 +39,12 @@ urlpatterns = [
     # path('test/result/', result),
     path('npktest',npk_result),
 
-    path('buyequipment/', farmerstovenders),
+    path('allEquipments/', all_equipments),
     path('myproducts/', my_products),
-    path('equipmentdetails/', equipment_Details),
-    path('editproduct/', edit_product)
+    path('equipmentdetails/<int:eqp_id>', equipment_details),
+    path('purchase/<int:eqp_id>', purchase_request),
+    path('rent/<int:eqp_id>', rent_request),
+
+    
     
 ]

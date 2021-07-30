@@ -68,8 +68,8 @@ def products_for_sale(request):
 @login_required
 @farmers_only
 def my_products(request):
-    # headers = {'Authorization': 'Token ' + request.session['token']}
-    #
+    headers = {'Authorization': 'Token ' + request.session['token']}
+    
     # if request.method == 'POST':
     #     comment_post_response = comment_add(request)
     #     if comment_post_response.json().get('id') != None:
@@ -78,22 +78,22 @@ def my_products(request):
     #         error = comment_post_response.json()
     #         print(error)
     #         return redirect('/farmers/myProducts')
-    #
-    # # calling product api to get all the products added by me
-    # product_endpoint = '/api/productsOnSale/mine/' + str(request.user.id)
-    # product_url = base_url + product_endpoint
-    # product_response = requests.get(product_url, headers=headers)
-    #
-    # context = {
-    #     "my_products": product_response.json(),
-    # }
+    
+    # calling product api to get all the products added by me
+    product_endpoint = '/api/productsOnSale/mine/' + str(request.user.id)
+    product_url = base_url + product_endpoint
+    product_response = requests.get(product_url, headers=headers)
+    
+    context = {
+        "my_products": product_response.json(),
+    }
 
-    return render(request, 'farmers/myProducts.html')
+    return render(request, 'farmers/myProducts.html', context)
 
 
 @login_required
 @farmers_only
-def edit_products(request, id):
+def edit_product(request, prod_id):
     headers = {'Authorization': 'Token ' + request.session['token']}
 
     if request.method == 'POST':
@@ -110,7 +110,7 @@ def edit_products(request, id):
             "added_by": added_by
         }
 
-        product_put_endpoint = '/api/productsOnSale/' + str(id)
+        product_put_endpoint = '/api/productsOnSale/' + str(prod_id)
         product_put_url = base_url + product_put_endpoint
 
         product_put_response = requests.put(product_put_url, data=product_put_data, headers=headers)
@@ -126,7 +126,7 @@ def edit_products(request, id):
     product_details_url = base_url + product_details_endpoint
     product_details_response = requests.get(product_details_url, headers=headers)
 
-    product_get_endpoint = '/api/productsOnSale/' + str(id)
+    product_get_endpoint = '/api/productsOnSale/' + str(prod_id)
     product_get_url = base_url + product_get_endpoint
     product_get_response = requests.get(product_get_url, headers=headers)
 
@@ -467,27 +467,6 @@ Soil testing part -----------------------------------------
 # def test(request):
 #     return render(request, 'farmers/Npktest.html')
 
-
-@login_required
-@farmers_only
-def getNPK_Prediction(N, P, K, temp, humidity, ph):
-    model = pickle.load(open('npk_model.sav', 'rb'))
-    scaler = pickle.load(open('scaler.sav', 'rb'))
-
-    prediction = model.predict(scaler.transform([
-        [N, P, K, temp, humidity, ph]
-    ]))
-
-    crops = {20: 'rice', 11: 'maize', 3: 'chickpea', 9: 'kidneybeans', 18: 'pigeonpeas', 13: 'mothbeans',
-             14: 'mungbean', 2: 'blackgram', 10: 'lentil', 19: 'pomegranate', 1: 'banana', 12: 'mango', 7: 'grapes',
-             21: 'watermelon', 15: 'muskmelon', 0: 'apple', 16: 'orange', 17: 'papaya', 4: 'coconut', 6: 'cotton',
-             8: 'jute', 5: 'coffee'}
-
-    return crops[prediction]
-
-
-@login_required
-@farmers_only
 def getNPK_Prediction(N, P, K, temp, humidity, ph):
     model = pickle.load(open('npk_model.sav', 'rb'))
     scaler = pickle.load(open('scaler.sav', 'rb'))
@@ -516,7 +495,7 @@ def npk_result(request):
         humidity = int(data['humidity'])
         ph = int(data['ph'])
 
-        print(N)
+        
         result = getNPK_Prediction(N, P, K, temp, humidity, ph)
         context = {'result': result}
         return render(request, 'farmers/Npktest.html', context)
@@ -580,6 +559,7 @@ def image_test(request):
 def general_table(request):
     return render(request, 'farmers/GeneralTable.html')
 
+
 @login_required
 @farmers_only
 def details_table(request):
@@ -591,6 +571,7 @@ def details_table(request):
 def profile(request):
     return render(request, 'farmers/Profile.html')
 
+
 @login_required
 @farmers_only
 def edit_profile(request):
@@ -600,15 +581,122 @@ def edit_profile(request):
 
 @login_required
 @farmers_only
-def farmerstovenders(request):
-    return render(request, 'farmers/farmersToVender.html')
+def all_equipments(request):
+    headers = {'Authorization': 'Token ' + request.session['token']}
+    all_equipment_endpoint = '/api/equipmentToDisplay/'
+    all_equipment_url = base_url + all_equipment_endpoint
+    all_equipment_response = requests.get(all_equipment_url, headers=headers).json()
+    context = {
+        "all_equipments": all_equipment_response,
+    }
+
+    return render(request, 'farmers/allEquipments.html', context)
+
 
 @login_required
 @farmers_only
-def equipment_Details(request):
-    return render(request, 'farmers/equipmentDetails.html')
+def equipment_details(request, eqp_id):
+    headers = {'Authorization': 'Token ' + request.session['token']}
+    equipment_detail_endpoint = '/api/equipmentToDisplay/' + str(eqp_id)
+    equipment_detail_url = base_url + equipment_detail_endpoint
+    equipment_detail_response = requests.get(equipment_detail_url, headers=headers).json()
+    context = {
+        "equipment_detail": equipment_detail_response,
+    }
+    
+
+    return render(request, 'farmers/equipmentDetails.html', context)
+
 
 @login_required
 @farmers_only
-def edit_product(request):
-    return render(request, 'farmers/editProduct.html')
+def purchase_request(request, eqp_id):
+    headers = {'Authorization': 'Token ' + request.session['token']}
+    if request.method == 'POST':
+        equipment_detail_endpoint = '/api/equipmentToDisplay/' + str(eqp_id)
+        equipment_detail_url = base_url + equipment_detail_endpoint
+        equipment_detail_response = requests.get(equipment_detail_url, headers=headers).json()
+        price_per_item = equipment_detail_response["price_to_buy_per_item"]
+
+        data = request.POST
+        equipment = eqp_id
+        sold_to = request.user.id
+        quantity = data["quantity"]
+        delivered_address = data['address']
+        total_price = int(price_per_item) * int(quantity)
+        remarks = data['remarks']
+
+        buy_data = {
+            "equipment": equipment,
+            "sold_to": sold_to,
+            "quantity": quantity,
+            "delivered_address": delivered_address,
+            "total_price": total_price,
+            "remarks": remarks,
+        }
+
+        buy_equipment_endpoint = '/api/equipmentToDisplay/buy'
+        buy_equipment_url = base_url + buy_equipment_endpoint
+        buy_equipment_response = requests.post(buy_equipment_url, data=buy_data, headers=headers)
+
+        if buy_equipment_response.json().get('id') != None:
+            print('Request submitted successfully')
+            return redirect('/farmers/allEquipments/')
+        else:
+            error = buy_equipment_response.json()
+            print(error)
+            return redirect('/farmers/equipmentdetails/' + str(eqp_id))
+
+    return redirect('/farmers/equipmentdetails/' + str(eqp_id))
+
+
+@login_required
+@farmers_only
+def rent_request(request, eqp_id):
+    headers = {'Authorization': 'Token ' + request.session['token']}
+    if request.method == 'POST':
+        equipment_detail_endpoint = '/api/equipmentToDisplay/' + str(eqp_id)
+        equipment_detail_url = base_url + equipment_detail_endpoint
+        equipment_detail_response = requests.get(equipment_detail_url, headers=headers).json()
+        price_per_hour = equipment_detail_response["price_per_hour"]
+
+        data = request.POST
+        equipment = eqp_id
+        rented_to = request.user.id
+        rented_quantity = data["quantity"]
+
+        day = data["day"]
+        hours = data["hours"]
+        delivered_address = data['address']
+        rented_duration = (int(day) * 24) + int(hours)
+        total_price = rented_duration * int(rented_quantity) * int(price_per_hour)
+
+        remarks = data['remarks']
+
+        rent_data = {
+            "equipment": equipment,
+            "rented_to": rented_to,
+            "rented_quantity": rented_quantity,
+            "delivered_address": delivered_address,
+            "rented_duration": rented_duration,
+            "total_price": total_price,
+            "remarks": remarks,
+        }
+        
+        rent_equipment_endpoint = '/api/equipmentToDisplay/rent'
+        rent_equipment_url = base_url + rent_equipment_endpoint
+        rent_equipment_response = requests.post(rent_equipment_url, data=rent_data, headers=headers)
+
+        if rent_equipment_response.json().get('id') != None:
+            print('Request submitted successfully')
+            return redirect('/farmers/allEquipments/')
+        else:
+            error = rent_equipment_response.json()
+            print(error)
+            return redirect('/farmers/equipmentdetails/' + str(eqp_id))
+    return redirect('/farmers/equipmentdetails/' + str(eqp_id))
+
+# @login_required
+# @farmers_only
+# def edit_product(request):
+#     return render(request, 'farmers/editProduct.html')

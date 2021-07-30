@@ -1,3 +1,4 @@
+from operator import mod
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -58,9 +59,10 @@ class EquipmentReport(models.Model):
 
 class BuyDetails(models.Model):
     equipment = models.ForeignKey(EquipmentToDisplay, on_delete=models.SET_NULL, null=True)
-    sold_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='sold_by')
+    
     sold_to = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='sold_to')
     quantity = models.FloatField()
+    delivered_address = models.CharField(max_length=100)
     total_price = models.FloatField()
     sold_date = models.DateTimeField(auto_now_add=True)
     remarks = models.CharField(max_length=150, null=True)
@@ -69,10 +71,11 @@ class BuyDetails(models.Model):
 
 class RentDetails(models.Model):
     equipment = models.ForeignKey(EquipmentToDisplay, on_delete=models.SET_NULL, null=True)
-    rented_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='rented_by')
+    
     rented_to = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='rented_to')
     rented_quantity = models.FloatField()
     rented_duration = models.FloatField()
+    delivered_address = models.CharField(max_length=100)
     total_price = models.FloatField()
     rented_date = models.DateTimeField(auto_now_add=True)
     remarks = models.CharField(max_length=150, null=True)

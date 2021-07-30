@@ -8,6 +8,7 @@
 {% block content %}
 
 
+
 <div class="container">
     <div class="row mt-2">
         <div class="col">
@@ -15,24 +16,25 @@
                 <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqQVgFzTRU8Sq0gJqF8OdO7t-88IY1CkcIdQgTqxCTTFFqKyNiD1uwvcp61xbZDYqiUBQ&usqp=CAU" alt=""  style="height:350px;" />
             </div>
             <div class="mt-4">
-                <h5><b >Description</b></h5><hr>
+                <h5><b>Description</b></h5><hr>
                     <p style="text-align:left">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Vero voluptatem nam pariatur voluptate perferendis, asperiores aspernatur!
-                        Porro similique consequatur, nobis soluta minima, quasi laboriosam hic cupiditate perferendis
-                        esse numquam magni.
+                        {{equipment_detail.details}}
                     </p>
             </div>
         </div>
         <div class="col mt-3">
-            <h2 class="text-success"><b>Medium Combine Harvester</b></h2><br>
-            <input type="hidden" id="purchasprice" name="purchasprice" value=3487>
-            <input type="hidden" id="rentprice" name="rentprice" value=100>
-            <p><b>Purchase For:</b><span style="font-size: 22px;"> Rs.1900000</span></p>
-			<p><b>Rent For:</b><span style="font-size:22px;"> Rs.200 </span></p>
-
+            <h2 class="text-success"><b>{{equipment_detail.equipment.name}}</b></h2><br>
+            <h4 class="text-success"><b>Modal: {{equipment_detail.modal}}</b></h4><br>
+            {% if equipment_detail.available_to_buy %}
+                <p><b>Purchase For:</b><span style="font-size: 22px;"> Rs. {{equipment_detail.price_to_buy_per_item}} per item</span></p>
+            {% endif %}
+            {% if equipment_detail.available_for_rent %}
+                <p><b>Rent For:</b><span style="font-size:22px;"> Rs. {{equipment_detail.price_per_hour}} per hour </span></p>
+                <p><b>Available for:</b><span style="font-size:22px;"> {{equipment_detail.duration}} hours </span></p>
+            {% endif %}
             <div class="accordion" id="accordionExample">
                 <div class="row m-0">
+                    {% if equipment_detail.available_to_buy %}
                     <div class="col-12 col-md-6 my-2 pl-0">
                         <div id="heading1">
                             <h2 class="mb-0">
@@ -42,7 +44,9 @@
                             </h2>
                         </div>
                     </div>
+                    {% endif %}
 
+                    {% if equipment_detail.available_for_rent %}
                     <div class="col-12 col-md-6 my-2 pl-0">
                         <div id="heading3">
                             <h2 class="mb-0">
@@ -52,25 +56,26 @@
                             </h2>
                         </div>
                     </div>
-
-
+                    {% endif %}
                 </div>
                 <div class="collapse-content px-3 my-3">
                     <div id="collapse1" class="collapse card" aria-labelledby="heading1" data-parent="#accordionExample">
                         <div class="card-body">
-                            <h2 style="text-align:center; font-size:1.5rem;"><u>Purchas Now</u></h2>
-                            <form class="mx-auto">
+                            <h2 style="text-align:center; font-size:1.5rem;"><u>Purchase Now</u></h2>
+                            <form class="mx-auto" method="POST" action="/farmers/purchase/{{equipment_detail.id}}">
+                                {% csrf_token %}
                                 <div class="col mt-2">
                                     <label for="quantity">Quantity</label><br>
-                                    <input type="number" class="form-control" id="purchasquantity" name="quantity" onchange="Purchasmultiply()" min="1">
-                                    <label for="remarks">Address</label>
-                                    <input type="text" class="form-control" id="remarks">
+                                    <input type="number" class="form-control" id="purchasequantity" name="quantity" onchange="Purchasmultiply()" min="1">
+                                    <label for="address">Address</label>
+                                    <input type="text" class="form-control" id="address" name="address">
                                     <label for="remarks">Remarks</label>
-                                    <textarea class="form-control" id="remarks1" name="remarks" rows="2" cols="40"></textarea>
-                                    <label for="result">Total Price</label>
-                                    <input class="form-control" id="purchasresult" name="result"/>
+                                    <textarea class="form-control" id="remarks" name="remarks" rows="2" cols="40"></textarea>
+                                    <label for="result">Total Price: </label>
+                                    <label id="purchaseresult"></label>
+                                    <!-- <input disabled class="form-control" id="purchaseresult" name="total_price"/> -->
                                     <div class="col" style="text-align:center;">
-                                        <button class="btn btn-success mt-2" style="width: 8rem;">Purchase</button>
+                                        <button type="submit" class="btn btn-success mt-2" style="width: 8rem;">Purchase</button>
                                     </div>
                                 </div>
                             </form>
@@ -80,7 +85,8 @@
                     <div id="collapse2" class="collapse card" aria-labelledby="heading1" data-parent="#accordionExample">
                         <div class="card-body">
                             <h2 style="text-align:center; font-size:1.5rem;"><u>Rent Now</u></h2>
-                            <form class="mx-auto">
+                            <form class="mx-auto" method="POST" action="/farmers/rent/{{equipment_detail.id}}">
+                                {% csrf_token %}
                                 <div class="col mt-2">
                                     <label for="quantity">Quantity</label><br>
                                     <input type="number" class="form-control" id="rentquantity" name="quantity" onchange="Rentmultiply()">
@@ -89,19 +95,22 @@
                                     <div class="form-row align-items-center">
                                         <div class="col-sm-8 my-1">
                                             <label for="address">Day</label>
-                                            <input type="number" class="form-control" id="rentday" onchange="Rentmultiply()">
+                                            <input type="number" class="form-control" id="rentday" onchange="Rentmultiply()" name="day">
                                         </div>
                                         <div class="col-sm-4 my-1">
                                             <label for="hours">Hours</label>
-                                            <input type="number" class="form-control" id="duration" onchange="Rentmultiply()">
+                                            <input type="number" class="form-control" id="hours" onchange="Rentmultiply()" name="hours">
                                         </div>
                                     </div>
+                                    <label for="address">Address</label>
+                                    <input type="text" class="form-control" id="address" name="address">
                                     <label for="remarks">Remarks</label>
                                     <textarea class="form-control" id="remarks2" name="remarks" rows="2" cols="38"></textarea>
-                                    <label for="result">Total Rent Price</label>
-                                    <input class="form-control" id="Rentresult" name="result"/>
+                                    <label for="result">Total Rent Price:</label>
+                                    <label id="Rentresult"></label>
+                                    
                                     <div class="col" style="text-align:center;">
-                                        <button class="btn btn-success mt-2" style="width: 8rem;">Rent</button>
+                                        <button type="submit" class="btn btn-success mt-2" style="width: 8rem;">Rent</button>
                                     </div>
                                 </div>
                             </form>
@@ -114,25 +123,28 @@
     </div>
 </div>
 
+{{equipment_detail.price_to_buy_per_item|json_script:"buy_price"}}
+{{equipment_detail.price_per_hour|json_script:"rent_price"}}
+
 <script>
 
+const buy_price = JSON.parse(document.getElementById('buy_price').textContent);
+const rent_price = JSON.parse(document.getElementById('rent_price').textContent);
+
 function Purchasmultiply(){
-	Quan = document.getElementById("purchasquantity").value;
-	price = document.getElementById("purchasprice").value;
-	result = Quan * price;
-	document.getElementById("purchasresult").value = result;
+	Quan = document.getElementById("purchasequantity").value;
+	result = Quan * buy_price;
+	document.getElementById("purchaseresult").innerHTML = "NRs." + result;
 }
 
 
 function Rentmultiply(){
 	Quan = document.getElementById("rentquantity").value;
 	day = document.getElementById("rentday").value*24;
-	price = document.getElementById("rentprice").value;
-	duration = document.getElementById("duration").value;
-	totalduration= Number(duration)+Number(day);
-	result = Quan * price * totalduration ;
-	document.getElementById("Rentresult").value = result;
-	console.log(result)
+	hours = document.getElementById("hours").value;
+	totalduration= Number(hours)+Number(day);
+	result = Quan * rent_price * totalduration ;
+	document.getElementById("Rentresult").innerHTML = "NRs." + result;
 }
 
 </script>

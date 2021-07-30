@@ -118,7 +118,7 @@ def modify_product_stock_data(stock_data):
     stock_data["total_production"] = total_produciton_qty
 
     # total sales
-    sold_product_detail = ProductSold.objects.filter(sold_product__product__id=product_id, sold_by=farmer_id)
+    sold_product_detail = ProductSold.objects.filter(sold_product__product__id=product_id, sold_product__added_by=farmer_id)
     total_sales = 0
     for sale in sold_product_detail:
         total_sales += sale.quantity_sold
@@ -131,7 +131,6 @@ def modify_product_stock_data(stock_data):
         total_home_expense += expense.quantity
     stock_data["total_expense"] = total_home_expense
 
-    
     return stock_data
 
 
@@ -148,15 +147,16 @@ def modify_sold_data(sold_products):
 
     product_details = Products.objects.get(id=product_for_sale_data['product'])
     product_details_data = ProductSerializer(product_details).data  # this is from Products
+    product_for_sale_data['product'] = product_details_data
+    sold_products['sold_product'] = product_for_sale_data
     
-    farmer_details = User.objects.get(id=sold_products['sold_by'])
+    farmer_details = User.objects.get(id=sold_products['sold_product']['added_by'])
     farmer_data = UserSerializer(farmer_details).data
 
     buyer_details = User.objects.get(id=sold_products['sold_to'])
     buyer_data = UserSerializer(buyer_details).data
 
-    product_for_sale_data['product'] = product_details_data
-    sold_products['sold_product'] = product_for_sale_data
+    
     sold_products['sold_by'] = farmer_data
     sold_products['sold_to'] = buyer_data
     return sold_products
@@ -174,16 +174,16 @@ def modify_bought_data(bought_equipment):
     equipment_to_buy_data = EquipmentToDisplaySerializer(equipment_to_buy_details).data 
 
     equipment_details = Equipment.objects.get(id=equipment_to_buy_data['equipment'])
-    equipment_details_data = EquipmentSerializer(equipment_details).data  
+    equipment_details_data = EquipmentSerializer(equipment_details).data
+    equipment_to_buy_data['equipment'] = equipment_details_data
+    bought_equipment['equipment'] = equipment_to_buy_data  
     
-    vendor_details = User.objects.get(id=bought_equipment['sold_by'])
+    vendor_details = User.objects.get(id=bought_equipment['equipment']['added_by'])
     vendor_data = UserSerializer(vendor_details).data
 
     buyer_details = User.objects.get(id=bought_equipment['sold_to'])
     buyer_data = UserSerializer(buyer_details).data
 
-    equipment_to_buy_data['equipment'] = equipment_details_data
-    bought_equipment['equipment'] = equipment_to_buy_data
     bought_equipment['sold_by'] = vendor_data
     bought_equipment['sold_to'] = buyer_data
     return bought_equipment
@@ -201,16 +201,16 @@ def modify_rented_data(equipment_rented):
     equipment_to_rent_data = EquipmentToDisplaySerializer(equipment_to_rent_details).data 
 
     equipment_details = Equipment.objects.get(id=equipment_to_rent_data['equipment'])
-    equipment_details_data = EquipmentSerializer(equipment_details).data  
+    equipment_details_data = EquipmentSerializer(equipment_details).data
+    equipment_to_rent_data['equipment'] = equipment_details_data
+    equipment_rented['equipment'] = equipment_to_rent_data  
     
-    vendor_details = User.objects.get(id=equipment_rented['rented_by'])
+    vendor_details = User.objects.get(id=equipment_rented['equipment']['added_by'])
     vendor_data = UserSerializer(vendor_details).data
 
     buyer_details = User.objects.get(id=equipment_rented['rented_to'])
     buyer_data = UserSerializer(buyer_details).data
 
-    equipment_to_rent_data['equipment'] = equipment_details_data
-    equipment_rented['equipment'] = equipment_to_rent_data
     equipment_rented['rented_by'] = vendor_data
     equipment_rented['rented_to'] = buyer_data
     return equipment_rented
