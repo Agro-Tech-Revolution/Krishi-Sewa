@@ -14,6 +14,7 @@ urlpatterns = [
     path('rentDetails', rent_details),
     path('vendorProfile', vendor_profile),
     path('vendorUpdateProfile', vendor_update_profile),
+    path('requests', requests),
 
     
 ]

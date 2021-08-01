@@ -222,3 +222,8 @@ def vendor_profile(request):
 def vendor_update_profile(request):
     return render(request, 'vendors/UpdateProfile.html')
 
+@login_required
+@vendors_only
+def requests(request):
+    return render(request, 'vendors/Requests.html')
+
