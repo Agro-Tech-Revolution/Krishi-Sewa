@@ -1,42 +1,63 @@
 {% extends 'layout-farmers.html' %}
 
+{% load static %}
+
 {% block title %}
 <title>Equipment Details</title>
-
+<link href="{% static 'farmers/css/equipmentDetails.css' %}" rel="stylesheet">
 {% endblock title %}
 
 {% block content %}
 
 
 <div class="container">
-    <div class="row mt-2">
+    <div class="row mt-2" >
         <div class="col">
             <div class="image-box mt-2">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqQVgFzTRU8Sq0gJqF8OdO7t-88IY1CkcIdQgTqxCTTFFqKyNiD1uwvcp61xbZDYqiUBQ&usqp=CAU" alt=""  style="height:350px;" />
-            </div>
-            <div class="mt-4">
-                <h5><b >Description</b></h5><hr>
-                    <p style="text-align:left">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Vero voluptatem nam pariatur voluptate perferendis, asperiores aspernatur!
-                        Porro similique consequatur, nobis soluta minima, quasi laboriosam hic cupiditate perferendis
-                        esse numquam magni.
-                    </p>
+                <figure class="view overlay rounded z-depth-1 main-img">
+
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQF2psCzfbB611rnUhxgMi-lc2oB78ykqDGYb4v83xQ1pAbhPiB&usqp=CAU"
+                  class="img-fluid z-depth-1" style="height: 350px; width: 80%; border-radius:10px;">
+
+            </figure>
             </div>
         </div>
-        <div class="col mt-3">
-            <h2 class="text-success"><b>Medium Combine Harvester</b></h2><br>
+        <div class="col mt-3 custom-table">
+			<div class="row">
+				<div class="col col-9">
+					<img class="img-fluid" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" style="height: 2rem; border-radius: 50%;"><span class="ml-3">Pawan Bahadu bohora</span>
+				</div>
+				<div class="col col-3">
+					<a href="" class="" data-toggle="tooltip" data-placement="bottom" title="Report">
+						<i class="far fa-flag" style="color: red; font-size: 1.5rem;"></i>
+					</a>
+				</div>
+			</div>
+
+			<h2 class="text-success mt-3"><b>Medium Combine Harvester</b></h2>
             <input type="hidden" id="purchasprice" name="purchasprice" value=3487>
             <input type="hidden" id="rentprice" name="rentprice" value=100>
-            <p><b>Purchase For:</b><span style="font-size: 22px;"> Rs.1900000</span></p>
-			<p><b>Rent For:</b><span style="font-size:22px;"> Rs.200 </span></p>
+			  <div class="table-responsive">
+				<table class="table table-sm table-borderless mb-0 mt-3">
+				  <tbody>
+					<tr>
+					  <th class="pl-0 w-25" scope="row"><strong>Purchase For:</strong></th>
+					  <td style="font-size: 22px;">Rs.1900000</td>
+					</tr>
+					<tr>
+					  <th class="pl-0 w-25" scope="row"><strong>Rent For:</strong></th>
+					  <td style="font-size: 22px;">Rs.200</td>
+					</tr>
+				  </tbody>
+				</table>
+			</div>
 
             <div class="accordion" id="accordionExample">
                 <div class="row m-0">
                     <div class="col-12 col-md-6 my-2 pl-0">
                         <div id="heading1">
                             <h2 class="mb-0">
-                                <button class="btn btn-success d-block w-100" type="button" data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
+                                <button class="btn d-block w-100 oPurchaseBtn" type="button" data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
                                     Purchase
                                 </button>
                             </h2>
@@ -46,7 +67,7 @@
                     <div class="col-12 col-md-6 my-2 pl-0">
                         <div id="heading3">
                             <h2 class="mb-0">
-                                <button class="btn btn-outline-success d-block w-100" type="button" data-toggle="collapse" data-target="#collapse2" aria-expanded="true" aria-controls="collapse2">
+                                <button class="btn d-block w-100 oRentBtn" type="button" data-toggle="collapse" data-target="#collapse2" aria-expanded="true" aria-controls="collapse2" >
                                     Rent
                                 </button>
                             </h2>
@@ -64,13 +85,13 @@
                                     <label for="quantity">Quantity</label><br>
                                     <input type="number" class="form-control" id="purchasquantity" name="quantity" onchange="Purchasmultiply()" min="1">
                                     <label for="remarks">Address</label>
-                                    <input type="text" class="form-control" id="remarks">
+                                    <input type="text" class="form-control" id="address">
                                     <label for="remarks">Remarks</label>
-                                    <textarea class="form-control" id="remarks1" name="remarks" rows="2" cols="40"></textarea>
+                                    <input class="form-control" id="remarks" name="remarks"/>
                                     <label for="result">Total Price</label>
                                     <input class="form-control" id="purchasresult" name="result"/>
                                     <div class="col" style="text-align:center;">
-                                        <button class="btn btn-success mt-2" style="width: 8rem;">Purchase</button>
+                                        <button class="btn mt-2 IpurchaseBtn" style="">Purchase</button>
                                     </div>
                                 </div>
                             </form>
@@ -97,11 +118,11 @@
                                         </div>
                                     </div>
                                     <label for="remarks">Remarks</label>
-                                    <textarea class="form-control" id="remarks2" name="remarks" rows="2" cols="38"></textarea>
+                                    <input class="form-control" id="rentRemarks" name="remarks"/>
                                     <label for="result">Total Rent Price</label>
                                     <input class="form-control" id="Rentresult" name="result"/>
                                     <div class="col" style="text-align:center;">
-                                        <button class="btn btn-success mt-2" style="width: 8rem;">Rent</button>
+                                        <button class="btn mt-2 IRentBtn" style="width: 8rem;">Rent</button>
                                     </div>
                                 </div>
                             </form>
@@ -112,7 +133,63 @@
             </div>
 		</div>
     </div>
+			<div class="mt-4">
+                <h5  style="width:100%;border-bottom:1px solid silver; padding-bottom: 20px;"><b class="mb-3">Description</b></h5>
+                    <p style="text-align:left; color: black;" >
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet,
+                    </p>
+            </div>
 </div>
+
+<!--Comment-->
+
+
+<section class="content-item" id="comments">
+    <div class="container">
+    	<div class="row">
+            <div class="col-sm-12 ml-2">
+                <form>
+                	<h3 class="pull-left"><b>Comments</b></h3>
+                    <fieldset>
+                        <hr>
+                        <div class="media ml-2">
+                            <a href=""><img class="img-fluid mr-3" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" style="height: 2rem; border-radius: 50%;"></a>
+                            <div class="media-body">
+                                <textarea class="form-control" id="message" placeholder="Add a comment..." rows="5" style=""></textarea>
+
+                            </div>
+                        </div>
+						<div class="col-xs-1 col-sm-12 col-lg-12">
+							<button type="submit" class="btn btn-primary post-btn "><b>Post</b></button>
+						</div>
+                    </fieldset>
+                </form>
+
+                <h6 style="color: #007bff;"><b>4 Comments</b></h6><hr>
+
+                <!-- COMMENT 1 - START -->
+                <div class="media ml-2">
+                    <a href=""><img class="img-fluid" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" style="height: 2rem; border-radius: 50%;"></a>
+                    <div class="media-body">
+                        <h6 class="media-heading ml-3"><b>John Doe</b> <span style="float: right;">2 days ago</span></h6>
+                        <p class="ml-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    </div>
+                </div>
+                <!-- COMMENT 1 - END -->
+
+				<!-- COMMENT 2 - START -->
+                <div class="media ml-2">
+                    <a href=""><img class="img-fluid" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" style="height: 2rem; border-radius: 50%;"></a>
+                    <div class="media-body">
+                        <h6 class="media-heading ml-3"><b>John Doe</b> <span style="float: right;">2 days ago</span></h6>
+                        <p class="ml-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    </div>
+                </div>
+                <!-- COMMENT 2 - END -->
+            </div>
+        </div>
+    </div>
+</section>
 
 <script>
 <!--Purchas-->

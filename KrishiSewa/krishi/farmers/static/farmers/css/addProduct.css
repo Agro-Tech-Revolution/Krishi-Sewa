@@ -166,7 +166,7 @@ input ,.selectProduct{
   line-height: 50px;
   background: #fafafa;
   border-radius: 15px;
-  border-color: #aadb86;
+  border-color:#aadb86;
   padding: 0 20px;
   font-size: 16px;
   color: #666;
@@ -256,7 +256,6 @@ input ,.selectProduct{
   padding-right: 57px;
   padding-top: 10px;
   padding-bottom: 10px;
-
 }
 
 form .btn-block {

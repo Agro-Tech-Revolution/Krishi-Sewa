@@ -13,9 +13,8 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
 import numpy as np
 # from flask import Flask, request, render_template
-from django.core.files.storage import  default_storage
+from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
-
 
 # Create your views here.
 base_url = 'http://127.0.0.1:8000'
@@ -247,7 +246,6 @@ def edit_production(request, id):
             print(error)
             return redirect('/farmers/myProduction')
 
-
     production_get_endpoint = '/api/products/production/' + str(id)
     production_get_url = base_url + production_get_endpoint
     production_get_response = requests.get(production_get_url, headers=headers)
@@ -451,8 +449,6 @@ def profit_loss_report(request):
         "all_details": report_response,
         "net_amount": abs(report_response["NetAmount"])
     }
-    
-    
 
     return render(request, 'farmers/details.html', context)
 
@@ -524,7 +520,6 @@ def npk_result(request):
         return render(request, 'farmers/Npktest.html')
 
 
-
 @login_required
 @farmers_only
 def image_test(request):
@@ -555,19 +550,20 @@ def get_image_model(image_path):
 @login_required
 @farmers_only
 def image_test(request):
-    predict=''
-    if request.method =='POST':
+    predict = ''
+    if request.method == 'POST':
         image_url = ''
         file = request.FILES['image']
         print(file)
-        path = default_storage.save('farmers/model/image_testing/'+str(file), ContentFile(file.read()))
+        path = default_storage.save('farmers/model/image_testing/' + str(file), ContentFile(file.read()))
         print(path)
 
         file_path = os.path.join('', path)
         print(file_path)
         predict = get_image_model(file_path)
 
-    return render(request, 'farmers/imagetest.html', {'img_result': predict })
+    return render(request, 'farmers/imagetest.html', {'img_result': predict})
+
 
 # @login_required
 # @farmers_only
@@ -580,6 +576,7 @@ def image_test(request):
 def general_table(request):
     return render(request, 'farmers/GeneralTable.html')
 
+
 @login_required
 @farmers_only
 def details_table(request):
@@ -591,11 +588,11 @@ def details_table(request):
 def profile(request):
     return render(request, 'farmers/Profile.html')
 
+
 @login_required
 @farmers_only
 def edit_profile(request):
     return render(request, 'farmers/EditProfile.html')
-
 
 
 @login_required
@@ -603,12 +600,25 @@ def edit_profile(request):
 def farmerstovenders(request):
     return render(request, 'farmers/farmersToVender.html')
 
+
 @login_required
 @farmers_only
 def equipment_Details(request):
     return render(request, 'farmers/equipmentDetails.html')
 
+
 @login_required
 @farmers_only
 def edit_product(request):
     return render(request, 'farmers/editProduct.html')
+
+
+@login_required
+@farmers_only
+def add_product(request):
+    return render(request, 'farmers/addProduct.html')
+
+@login_required
+@farmers_only
+def product_details(request):
+    return render(request, 'farmers/productDetails.html')

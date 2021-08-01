@@ -14,7 +14,7 @@ urlpatterns = [
     path('addProduction', add_production),
     path('editProduction/<int:id>', edit_production),
     path('deleteProduction/<int:id>', delete_production),
-    
+
     path('myProducts/sell/<int:id>', sell_product),
     path('mySales', my_sales),
     path('editSales/<int:id>', edit_sales),
@@ -23,7 +23,7 @@ urlpatterns = [
     path('addExpenses', add_expenses),
     path('myProduction', my_production),
     path('myStock', my_stock),
-    
+
     path('myExpenses', my_expenses),
     path('imagetest', image_test),
     path('detailReport', profit_loss_report),
@@ -35,11 +35,13 @@ urlpatterns = [
     path('editProfile', edit_profile),
 
     # path('test/result/', result),
-    path('npktest',npk_result),
+    path('npktest', npk_result),
 
+    path('addproduct/', add_product),
     path('buyequipment/', farmerstovenders),
     path('myproducts/', my_products),
     path('equipmentdetails/', equipment_Details),
-    path('editproduct/', edit_product)
-    
+    path('editproduct/', edit_product),
+    path('productdetails/', product_details),
+
 ]
