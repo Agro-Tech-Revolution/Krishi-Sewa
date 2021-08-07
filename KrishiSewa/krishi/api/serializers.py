@@ -1,3 +1,4 @@
+from django.db.models.base import Model
 from rest_framework import serializers
 from .models import *
 from django.contrib.auth.models import User
@@ -12,7 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {
             'write_only': True,
             'required': True
-        },
+            },
             'email': {
                 'required': True
             },
@@ -37,3 +38,17 @@ class CreateProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ['user', 'user_type']
+
+
+class UpdateUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email']
+
+
+class UpdateProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ['user', 'bio', 'contact', 'profile_pic', 'address']
+
+

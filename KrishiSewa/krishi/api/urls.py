@@ -5,9 +5,11 @@ urlpatterns = [
     path('users/', UserAPIView.as_view()),
     path('users/<str:username>', UserDetail.as_view()),
     path('users/id/<int:id>', UserById.as_view()),
+    path('users/id/<int:user_id>/details', GetUserDetails.as_view()),
 
     path('profile/', CreateProfile.as_view()),
     path('profile/<int:user_id>', GetProfileType.as_view()),
+    path('profile/<int:user_id>/edit', UpdateProfileView.as_view()),
 
     # products
     path('products/', ProductsAPIView.as_view()),

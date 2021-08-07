@@ -15,6 +15,7 @@ import numpy as np
 # from flask import Flask, request, render_template
 from django.core.files.storage import  default_storage
 from django.core.files.base import ContentFile
+from PIL import Image
 
 
 # Create your views here.
@@ -568,14 +569,80 @@ def details_table(request):
 
 @login_required
 @farmers_only
-def profile(request):
-    return render(request, 'farmers/Profile.html')
+def profile(request, user_id):
+    headers = {'Authorization': 'Token ' + request.session['token']}
+    user_detail_endpoint = '/api/users/id/' + str(user_id) + '/details'
+    user_detail_url = base_url + user_detail_endpoint
+    user_detail_response = requests.get(user_detail_url, headers=headers).json()
+    context = {
+        'user_data': user_detail_response
+    }
+    return render(request, 'farmers/profile.html', context)
 
 
 @login_required
 @farmers_only
-def edit_profile(request):
-    return render(request, 'farmers/EditProfile.html')
+def edit_profile(request, user_id):
+    headers = {'Authorization': 'Token ' + request.session['token']}
+    user_detail_endpoint = '/api/users/id/' + str(user_id) + '/details'
+    user_detail_url = base_url + user_detail_endpoint
+    user_detail_response = requests.get(user_detail_url, headers=headers).json()
+
+    current_profile_pic = user_detail_response["profile_pic"]
+
+    if request.method == 'POST':
+        data = request.POST
+        username = request.user.username
+        first_name = data["first_name"]
+        last_name = data["last_name"]
+        email = data["email"]
+        user = user_id
+        bio = data["bio"]
+        contact = data["contact"]
+        address = data["address"]
+
+        try:
+            profile_pic = request.FILES["profile_pic"]
+        except:
+            profile_pic = None
+
+        image_path = current_profile_pic
+        if not profile_pic == None:
+            try:
+                Image.open(profile_pic)
+                image_path = default_storage.save('static/profile_pic/' + str(profile_pic), profile_pic)
+            except:
+                print("Not Valid Image")
+                return redirect('/farmers/profile/' + str(user_id) + '/edit')
+        
+        data_to_update = {
+            "username": username,
+            "first_name": first_name,
+            "last_name": last_name,
+            "email": email,
+            "user": user,
+            "bio": bio,
+            "contact": contact,
+            "address": address,
+            "profile_pic": image_path,
+        }
+        # print(data_to_update)
+
+        user_put_endpoint = '/api/profile/' + str(user_id) +'/edit'
+        user_put_url = base_url + user_put_endpoint
+        user_put_response = requests.put(user_put_url, data=data_to_update, headers=headers)
+        if user_put_response.json().get('username') != None:
+            print('Profile updated successfully')
+            return redirect('/farmers/profile/' + str(user_id))
+        else:
+            error = user_put_response.json()
+            print(error)
+        return redirect('/farmers/profile/' + str(user_id) + '/edit')
+
+    context = {
+        'user_data': user_detail_response
+    }
+    return render(request, 'farmers/editProfile.html', context)
 
 
 

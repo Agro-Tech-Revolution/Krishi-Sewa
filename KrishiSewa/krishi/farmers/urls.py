@@ -33,8 +33,8 @@ urlpatterns = [
     # path('generalTable', general_table),
     # path('detailsTable', details_table),
 
-    path('profile', profile),
-    path('editProfile', edit_profile),
+    path('profile/<int:user_id>', profile),
+    path('profile/<int:user_id>/edit', edit_profile),
 
     # path('test/result/', result),
     path('npktest',npk_result),

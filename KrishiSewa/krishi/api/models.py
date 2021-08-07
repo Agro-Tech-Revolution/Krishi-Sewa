@@ -6,9 +6,13 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     user_type = models.CharField(max_length=50)
     contact = models.IntegerField(null=True)
-    profile_pic = models.ImageField(upload_to='static/profile_pic',
-                                    null=True,
-                                    default='static/profile_pic/default_profile.jpg')
+    profile_pic = models.CharField(max_length=500,
+                                   null=True,
+                                   default='static/profile_pic/default_profile.jpg')
+    address = models.CharField(max_length=100, null=True)
+    bio = models.TextField(null=True)
+
+
 
 
 

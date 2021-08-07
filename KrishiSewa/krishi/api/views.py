@@ -89,6 +89,68 @@ class GetProfileType(APIView):
         return Response(profile_data)
 
 
+class UpdateProfileView(APIView):
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,)
+
+    def get_object(self, user_id):
+        try:
+            return Profile.objects.get(user=user_id)
+        except Profile.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    def put(self, request, user_id):
+        profile = self.get_object(user_id)
+        user = User.objects.get(id=user_id)
+
+        profile_serializer = UpdateProfileSerializer(profile, data=request.data)
+        user_serializer = UpdateUserSerializer(user, data=request.data)
+        if profile_serializer.is_valid() and user_serializer.is_valid():
+            profile_serializer.save()
+            user_serializer.save()
+            return Response(user_serializer.data)
+        return Response({"error": "Error in updating profile"}, status=status.HTTP_400_BAD_REQUEST)
+
+    # def get(self, request, user_id):
+    #     profile = self.get_object(user_id)
+    #     profile_data = CreateProfileSerializer(profile).data
+
+    #     user_details = User.objects.get(id=user_id)
+    #     user_data = UserSerializer(user_details).data
+    #     profile_data['user'] = user_data
+        
+    #     return Response(profile_data)
+
+
+class GetUserDetails(APIView):
+    def get(self, request, user_id):
+        try:
+            user = User.objects.get(id=user_id)
+            profile = Profile.objects.get(user=user_id)
+
+            user_serializer = UpdateUserSerializer(user)
+            profile_serializer = UpdateProfileSerializer(profile)
+
+            user_dict = user_serializer.data
+            profile_dict = profile_serializer.data
+            user_dict.update(profile_dict)
+            
+            if profile.user_type.upper() == 'FARMERS':
+                user_dict["total_sales"] = 0
+                user_dict["total_purchase"] = 0
+            elif profile.user_type.upper() == 'VENDORS':
+                user_dict["total_sales"] = 0
+                user_dict["total_rent"] = 0
+            elif profile.user_type.upper() == 'BUYERS':
+                user_dict["total_purchase"] = 0
+
+            user_dict["user_type"] = profile.user_type.lower()
+
+            return Response(user_dict)
+        except User.DoesNotExist:
+            return Response({}, status=status.HTTP_404_NOT_FOUND)
+
+
 class NoteAPIView(APIView):
     # permission_classes = [IsAuthenticated]
     # authentication_classes = (TokenAuthentication,)

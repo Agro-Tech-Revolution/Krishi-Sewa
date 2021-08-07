@@ -16,13 +16,63 @@ def feedback(request):
 def history(request):
     return render(request,'accounts/History.html')
 
-base_url = "http://127.0.0.1:8000"
 
+base_url = "http://127.0.0.1:8000"
 
 
 @unauthenticated_user
 def home(request):
     return render(request,'accounts/Home.html')
+
+# @unauthenticated_user
+# def login_view(request):
+#     if request.method== 'POST':
+#         username = request.POST.get('username')
+#         password = request.POST.get('password')
+        
+#         # user_data = {
+#         #     'username': username,
+#         #     'password': password
+#         # }
+#         user = authenticate(request,
+#                             username=username,
+#                             password=password)
+
+#         if user is not None:
+#             # auth_endpoint = "/auth/"
+#             # auth_url = base_url + auth_endpoint
+            
+#             # r = requests.post(auth_url, data=user_data)
+#             login(request, user)
+#             request.session['token'] = ""
+#             if user.is_staff:
+#                 return redirect('/admins/')
+#             else:
+#                 return redirect('/farmers')
+#             # if Response(r).status_code == 200:
+                
+#             #     token = r.json().get('token')
+#             #     request.session['token'] = token
+                
+#                     # headers = {'Authorization': 'Token ' + token}
+#                     # profile_endpoint = "/api/profile/"
+#                     # profile_url = base_url + profile_endpoint + str(user.id)
+
+#                     # profile_response = requests.get(profile_url, headers=headers)
+#                     # user_type = profile_response.json().get('user_type')
+                    
+#                     # if user_type.upper() == 'BUYERS':
+#                     #     return redirect('/buyers/')
+#                     # elif user_type.upper() == 'FARMERS':
+#                     #     return redirect('/farmers/')
+#                     # elif user_type.upper() == 'VENDORS':
+#                     #     return redirect('/vendors/')
+            
+#         else:
+#             print("No user found")
+        
+#     return render(request, 'accounts/login.html')                        
+
 
 @unauthenticated_user
 def login_view(request):
