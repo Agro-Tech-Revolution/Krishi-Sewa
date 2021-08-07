@@ -14,7 +14,7 @@ urlpatterns = [
     path('addProduction', add_production),
     path('editProduction/<int:id>', edit_production),
     path('deleteProduction/<int:id>', delete_production),
-    
+
     path('myProducts/sell/<int:id>', sell_product),
     path('editproduct/<int:prod_id>', edit_product),
 
@@ -25,7 +25,7 @@ urlpatterns = [
     path('addExpenses', add_expenses),
     path('myProduction', my_production),
     path('myStock', my_stock),
-    
+
     path('myExpenses', my_expenses),
     path('imagetest', image_test),
     path('detailReport', profit_loss_report),
@@ -37,7 +37,7 @@ urlpatterns = [
     path('profile/<int:user_id>/edit', edit_profile),
 
     # path('test/result/', result),
-    path('npktest',npk_result),
+    path('npktest', npk_result),
 
     path('allEquipments/', all_equipments),
     path('myproducts/', my_products),
@@ -45,6 +45,9 @@ urlpatterns = [
     path('purchase/<int:eqp_id>', purchase_request),
     path('rent/<int:eqp_id>', rent_request),
 
-    
-    
+    path('addproduct/', add_product),
+    path('myproducts/', my_products),
+    path('editproduct/', edit_product),
+    path('productdetails/', product_details),
+
 ]

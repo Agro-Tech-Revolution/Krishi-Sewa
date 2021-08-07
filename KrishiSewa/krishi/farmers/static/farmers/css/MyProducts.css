@@ -109,7 +109,6 @@
 	background:#ffc107;
 	color: #fff;
 }
-
   @media screen and (max-width: 898px) and (min-width: 768px)  {
     #cards_landscape_wrap-2 .card-flyer {
         width:14rem;

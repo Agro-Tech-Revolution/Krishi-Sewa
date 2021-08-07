@@ -13,10 +13,9 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
 import numpy as np
 # from flask import Flask, request, render_template
-from django.core.files.storage import  default_storage
+from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from PIL import Image
-
 
 # Create your views here.
 base_url = 'http://127.0.0.1:8000'
@@ -248,7 +247,6 @@ def edit_production(request, id):
             print(error)
             return redirect('/farmers/myProduction')
 
-
     production_get_endpoint = '/api/products/production/' + str(id)
     production_get_url = base_url + production_get_endpoint
     production_get_response = requests.get(production_get_url, headers=headers)
@@ -452,8 +450,6 @@ def profit_loss_report(request):
         "all_details": report_response,
         "net_amount": abs(report_response["NetAmount"])
     }
-    
-    
 
     return render(request, 'farmers/details.html', context)
 
@@ -504,7 +500,6 @@ def npk_result(request):
         return render(request, 'farmers/Npktest.html')
 
 
-
 @login_required
 @farmers_only
 def image_test(request):
@@ -535,19 +530,20 @@ def get_image_model(image_path):
 @login_required
 @farmers_only
 def image_test(request):
-    predict=''
-    if request.method =='POST':
+    predict = ''
+    if request.method == 'POST':
         image_url = ''
         file = request.FILES['image']
         print(file)
-        path = default_storage.save('farmers/model/image_testing/'+str(file), ContentFile(file.read()))
+        path = default_storage.save('farmers/model/image_testing/' + str(file), ContentFile(file.read()))
         print(path)
 
         file_path = os.path.join('', path)
         print(file_path)
         predict = get_image_model(file_path)
 
-    return render(request, 'farmers/imagetest.html', {'img_result': predict })
+    return render(request, 'farmers/imagetest.html', {'img_result': predict})
+
 
 # @login_required
 # @farmers_only
@@ -578,6 +574,7 @@ def profile(request, user_id):
         'user_data': user_detail_response
     }
     return render(request, 'farmers/profile.html', context)
+
 
 
 @login_required
@@ -645,7 +642,6 @@ def edit_profile(request, user_id):
     return render(request, 'farmers/editProfile.html', context)
 
 
-
 @login_required
 @farmers_only
 def all_equipments(request):
@@ -658,6 +654,7 @@ def all_equipments(request):
     }
 
     return render(request, 'farmers/allEquipments.html', context)
+
 
 
 @login_required
@@ -673,6 +670,7 @@ def equipment_details(request, eqp_id):
     
 
     return render(request, 'farmers/equipmentDetails.html', context)
+
 
 
 @login_required
@@ -715,6 +713,10 @@ def purchase_request(request, eqp_id):
             return redirect('/farmers/equipmentdetails/' + str(eqp_id))
 
     return redirect('/farmers/equipmentdetails/' + str(eqp_id))
+
+    
+def edit_product(request):
+    return render(request, 'farmers/editProduct.html')
 
 
 @login_required
@@ -767,3 +769,10 @@ def rent_request(request, eqp_id):
 # @farmers_only
 # def edit_product(request):
 #     return render(request, 'farmers/editProduct.html')
+def add_product(request):
+    return render(request, 'farmers/addProduct.html')
+
+@login_required
+@farmers_only
+def product_details(request):
+    return render(request, 'farmers/productDetails.html')
