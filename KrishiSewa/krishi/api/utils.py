@@ -1,6 +1,6 @@
 from re import T
-from vendors.serializers import BuyDetailsSerializer, EquipmentReportSerializer, EquipmentSerializer, EquipmentToDisplaySerializer, RentDetailsSerializer
-from vendors.models import Equipment, EquipmentReport, EquipmentToDisplay
+from vendors.serializers import BuyDetailsSerializer, EquipmentCommentSerializer, EquipmentReportSerializer, EquipmentSerializer, EquipmentToDisplaySerializer, RentDetailsSerializer
+from vendors.models import Equipment, EquipmentComment, EquipmentReport, EquipmentToDisplay
 from farmers.serializers import *
 from .serializers import *
 
@@ -13,12 +13,21 @@ def modify_product_details_data(product):
     user_details = User.objects.get(id=product['added_by'])
     user_details_data = UserSerializer(user_details).data
 
+    profile_details = Profile.objects.get(user=product['added_by'])
+    profile_details_data = UpdateProfileSerializer(profile_details).data
+    user_details_data["profile"] = profile_details_data
+
     comments_details = ProductComment.objects.filter(product=prod_id)
     comments_data = ProductCommentSerializer(comments_details, many=True).data
 
     for comment in comments_data:
         user_comment_details = User.objects.get(id=comment['comment_by'])
         user_comment_data = UserSerializer(user_comment_details).data
+
+        comment_profile_details = Profile.objects.get(user=comment['comment_by'])
+        comment_profile_details_data = UpdateProfileSerializer(comment_profile_details).data
+        user_comment_data["profile"] = comment_profile_details_data
+
         comment['comment_by'] = user_comment_data
 
     reports_details = ProductReport.objects.filter(reported_product=prod_id)
@@ -41,7 +50,7 @@ def get_product_details(products_for_sale):
     product_data = ProductForSaleSerializer(products_for_sale, many=True).data
         
     for product in product_data:
-        product = modify_product_details_data(product)
+        product = modify_product_details_data(product)    
     return product_data
 
 
@@ -54,6 +63,10 @@ def modify_equipment_detail_data(equipment):
     user_details = User.objects.get(id=equipment['added_by'])
     user_details_data = UserSerializer(user_details).data
 
+    profile_details = Profile.objects.get(user=equipment['added_by'])
+    profile_details_data = UpdateProfileSerializer(profile_details).data
+    user_details_data["profile"] = profile_details_data
+
     reports_details = EquipmentReport.objects.filter(reported_equipment=eqp_id)
     report_data = EquipmentReportSerializer(reports_details, many=True).data
 
@@ -61,10 +74,25 @@ def modify_equipment_detail_data(equipment):
         user_report_details = User.objects.get(id=report['reported_by'])
         user_report_data = UserSerializer(user_report_details).data
         report['reported_by'] = user_report_data
+    
+    comment_details = EquipmentComment.objects.filter(equipment=eqp_id)
+    comment_data = EquipmentCommentSerializer(comment_details, many=True).data
+
+    for comment in comment_data:
+        user_comment_details = User.objects.get(id=comment['comment_by'])
+        user_comment_data = UserSerializer(user_comment_details).data
+
+        comment_profile_details = Profile.objects.get(user=comment['comment_by'])
+        comment_profile_details_data = UpdateProfileSerializer(comment_profile_details).data
+        user_comment_data["profile"] = comment_profile_details_data
+
+        comment['comment_by'] = user_comment_data
+
 
     equipment['equipment'] = equipment_details_data
     equipment['added_by'] = user_details_data
     equipment['reports'] = report_data
+    equipment['comments'] = comment_data
 
     return equipment
 
@@ -73,6 +101,7 @@ def get_equipment_details(equipment_to_display):
     equipment_data = EquipmentToDisplaySerializer(equipment_to_display, many=True).data
 
     for equipment in equipment_data:
+        
         equipment = modify_equipment_detail_data(equipment)
     return equipment_data
 

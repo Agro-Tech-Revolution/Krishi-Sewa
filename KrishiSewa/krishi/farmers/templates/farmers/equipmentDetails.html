@@ -9,36 +9,13 @@
 
 {% block content %}
 
-
-
 <div class="container">
     <div class="row mt-2" >
         <div class="col">
             <div class="image-box mt-2">
-            <!--
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqQVgFzTRU8Sq0gJqF8OdO7t-88IY1CkcIdQgTqxCTTFFqKyNiD1uwvcp61xbZDYqiUBQ&usqp=CAU" alt=""  style="height:350px;" />
-            </div>
-            <div class="mt-4">
-                <h5><b>Description</b></h5><hr>
-                    <p style="text-align:left">
-                        {{equipment_detail.details}}
-                    </p>
-            </div>
-        </div>
-        <div class="col mt-3">
-            <h2 class="text-success"><b>{{equipment_detail.equipment.name}}</b></h2><br>
-            <h4 class="text-success"><b>Modal: {{equipment_detail.modal}}</b></h4><br>
-            {% if equipment_detail.available_to_buy %}
-                <p><b>Purchase For:</b><span style="font-size: 22px;"> Rs. {{equipment_detail.price_to_buy_per_item}} per item</span></p>
-            {% endif %}
-            {% if equipment_detail.available_for_rent %}
-                <p><b>Rent For:</b><span style="font-size:22px;"> Rs. {{equipment_detail.price_per_hour}} per hour </span></p>
-                <p><b>Available for:</b><span style="font-size:22px;"> {{equipment_detail.duration}} hours </span></p>
-            {% endif %}
-            -->
                 <figure class="view overlay rounded z-depth-1 main-img">
 
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQF2psCzfbB611rnUhxgMi-lc2oB78ykqDGYb4v83xQ1pAbhPiB&usqp=CAU"
+                <img src="/{{equipment_detail.eqp_img}}"
                   class="img-fluid z-depth-1" style="height: 350px; width: 80%; border-radius:10px;">
 
             </figure>
@@ -47,7 +24,12 @@
         <div class="col mt-3 custom-table">
 			<div class="row">
 				<div class="col col-9">
-					<img class="img-fluid" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" style="height: 2rem; border-radius: 50%;"><span class="ml-3">Pawan Bahadu bohora</span>
+					<img class="img-fluid" src="/{{equipment_detail.added_by.profile.profile_pic}}" alt="" style="height: 2rem; border-radius: 50%;">
+                    <a href="/farmers/profile/{{equipment_detail.added_by.id}}">
+                        <span class="ml-3 text-capitalize">
+                            {{equipment_detail.added_by.first_name}} {{equipment_detail.added_by.last_name}}
+                        </span>
+                    </a>
 				</div>
 				<div class="col col-3">
 					<a href="" class="" data-toggle="tooltip" data-placement="bottom" title="Report">
@@ -58,7 +40,7 @@
 
 			<h2 class="text-success mt-3"><b>{{equipment_detail.equipment.name}}</b></h2>
             
-			  <div class="table-responsive">
+			<div class="table-responsive">
 				<table class="table table-sm table-borderless mb-0 mt-3">
 				  <tbody>
                     <tr>
@@ -174,86 +156,87 @@
             </div>
 		</div>
     </div>
-			<div class="mt-4">
-                <h5  style="width:100%;border-bottom:1px solid silver; padding-bottom: 20px;"><b class="mb-3">Description</b></h5>
-                    <p style="text-align:left; color: black;" >
-                        {{equipment_detail.details}}
-                    </p>
-            </div>
+    <div class="mt-4">
+        <h5 style="width:100%; border-bottom:1px solid silver; padding-bottom:20px;">
+            <b class="mb-3">Description</b>
+        </h5>
+        <p style="text-align:left; color: black;" >
+            {{equipment_detail.details}}
+        </p>
+    </div>
 </div>
 
 {{equipment_detail.price_to_buy_per_item|json_script:"buy_price"}}
 {{equipment_detail.price_per_hour|json_script:"rent_price"}}
+    
 <!--Comment-->
-
-
 <section class="content-item" id="comments">
     <div class="container">
-    	<div class="row">
+        <div class="row">
             <div class="col-sm-12 ml-2">
-                <form>
-                	<h3 class="pull-left"><b>Comments</b></h3>
+                <form method="POST">
+                    {% csrf_token %}
+                    <h3 class="pull-left"><b>Comments</b></h3>
                     <fieldset>
                         <hr>
                         <div class="media ml-2">
                             <a href=""><img class="img-fluid mr-3" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" style="height: 2rem; border-radius: 50%;"></a>
                             <div class="media-body">
-                                <textarea class="form-control" id="message" placeholder="Add a comment..." rows="5"></textarea>
-
+                                <textarea class="form-control" id="message" placeholder="Add a comment..." rows="5" name="comment"></textarea>
                             </div>
                         </div>
-						<div class="col-xs-1 col-sm-12 col-lg-12">
-							<button type="submit" class="btn btn-primary post-btn "><b>Post</b></button>
-						</div>
+                        <div class="col-xs-1 col-sm-12 col-lg-12">
+                            <button type="submit" class="btn btn-primary post-btn "><b>Post</b></button>
+                        </div>
                     </fieldset>
                 </form>
 
-                <h6 style="color: #007bff;"><b>4 Comments</b></h6><hr>
+                <h6 style="color: #007bff;"><b>{{equipment_detail.comments|length}} Comments</b></h6><hr>
 
                 <!-- COMMENT 1 - START -->
+                {% for comment in equipment_detail.comments %}
                 <div class="media ml-2">
-                    <a href=""><img class="img-fluid" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" style="height: 2rem; border-radius: 50%;"></a>
+                    <a href=""><img class="img-fluid" src="/{{comment.comment_by.profile.profile_pic}}" alt="" style="height: 2rem; border-radius: 50%;"></a>
                     <div class="media-body">
-                        <h6 class="media-heading ml-3"><b>John Doe</b> <span style="float: right;">2 days ago</span></h6>
-                        <p class="ml-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        <h6 class="media-heading ml-3">
+                            <b class="text-capitalize">{{comment.comment_by.first_name}} {{comment.comment_by.last_name}}</b> 
+                            <!-- <span style="float: right;">2 days ago</span> -->
+                        </h6>
+                        <p class="ml-3">
+                            {{comment.comment}}
+                        </p>
                     </div>
                 </div>
+                {% endfor %}
                 <!-- COMMENT 1 - END -->
 
-				<!-- COMMENT 2 - START -->
-                <div class="media ml-2">
-                    <a href=""><img class="img-fluid" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" style="height: 2rem; border-radius: 50%;"></a>
-                    <div class="media-body">
-                        <h6 class="media-heading ml-3"><b>John Doe</b> <span style="float: right;">2 days ago</span></h6>
-                        <p class="ml-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                    </div>
-                </div>
-                <!-- COMMENT 2 - END -->
+
             </div>
         </div>
     </div>
 </section>
 
+
 <script>
 
-const buy_price = JSON.parse(document.getElementById('buy_price').textContent);
-const rent_price = JSON.parse(document.getElementById('rent_price').textContent);
+    const buy_price = JSON.parse(document.getElementById('buy_price').textContent);
+    const rent_price = JSON.parse(document.getElementById('rent_price').textContent);
 
-function Purchasmultiply(){
-	Quan = document.getElementById("purchasequantity").value;
-	result = Quan * buy_price;
-	document.getElementById("purchaseresult").innerHTML = "NRs." + result;
-}
+    function Purchasmultiply(){
+        Quan = document.getElementById("purchasequantity").value;
+        result = Quan * buy_price;
+        document.getElementById("purchaseresult").innerHTML = "NRs." + result;
+    }
 
 
-function Rentmultiply(){
-	Quan = document.getElementById("rentquantity").value;
-	day = document.getElementById("rentday").value*24;
-	hours = document.getElementById("hours").value;
-	totalduration= Number(hours)+Number(day);
-	result = Quan * rent_price * totalduration ;
-	document.getElementById("Rentresult").innerHTML = "NRs." + result;
-}
+    function Rentmultiply(){
+        Quan = document.getElementById("rentquantity").value;
+        day = document.getElementById("rentday").value*24;
+        hours = document.getElementById("hours").value;
+        totalduration= Number(hours)+Number(day);
+        result = Quan * rent_price * totalduration ;
+        document.getElementById("Rentresult").innerHTML = "NRs." + result;
+    }
 
 </script>
 

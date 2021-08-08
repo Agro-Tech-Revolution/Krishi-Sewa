@@ -32,7 +32,7 @@ class Products(models.Model):
     prod_category = models.CharField(max_length=25, 
                                     choices=types_of_product_choices, 
                                     default="Cereals")
-    prod_img = models.ImageField(null=True, upload_to='static/product_images')
+    prod_img = models.CharField(max_length=1200, null=True, default='static/product_images/no_image.png')
     products_for_sales = models.ManyToManyField(User, 
                                                 through='ProductsForSale',
                                                 related_name='products_for_sale')
@@ -55,6 +55,7 @@ class ProductsForSale(models.Model):
     price_per_kg = models.FloatField()
     added_date = models.DateTimeField(auto_now_add=True)
     details = models.CharField(max_length=250, null=True)
+    to_display = models.BooleanField(default=True)
 
     product_comments = models.ManyToManyField(User, 
                                               through='ProductComment', 

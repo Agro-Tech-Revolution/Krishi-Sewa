@@ -6,7 +6,7 @@
 
 {% block content %}
 
-<table class="table">
+<table class="table table-striped">
   <thead>
     <tr>
       <th scope="col"></th>
@@ -15,26 +15,18 @@
       <th scope="col">Unit</th>
 	    <th scope="col">Quantity</th>
       <th scope="col">Amount</th>
-      <th scope="col">Date</th>
       <th scope="col">Remarks</th>
-      <th scope="col">Action</th>
     </tr>
   </thead>
   <tbody>
     {% for expense in my_expense %}
     <tr>
       <th scope="row">{{forloop.counter}}</th>
-      <td>{{expense.expense_type}}</td>
-      <td>{{expense.particular}}</td>
-      <td>{{expense.unit}}</td>
-	    <td>{{expense.quantity}}</td>
-      <td>{{expense.amount}}</td>
-      <td>{{expense.expense_date}}</td>
-      <td>{{expense.remarks}}</td>
-      <td>
-        <a href="/farmers/editExpense/{{expense.id}}" class="btn btn-success">Edit</a>
-        <a href="/farmers/deleteExpense/{{expense.id}}" class="btn btn-danger">Delete</a>
-      </td>
+      <td>Mark</td>
+      <td>Otto</td>
+      <td>@mdo</td>
+	    <td>Otto</td>
+      <td>@mdo</td>
     </tr>
     {% endfor %}
   </tbody>

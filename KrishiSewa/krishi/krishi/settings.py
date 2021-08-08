@@ -44,8 +44,8 @@ INSTALLED_APPS = [
     'vendors.apps.VendorsConfig',
     'buyers.apps.BuyersConfig',
     'admins.apps.AdminsConfig',
-    # 'chat.apps.ChatConfig',
-    # 'channels',
+    'chat.apps.ChatConfig',
+    'channels',
     'rest_framework',
     'rest_framework.authtoken'
 ]
@@ -137,14 +137,14 @@ STATICFILES_DIRS = [
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
-# DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# ASGI_APPLICATION = "krishi.routing.application"
+ASGI_APPLICATION = "krishi.routing.application"
 
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels.layers.InMemoryChannelLayer"
-#     }
-# }
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
 
 LOGIN_URL = '/login/'

@@ -4,17 +4,18 @@
 {% load static %}
 
 {% block title %}
-<title>Add Expense</title>
+<title>Edit Expense</title>
 <link href="{% static 'farmers/css/editproduct.css' %}" rel="stylesheet">
 {% endblock title %}
 
 {% block content %}
 
 <div class="page-wrapper bg-gra-02 p-t-130 p-b-100 font-poppins mt-5">
+  {% if expense_data %}
         <div class="wrapper wrapper--w680">
             <div class="card card-4" style="width: 100%;">
                 <div class="card-body">
-                    <p class="title">Add Expenses</p>
+                    <p class="title">Edit Expenses</p>
                     <form method="POST">
                       {% csrf_token %}
                       
@@ -24,7 +25,11 @@
                       <div class="input-group-icon">
                         <select class="selectProduct input--style-4" name="category" placeholder="Category">
                         {% for type in type %}
-                          <option value="{{type}}">{{type}}</option>
+                          {% if type == expense_data.expense_type %}
+                            <option value="{{type}}" selected>{{type}}</option>
+                          {% else %}
+                            <option value="{{type}}">{{type}}</option>
+                          {% endif %}
                         {% endfor %}
                         </select>
                           
@@ -34,32 +39,32 @@
                       <div class="">
 
                         <div class="input-group-icon">
-                            <input class="input--style-4" type="text" name="particular" placeholder="Particular">
+                            <input class="input--style-4" type="text" name="particular" placeholder="Particular" value={{expense_data.particular}}>
                         </div>
                     </div>
 
         <div class="">
           <div class="input-group-icon">
-            <input class="input--style-4" type="text" name="unit" placeholder="Unit">
+            <input class="input--style-4" type="text" name="unit" placeholder="Unit" value={{expense_data.unit}}>
           </div>
 				</div>
 
         <div class="">
           <div class="input-group-icon">
-            <input class="input--style-4" type="number" name="quantity" placeholder="Quantity" step=".1">
+            <input class="input--style-4" type="number" name="quantity" placeholder="Quantity" step=".1" value={{expense_data.quantity}}>
           </div>
 				</div>
                     
                                 
         <div class="">
           <div class="input-group-icon">
-            <input class="input--style-4" type="number" name="amount" placeholder="Expense Amount" step=".1">
+            <input class="input--style-4" type="number" name="amount" placeholder="Expense Amount" step=".1" value={{expense_data.amount}}>
           </div>
 				</div>
 
 				<div class="" style="margin-top: 15px;">
           <div class="input-group-icon">
-            <textarea class="input--style-4" name="remarks" placeholder="Remarks" rows="2"></textarea>
+            <textarea class="input--style-4" name="remarks" placeholder="Remarks" rows="2">{% if expense_data.remarks %}{{expense_data.remarks}}{% endif %}</textarea>
           </div>
 				</div>
                         
@@ -71,5 +76,8 @@
       </div>
     </div>
   </div>
+  {% else %}
+  Not your Expense
+  {% endif %}
 </div>
 {% endblock content %}

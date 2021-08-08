@@ -117,16 +117,18 @@ def report_product(request):
         report_description = data['description']
         reported_by = request.user.id
 
-        report_data = {
+        request.data = {
             "reported_by": reported_by,
             "reported_product": reported_product,
             "report_category": report_category,
             "report_description": report_description
         }
 
-        report_endpoint = '/api/products/reports'
-        report_url = base_url + report_endpoint
-        report_response = requests.post(report_url, data=report_data, headers=headers)
+        report_obj = ProductReportView()
+        report_response = report_obj.post(request)
+        # report_endpoint = '/api/products/reports'
+        # report_url = base_url + report_endpoint
+        # report_response = requests.post(report_url, data=report_data, headers=headers)
         if Response(report_response).status_code == 200:
             print("Product Reported Successfully")
         return redirect('/buyers/viewProducts')

@@ -59,6 +59,9 @@ urlpatterns = [
     path('equipmentToDisplay/reports', EquipmentReportView.as_view()),
     path('equipmentToDisplay/reports/<int:id>', EqpReportDetails.as_view()),
 
+    path('equipmentToDisplay/comments', EquipmentCommentView.as_view()),
+    path('equipmentToDisplay/comments/<int:com_id>', EqpCommentDetails.as_view()),
+
     path('equipmentToDisplay/buy', BuyEquipmentView.as_view()),
     path('equipmentToDisplay/buy/<int:id>', BuyEquipmentDetails.as_view()),
     path('equipmentToDisplay/buy/buyer/<int:id>', BoughtEquipmentsBuyer.as_view()),

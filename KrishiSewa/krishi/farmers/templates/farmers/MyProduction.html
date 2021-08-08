@@ -5,7 +5,7 @@
 {% endblock title %}
 
 {% block content %}
-<table class="table">
+<table class="table table-striped">
   <thead>
     <tr>
       <th scope="col"></th>
@@ -20,7 +20,7 @@
     {% if my_production|length > 0 %}
     {% for production in my_production %}
     <tr>
-      <th scope="row">{{production.id}}</th>
+      <th scope="row">{{forloop.counter}}</th>
       <td>{{production.product_id.prod_name}}</td>
       <td>{{production.production_qty}} kg</td>
       <td>{{production.area}} sq. ft.</td>

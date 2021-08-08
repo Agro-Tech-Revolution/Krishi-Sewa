@@ -7,9 +7,9 @@ from .utils import *
 from django.core.files.storage import  default_storage
 from django.core.files.base import ContentFile
 from PIL import Image
+from api.views import *
 
 # Create your views here.
-base_url = 'http://127.0.0.1:8000'
 
 
 @login_required
@@ -57,7 +57,7 @@ def equipments(request):
                 print("Not Valid Image")
                 return redirect('/vendors/addEquipments')
 
-        equipment_data = {
+        request.data = {
             "equipment": equipment,
             "modal": modal,
             "available_for_rent": available_for_rent == 'True',
@@ -71,81 +71,87 @@ def equipments(request):
         }
 
         # print(equipment_data)
+
+        equipment_post_obj = EquipmentsToDisplayView()
+        equipment_post_response = equipment_post_obj.post(request)
         
-        equipment_post_endpoint = '/api/equipmentToDisplay/'
-        equipment_post_url = base_url + equipment_post_endpoint
-        equipment_post_response = requests.post(equipment_post_url, data=equipment_data, headers=headers)
-        if equipment_post_response.json().get('id') != None:
+        # equipment_post_endpoint = '/api/equipmentToDisplay/'
+        # equipment_post_url = base_url + equipment_post_endpoint
+        # equipment_post_response = requests.post(equipment_post_url, data=equipment_data, headers=headers)
+        if equipment_post_response.data.get('id') != None:
             print('Equipment addedd successfully')
             return redirect('/vendors/addEquipments')
         else:
-            error = equipment_post_response.json()
+            error = equipment_post_response.data
             print(error)
         return redirect('/vendors/addEquipments')
 
-    equipment_names_endpoint = '/api/equipment/'
-    equipment_names_url = base_url + equipment_names_endpoint
-    equipment_names_response = requests.get(equipment_names_url, headers) 
+    equipment_names_obj = EquipmentAPIView()
+    equipment_names_response = equipment_names_obj.get(request)
+
+    # equipment_names_endpoint = '/api/equipment/'
+    # equipment_names_url = base_url + equipment_names_endpoint
+    # equipment_names_response = requests.get(equipment_names_url, headers) 
     
     categories = ['Tractor', 'Harvester', 'ATV or UTV', 'Plows' , 'Harrows',
                   'Fertilizer Spreaders', 'Seeders', 'Balers', 'Other']
     context = {
         'categories': categories,
-        'equipment_names': equipment_names_response.json()
+        'equipment_names': equipment_names_response.data
     }
     return render(request, 'vendors/addEquipments.html', context)
 
 
-@login_required
-@vendors_only
-def my_equipments(request):
-    headers = {'Authorization': 'Token ' + request.session['token']}
+# @login_required
+# @vendors_only
+# def my_equipments(request):
+#     headers = {'Authorization': 'Token ' + request.session['token']}
 
-    if request.method=='POST':
-        comment_post_response = eqp_comment_add(request)
-        if Response(comment_post_response).status_code == 200:
-            print('Comment Added Successfully')
-            return redirect('/vendors/myEquipments')
+#     if request.method=='POST':
+#         comment_post_response = eqp_comment_add(request)
+#         if Response(comment_post_response).status_code == 200:
+#             print('Comment Added Successfully')
+#             return redirect('/vendors/myEquipments')
 
-    # calling equipment api to get all the equipments added by me
-    equipment_get_endpoint = '/api/equipment/mine/' + str(request.user.id)
-    equipment_get_url = base_url + equipment_get_endpoint
-    equipment_get_response = requests.get(equipment_get_url, headers=headers)
+#     # calling equipment api to get all the equipments added by me
+#     equipment_get_endpoint = '/api/equipment/mine/' + str(request.user.id)
+#     equipment_get_url = base_url + equipment_get_endpoint
+#     equipment_get_response = requests.get(equipment_get_url, headers=headers)
 
-    equipments_by_me = []
-    if Response(equipment_get_response).status_code == 200:
-        equipments_by_me = equipment_get_response.json()
+#     equipments_by_me = []
+#     if Response(equipment_get_response).status_code == 200:
+#         equipments_by_me = equipment_get_response.json()
         
-    # calling comment api to get all the comments of equipments added by logged in user
-    comment_endpoint = '/api/equipment/comments/user/' + str(request.user.id)
-    comment_url = base_url + comment_endpoint
-    comment_response = requests.get(comment_url, headers=headers)
+#     # calling comment api to get all the comments of equipments added by logged in user
+#     comment_endpoint = '/api/equipment/comments/user/' + str(request.user.id)
+#     comment_url = base_url + comment_endpoint
+#     comment_response = requests.get(comment_url, headers=headers)
 
-    comments_on_my_equipments = []
-    if Response(comment_response).status_code == 200:
-        comments_on_my_equipments = comment_response.json()
+#     comments_on_my_equipments = []
+#     if Response(comment_response).status_code == 200:
+#         comments_on_my_equipments = comment_response.json()
 
-    # modifiying comments keys and values so that the name of the person who commmented can be seen
-    for comment in comments_on_my_equipments:
-        user_endpoint = '/api/users/id/'+str(comment['comment_by'])
-        user_url = base_url + user_endpoint
-        user_response = requests.get(user_url, headers=headers)
-        if Response(user_response).status_code == 200:
-            comment['comment_by'] = user_response.json()
+#     # modifiying comments keys and values so that the name of the person who commmented can be seen
+#     for comment in comments_on_my_equipments:
+#         user_endpoint = '/api/users/id/'+str(comment['comment_by'])
+#         user_url = base_url + user_endpoint
+#         user_response = requests.get(user_url, headers=headers)
+#         if Response(user_response).status_code == 200:
+#             comment['comment_by'] = user_response.json()
 
-    # appending comments of a equipment to equipments dictionary
-    for equipment in equipments_by_me:
-        comments_for_a_equipment = []
-        for comment in comments_on_my_equipments:
-            if comment['equipment'] == equipment['id']:
-                comments_for_a_equipment.append(comment)
-        equipment['comments'] = comments_for_a_equipment
+#     # appending comments of a equipment to equipments dictionary
+#     for equipment in equipments_by_me:
+#         comments_for_a_equipment = []
+#         for comment in comments_on_my_equipments:
+#             if comment['equipment'] == equipment['id']:
+#                 comments_for_a_equipment.append(comment)
+#         equipment['comments'] = comments_for_a_equipment
         
-    context = {
-        "my_equipments": equipments_by_me,
-    }    
+#     context = {
+#         "my_equipments": equipments_by_me,
+#     }    
 
-    return render(request, 'vendors/myEquipments.html', context)
+#     return render(request, 'vendors/myEquipments.html', context)
 
 
 @login_required

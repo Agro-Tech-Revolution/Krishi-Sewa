@@ -1,6 +1,7 @@
 from operator import mod
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.fields import related
 
 # Create your models here.
 class Equipment(models.Model):
@@ -32,14 +33,26 @@ class EquipmentToDisplay(models.Model):
     duration = models.FloatField(null=True) # this can be removed
     details = models.CharField(max_length=200)
     date = models.DateTimeField(auto_now_add=True)
-    eqp_img = models.CharField(max_length=1200, null=True)
+    eqp_img = models.CharField(max_length=1200, null=True, default='static/eqp_images/no_image.png')
     added_by = models.ForeignKey(User, 
                                  on_delete=models.CASCADE, 
                                  null=True)
+    to_display = models.BooleanField(default=True)                                 
+
+    comments = models.ManyToManyField(User,
+                                      through='EquipmentComment',
+                                      related_name='eqp_comments')                                 
 
     reports = models.ManyToManyField(User, 
                                      through='EquipmentReport', 
                                      related_name='eqp_reports')
+
+
+class EquipmentComment(models.Model):
+    comment_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    equipment = models.ForeignKey(EquipmentToDisplay, on_delete=models.CASCADE, null=True)
+    comment = models.CharField(max_length=200)
+    comment_date = models.DateTimeField(auto_now_add=True)
 
 
 class EquipmentReport(models.Model):

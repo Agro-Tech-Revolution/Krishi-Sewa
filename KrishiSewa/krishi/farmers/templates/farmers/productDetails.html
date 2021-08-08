@@ -15,8 +15,8 @@
             <div class="image-box mt-2">
                 <figure class="view overlay rounded z-depth-1 main-img w-100">
 
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQF2psCzfbB611rnUhxgMi-lc2oB78ykqDGYb4v83xQ1pAbhPiB&usqp=CAU"
-                  class="img-fluid z-depth-1 w-100" style="height: 350px; border-radius:10px;">
+                <img src="/{{product_data.product.prod_img}}"
+                  class="img-fluid z-depth-1 d-block mx-auto" style="height: 350px; border-radius:10px;">
 
             </figure>
             </div>
@@ -24,7 +24,10 @@
         <div class="col mt-3 custom-table">
 			<div class="row">
 				<div class="col col-9">
-					<img class="img-fluid" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" style="height: 2rem; border-radius: 50%;"><span class="ml-3 added-user-name">Pawan Bahadur bohora</span>
+					<img class="img-fluid" src="/{{product_data.added_by.profile.profile_pic}}" alt="" style="height: 2rem; border-radius: 50%;">
+          <span class="ml-3 added-user-name text-capitalize">
+            {{product_data.added_by.first_name}} {{product_data.added_by.last_name}}
+          </span>
 				</div>
 				<span class="col col-3 ">
 					<div class="dropdown">
@@ -33,32 +36,34 @@
 					  </a>
 
 					  <div class="dropdown-menu dropdown-menu-right" id="menu-drop" aria-labelledby="dropdownMenuLink" 	style="border-radius:10px">
-						<a class="dropdown-item drop-option" href="/farmers/editproduct/"><i class="far fa-edit mr-2" aria-hidden="true"></i>Edit</a>
-						<a class="dropdown-item drop-option" href="#"><i class="fa fa-trash mr-2" aria-hidden="true"></i>Delete</a>
+						<a class="dropdown-item drop-option" href="/farmers/editproduct/{{product_data.id}}"><i class="far fa-edit mr-2" aria-hidden="true"></i>Edit</a>
+						<a class="dropdown-item drop-option" href="/farmers/deleteproduct/{{product_data.id}}"><i class="fa fa-trash mr-2" aria-hidden="true"></i>Delete</a>
 					  </div>
 					</div>
 				</span>
 			</div>
 
-			<h2 class="text-success mt-3"><b>Medium Combine Harvester</b></h2>
+			<h2 class="text-success mt-3">
+        <b>{{product_data.product.prod_name}}</b>
+      </h2>
 			<div class="table-responsive">
 				<table class="table table-sm table-borderless mb-0 mt-3">
 				  <tbody>
 					<tr>
 					  <th class="pl-0 w-25" scope="row"><strong>Purchase For:</strong></th>
-					  <td>Rs.1900000</td>
+					  <td>NRs.{{product_data.price_per_kg}} per kg.</td>
 					</tr>
 					<tr>
-					  <th class="pl-0 w-25" scope="row"><strong>Type:</strong></th>
-					  <td>Tractor</td>
+					  <th class="pl-0 w-25" scope="row"><strong>Product Category:</strong></th>
+					  <td>{{product_data.product.prod_category}}</td>
 					</tr>
 					<tr>
 					  <th class="pl-0 w-25" scope="row"><strong>Added Date:</strong></th>
-					  <td>2021/08/30</td>
+					  <td>{{product_data.added_date}}</td>
 					</tr>
 					<tr>
 					  <th class="pl-0 w-50" scope="row"><strong>Available Quantity:</strong></th>
-					  <td>10</td>
+					  <td>{{product_data.quantity_in_kg}} kg</td>
 					</tr>
 				  </tbody>
 				</table>
@@ -68,7 +73,11 @@
 			<div class="mt-4">
                 <h5  style="width:100%;border-bottom:1px solid silver; padding-bottom: 20px;"><b class="mb-3">Description</b></h5>
                     <p style="text-align:left; color: black;" >
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet,
+                        {% if product_data.details %}
+                        {{product_data.details}}
+                        {% else %}
+                        -
+                        {% endif %}
                     </p>
             </div>
 </div>
@@ -80,15 +89,15 @@
     <div class="container">
     	<div class="row">
             <div class="col-sm-12 ml-2">
-                <form>
+                <form method="POST">
+                  {% csrf_token %}
                 	<h3 class="pull-left"><b>Comments</b></h3>
                     <fieldset>
                         <hr>
                         <div class="media ml-2">
-                            <a href=""><img class="img-fluid mr-3" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" style="height: 2rem; border-radius: 50%;"></a>
+                            <img class="img-fluid mr-3" src="/{{product_data.added_by.profile.profile_pic}}" alt="" style="height: 2rem; border-radius: 50%;">
                             <div class="media-body">
-                                <textarea class="form-control" id="message" placeholder="Add a comment..." rows="5" style=""></textarea>
-
+                                <textarea class="form-control" id="message" placeholder="Add a comment..." rows="5" name="comment"></textarea>
                             </div>
                         </div>
 						<div class="col-xs-1 col-sm-12 col-lg-12">
@@ -97,27 +106,25 @@
                     </fieldset>
                 </form>
 
-                <h6 style="color: #007bff;"><b>4 Comments</b></h6><hr>
+                <h6 style="color: #007bff;"><b>{{product_data.product_comments|length}} Comments</b></h6><hr>
 
                 <!-- COMMENT 1 - START -->
+                {% for comment in product_data.product_comments %}
                 <div class="media ml-2">
-                    <a href=""><img class="img-fluid" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" style="height: 2rem; border-radius: 50%;"></a>
+                    <a href=""><img class="img-fluid" src="/{{comment.comment_by.profile.profile_pic}}" alt="" style="height: 2rem; border-radius: 50%;"></a>
                     <div class="media-body">
-                        <h6 class="media-heading ml-3"><b>John Doe</b> <span style="float: right;">2 days ago</span></h6>
-                        <p class="ml-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        <h6 class="media-heading ml-3">
+                          <b class="text-capitalize">{{comment.comment_by.first_name}} {{comment.comment_by.last_name}}</b> 
+                          <!-- <span style="float: right;">2 days ago</span> -->
+                        </h6>
+                        <p class="ml-3">
+                          {{comment.comment}}  
+                        </p>
                     </div>
                 </div>
+                {% endfor %}
                 <!-- COMMENT 1 - END -->
 
-				<!-- COMMENT 2 - START -->
-                <div class="media ml-2">
-                    <a href=""><img class="img-fluid" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" style="height: 2rem; border-radius: 50%;"></a>
-                    <div class="media-body">
-                        <h6 class="media-heading ml-3"><b>John Doe</b> <span style="float: right;">2 days ago</span></h6>
-                        <p class="ml-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                    </div>
-                </div>
-                <!-- COMMENT 2 - END -->
             </div>
         </div>
     </div>

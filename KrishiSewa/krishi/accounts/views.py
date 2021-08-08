@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from .auth import *
+# from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework.authtoken.models import Token
 
 # Create your views here.
 
@@ -24,56 +26,6 @@ base_url = "http://127.0.0.1:8000"
 def home(request):
     return render(request,'accounts/Home.html')
 
-# @unauthenticated_user
-# def login_view(request):
-#     if request.method== 'POST':
-#         username = request.POST.get('username')
-#         password = request.POST.get('password')
-        
-#         # user_data = {
-#         #     'username': username,
-#         #     'password': password
-#         # }
-#         user = authenticate(request,
-#                             username=username,
-#                             password=password)
-
-#         if user is not None:
-#             # auth_endpoint = "/auth/"
-#             # auth_url = base_url + auth_endpoint
-            
-#             # r = requests.post(auth_url, data=user_data)
-#             login(request, user)
-#             request.session['token'] = ""
-#             if user.is_staff:
-#                 return redirect('/admins/')
-#             else:
-#                 return redirect('/farmers')
-#             # if Response(r).status_code == 200:
-                
-#             #     token = r.json().get('token')
-#             #     request.session['token'] = token
-                
-#                     # headers = {'Authorization': 'Token ' + token}
-#                     # profile_endpoint = "/api/profile/"
-#                     # profile_url = base_url + profile_endpoint + str(user.id)
-
-#                     # profile_response = requests.get(profile_url, headers=headers)
-#                     # user_type = profile_response.json().get('user_type')
-                    
-#                     # if user_type.upper() == 'BUYERS':
-#                     #     return redirect('/buyers/')
-#                     # elif user_type.upper() == 'FARMERS':
-#                     #     return redirect('/farmers/')
-#                     # elif user_type.upper() == 'VENDORS':
-#                     #     return redirect('/vendors/')
-            
-#         else:
-#             print("No user found")
-        
-#     return render(request, 'accounts/login.html')                        
-
-
 @unauthenticated_user
 def login_view(request):
     if request.method== 'POST':
@@ -87,36 +39,65 @@ def login_view(request):
         user = authenticate(request,
                             username=username,
                             password=password)
-        if user is not None:
-            auth_endpoint = "/auth/"
-            auth_url = base_url + auth_endpoint
-            
-            r = requests.post(auth_url, data=user_data)
-            if Response(r).status_code == 200:
-                login(request, user)
-                token = r.json().get('token')
-                request.session['token'] = token
-                if user.is_staff:
-                    return redirect('/admins/')
-                else:
-                    headers = {'Authorization': 'Token ' + token}
-                    profile_endpoint = "/api/profile/"
-                    profile_url = base_url + profile_endpoint + str(user.id)
 
-                    profile_response = requests.get(profile_url, headers=headers)
-                    user_type = profile_response.json().get('user_type')
-                    
-                    if user_type.upper() == 'BUYERS':
-                        return redirect('/buyers/')
-                    elif user_type.upper() == 'FARMERS':
-                        return redirect('/farmers/')
-                    elif user_type.upper() == 'VENDORS':
-                        return redirect('/vendors/')
-            
+        if user is not None:
+            token, created = Token.objects.get_or_create(user=user)
+            login(request, user)
+
+            request.session['token'] = token.key
+            if user.is_staff:
+                return redirect('/admins/')
+            else:
+                return redirect('/')
         else:
             print("No user found")
         
-    return render(request, 'accounts/login.html')
+    return render(request, 'accounts/login.html')                        
+
+
+# @unauthenticated_user
+# def login_view(request):
+#     if request.method== 'POST':
+#         username = request.POST.get('username')
+#         password = request.POST.get('password')
+        
+#         user_data = {
+#             'username': username,
+#             'password': password
+#         }
+#         user = authenticate(request,
+#                             username=username,
+#                             password=password)
+#         if user is not None:
+#             auth_endpoint = "/auth/"
+#             auth_url = base_url + auth_endpoint
+            
+#             r = requests.post(auth_url, data=user_data)
+#             if Response(r).status_code == 200:
+#                 login(request, user)
+#                 token = r.json().get('token')
+#                 request.session['token'] = token
+#                 if user.is_staff:
+#                     return redirect('/admins/')
+#                 else:
+#                     headers = {'Authorization': 'Token ' + token}
+#                     profile_endpoint = "/api/profile/"
+#                     profile_url = base_url + profile_endpoint + str(user.id)
+
+#                     profile_response = requests.get(profile_url, headers=headers)
+#                     user_type = profile_response.json().get('user_type')
+                    
+#                     if user_type.upper() == 'BUYERS':
+#                         return redirect('/buyers/')
+#                     elif user_type.upper() == 'FARMERS':
+#                         return redirect('/farmers/')
+#                     elif user_type.upper() == 'VENDORS':
+#                         return redirect('/vendors/')
+            
+#         else:
+#             print("No user found")
+        
+#     return render(request, 'accounts/login.html')
 
 
 @unauthenticated_user

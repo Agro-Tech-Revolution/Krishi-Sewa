@@ -12,7 +12,7 @@ class EquipmentToDisplaySerializer(serializers.ModelSerializer):
     class Meta:
         model = EquipmentToDisplay
         fields = ['id', 'equipment', 'modal', 'available_for_rent', 'available_to_buy', 'price_to_buy_per_item',
-                  'price_per_hour', 'duration', 'details', 'added_by', 'date', 'eqp_img', 'reports']
+                  'price_per_hour', 'duration', 'details', 'added_by', 'date', 'eqp_img', 'reports', 'comments']
 
 
 class EquipmentReportSerializer(serializers.ModelSerializer):
@@ -20,6 +20,12 @@ class EquipmentReportSerializer(serializers.ModelSerializer):
         model = EquipmentReport
         fields = ['id', 'reported_by', 'reported_equipment', 'report_category', 
                   'report_description', 'reported_date']
+
+
+class EquipmentCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EquipmentComment
+        fields = ['id', 'comment_by', 'equipment', 'comment', 'comment_date']
 
 
 class BuyDetailsSerializer(serializers.ModelSerializer):
