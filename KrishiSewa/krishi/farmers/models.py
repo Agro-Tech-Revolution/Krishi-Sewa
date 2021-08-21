@@ -1,3 +1,4 @@
+from operator import mod
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -54,7 +55,7 @@ class ProductsForSale(models.Model):
     quantity_in_kg = models.FloatField()
     price_per_kg = models.FloatField()
     added_date = models.DateTimeField(auto_now_add=True)
-    details = models.CharField(max_length=250, null=True)
+    details = models.CharField(max_length=250, null=True, blank=True)
     to_display = models.BooleanField(default=True)
 
     product_comments = models.ManyToManyField(User, 
@@ -93,7 +94,7 @@ class Production(models.Model):
     farmer_id = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     production_qty = models.FloatField()
     area = models.FloatField()
-    remarks = models.CharField(max_length=500, null=True)
+    remarks = models.CharField(max_length=500, null=True, blank=True)
     production_date = models.DateTimeField(auto_now_add=True)
 
 
@@ -110,7 +111,7 @@ class ProductSold(models.Model):
     quantity_sold = models.FloatField()
     sold_price = models.FloatField()
     sold_date = models.DateTimeField(auto_now_add=True)
-    remarks = models.CharField(max_length=1250, null=True)
+    remarks = models.CharField(max_length=1250, null=True, blank=True)
     approved = models.BooleanField(default=False)
     seen = models.BooleanField(default=False)
 
@@ -129,7 +130,7 @@ class Expenses(models.Model):
     quantity = models.FloatField()
     amount = models.FloatField()
     expense_date = models.DateTimeField(auto_now_add=True)
-    remarks = models.CharField(max_length=150, null=True)
+    remarks = models.CharField(max_length=150, null=True, blank=True)
     expense_of = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
 
@@ -143,10 +144,26 @@ class HomeExpenses(models.Model):
     quantity = models.FloatField()
     estimated_price = models.FloatField()
     date = models.DateTimeField(auto_now_add=True)
-    remarks = models.CharField(max_length=500, null=True)
+    remarks = models.CharField(max_length=500, null=True, blank=True)
     expense_of = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     product = models.ForeignKey(Products, on_delete=models.SET_NULL, null=True)
 
+
+class NPKTest(models.Model):
+    nitrogen = models.FloatField()
+    phosphorus = models.FloatField()
+    potassium = models.FloatField()
+    temperature = models.FloatField()
+    humidity = models.FloatField()
+    ph = models.FloatField()
+    reccommended_crop = models.CharField(max_length=50)
+    test_of = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class ImageTest(models.Model):
+    image = models.CharField(max_length=150)
+    reccomended_crops = models.CharField(max_length=255)
+    test_of = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 

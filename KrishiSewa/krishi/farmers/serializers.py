@@ -70,3 +70,15 @@ class HomeExpenseSerializer(serializers.ModelSerializer):
     class Meta:
         model = HomeExpenses
         fields = ['id', 'category', 'quantity', 'estimated_price', 'date', 'expense_of', 'product', 'remarks']
+
+
+class NPKTestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NPKTest
+        fields = '__all__'
+
+
+class ImageTestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NPKTest
+        fields = '__all__'

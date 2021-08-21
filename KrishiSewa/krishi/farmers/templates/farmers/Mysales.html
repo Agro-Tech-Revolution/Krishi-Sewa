@@ -15,30 +15,27 @@
 	    <th scope="col">Sold at</th>
       <th scope="col">Sold Date</th>
       <th scope="col">Remarks</th>
-      <th scope="col">Action</th>
+
     </tr>
   </thead>
   <tbody>
     {% if my_sales|length > 0 %}
     {% for sale in my_sales %}
     <tr>
-      <th scope="row">{{sale.id}}</td>
+      <th scope="row">{{forloop.counter}}</td>
       <td>{{sale.sold_product.product.prod_name}}</td>
       <td>{{sale.sold_to.first_name}} {{sale.sold_to.last_name}}</td>
       <td>{{sale.quantity_sold}} kg</td>
 	    <td>NRs. {{sale.sold_price}}</td>
       <td>{{sale.sold_date}}</td>
-      <td>
+      <td class="text-capitalize">
         {% if sale.remarks %}
           {{sale.remarks}}
         {% else %}
           -
         {% endif %}
       </td>
-      <td>
-        <a href="/farmers/editSales/{{sale.id}}" class="btn btn-success">Edit</a>
-        <a href="/farmers/deleteSales/{{sale.id}}" class="btn btn-danger">Delete</a>
-      </td>
+      
     </tr>
     {% endfor %}
     {% else %}

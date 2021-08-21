@@ -3,6 +3,7 @@ import keras.models
 from django.db.models import base
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from numpy.core.fromnumeric import product
 from requests.api import head
 from accounts.auth import *
 from rest_framework.response import Response
@@ -14,7 +15,6 @@ from tensorflow.keras.preprocessing.image import load_img, img_to_array
 import numpy as np
 # from flask import Flask, request, render_template
 from django.core.files.storage import default_storage
-from django.core.files.base import ContentFile
 from PIL import Image
 
 # Create your views here.
@@ -492,6 +492,84 @@ def add_home_expenses(request):
 
 @login_required
 @farmers_only
+def my_home_expenses(request):
+    home_expense_obj = MyHomeExpense()
+    home_expense_response = home_expense_obj.get(request, request.user.id)
+    context = {
+        "my_home_expense": home_expense_response.data
+    }
+    return render(request, 'farmers/MyHomeExpenses.html', context)
+
+@login_required
+@farmers_only
+def edit_home_expense(request, exp_id):
+    home_expense_obj = HomeExpenseDetails()
+    if request.method == 'POST':
+        data = request.POST
+        category = data["category"]
+        quantity = data["quantity"]
+        estimated_price = data["price"]
+        remarks = data["remarks"]
+        product = data["product"]
+        
+
+        request.data = {
+            "category": category,
+            "quantity": quantity,
+            "estimated_price": estimated_price,
+            "remarks": remarks,
+            "expense_of": request.user.id,
+            "product": product,
+        }
+
+        home_expense_put_response = home_expense_obj.put(request, exp_id)
+
+        if home_expense_put_response.data.get('id') != None:
+            print('Home Expense updated successfully')
+            return redirect('/farmers/myHomeExpenses')
+        else:
+            error = home_expense_put_response.data
+            print(error)
+            return redirect('/farmers/editHomeExpense/' + str(exp_id))
+
+        
+
+
+    product_obj = ProductsAPIView()
+    product_get_response = product_obj.get(request)
+    product_data = product_get_response.data
+
+    prod_categories = ['Cereals', 'Pulses', 'Vegetables', 'Fruits', 'Nuts', 'Oilseeds',
+                        'Sugars and Starches', 'Fibres', 'Beverages', 'Narcotics',
+                        'Spices', 'Condiments', 'Others']
+
+    expense_type = ["Consumed", "Wastes"]
+
+
+    home_expense_response = home_expense_obj.get(request, exp_id)
+    
+    context = {
+        "product": product_data,
+        "prod_categories": prod_categories,
+        "expense_type": expense_type,
+        "expense_data": home_expense_response.data
+    }
+
+    return render(request, 'farmers/editHomeExpense.html', context)
+
+
+@login_required
+@farmers_only
+def delete_home_expense(request, exp_id):
+    home_expense_obj = HomeExpenseDetails()
+    home_expense_response = home_expense_obj.delete(request, exp_id)
+    if Response(home_expense_response).status_code == 200:
+        print('Deleted Successfully')
+    return redirect('/farmers/myHomeExpenses')
+
+
+@login_required
+@farmers_only
 def add_expenses(request):
     if request.method == 'POST':
         data = request.POST
@@ -637,22 +715,20 @@ def my_stock(request):
     return render(request, 'farmers/Mystock.html', context)
 
 
-# @login_required
-# @farmers_only
-# def my_sales(request):
-#     headers = {'Authorization': 'Token ' + request.session['token']}
+@login_required
+@farmers_only
+def my_sales(request):
 
-#     product_sales_endpoint = '/api/sellProducts/seller/' + str(request.user.id)
-#     product_sales_url = base_url + product_sales_endpoint
-#     product_sales_request = requests.get(product_sales_url, headers=headers)
-#     context = {
-#         "my_sales": product_sales_request.json()
-#     }
+    product_request_obj = FarmerProductRequests()
+    product_request_response = product_request_obj.get(request, request.user.id)
+    all_data = product_request_response.data
 
-#     return render(request, 'farmers/Mysales.html', context)
-
-
-
+    product_request = [prod_req for prod_req in all_data if prod_req["approved"]]
+    
+    context = {
+        "my_sales": product_request
+    }
+    return render(request, 'farmers/Mysales.html', context)
 
 
 @login_required
@@ -716,6 +792,24 @@ def npk_result(request):
         
         result = getNPK_Prediction(N, P, K, temp, humidity, ph)
         context = {'result': result}
+
+        request.data = {
+            "nitrogen": N,
+            "phosphorus": P,
+            "potassium": K,
+            "temperature": temp,
+            "humidity": humidity,
+            "ph": ph,
+            "reccommended_crop": result,
+            "test_of": request.user.id
+        }
+        npk_test_obj = NPKTestView()
+        npk_test_response = npk_test_obj.post(request)
+        if npk_test_response.data.get('id') != None:
+            print('Success')
+        else:
+            error = npk_test_response.data
+            print(error)
         return render(request, 'farmers/Npktest.html', context)
     else:
         return render(request, 'farmers/Npktest.html')
@@ -748,15 +842,35 @@ def get_image_model(image_path):
 def image_test(request):
     predict = ''
     if request.method == 'POST':
-        image_url = ''
-        file = request.FILES['image']
-        print(file)
-        path = default_storage.save('farmers/model/image_testing/' + str(file), ContentFile(file.read()))
-        print(path)
+        try:
+            image = request.FILES["image"]
+        except:
+            image = None
 
-        file_path = os.path.join('', path)
+        image_path = ''
+        if not image == None:
+            try:
+                Image.open(image)
+                image_path = default_storage.save('static/image_test/' + str(image), image)
+            except:
+                print("Not Valid Image")
+                return redirect('/farmers/imagetest')
+
+        file_path = os.path.join('', image_path)
         print(file_path)
         predict = get_image_model(file_path)
+        request.data = {
+            "image": file_path,
+            "reccomended_crops": predict,
+            "test_of": request.user.id
+        }
+        image_test_obj = ImageTestView()
+        image_test_response = image_test_obj.post(request)
+        if image_test_response.data.get('id') != None:
+            print('Success')
+        else:
+            error = image_test_response.data
+            print(error)
 
     return render(request, 'farmers/imagetest.html', {'img_result': predict})
 
@@ -798,47 +912,7 @@ def edit_profile(request, user_id):
     current_profile_pic = user_detail_response["profile_pic"]
 
     if request.method == 'POST':
-        data = request.POST
-        username = request.user.username
-        first_name = data["first_name"]
-        last_name = data["last_name"]
-        email = data["email"]
-        user = user_id
-        bio = data["bio"]
-        contact = data["contact"]
-        address = data["address"]
-
-        try:
-            profile_pic = request.FILES["profile_pic"]
-        except:
-            profile_pic = None
-
-        image_path = current_profile_pic
-        if not profile_pic == None:
-            try:
-                Image.open(profile_pic)
-                image_path = default_storage.save('static/profile_pic/' + str(profile_pic), profile_pic)
-            except:
-                print("Not Valid Image")
-                return redirect('/farmers/profile/' + str(user_id) + '/edit')
-        
-        request.data = {
-            "username": username,
-            "first_name": first_name,
-            "last_name": last_name,
-            "email": email,
-            "user": user,
-            "bio": bio,
-            "contact": contact,
-            "address": address,
-            "profile_pic": image_path,
-        }
-        # print(data_to_update)
-        update_profile_obj = UpdateProfileView()
-        user_put_response = update_profile_obj.put(request, user_id)
-        # user_put_endpoint = '/api/profile/' + str(user_id) +'/edit'
-        # user_put_url = base_url + user_put_endpoint
-        # user_put_response = requests.put(user_put_url, data=data_to_update, headers=headers)
+        user_put_response = update_profile_data(request, user_id, current_profile_pic)
         if user_put_response.data.get('username') != None:
             print('Profile updated successfully')
             return redirect('/farmers/profile/' + str(user_id))
@@ -846,6 +920,45 @@ def edit_profile(request, user_id):
             error = user_put_response.data
             print(error)
         return redirect('/farmers/profile/' + str(user_id) + '/edit')
+        # data = request.POST
+        # username = request.user.username
+        # first_name = data["first_name"]
+        # last_name = data["last_name"]
+        # email = data["email"]
+        # user = user_id
+        # bio = data["bio"]
+        # contact = data["contact"]
+        # address = data["address"]
+
+        # try:
+        #     profile_pic = request.FILES["profile_pic"]
+        # except:
+        #     profile_pic = None
+
+        # image_path = current_profile_pic
+        # if not profile_pic == None:
+        #     try:
+        #         Image.open(profile_pic)
+        #         image_path = default_storage.save('static/profile_pic/' + str(profile_pic), profile_pic)
+        #     except:
+        #         print("Not Valid Image")
+        #         return redirect('/farmers/profile/' + str(user_id) + '/edit')
+        
+        # request.data = {
+        #     "username": username,
+        #     "first_name": first_name,
+        #     "last_name": last_name,
+        #     "email": email,
+        #     "user": user,
+        #     "bio": bio,
+        #     "contact": contact,
+        #     "address": address,
+        #     "profile_pic": image_path,
+        # }
+        # # print(data_to_update)
+        # update_profile_obj = UpdateProfileView()
+        # user_put_response = update_profile_obj.put(request, user_id)
+        
 
     context = {
         'user_data': user_detail_response
@@ -864,6 +977,7 @@ def all_equipments(request):
     # all_equipment_response = requests.get(all_equipment_url, headers=headers).json()
     context = {
         "all_equipments": all_equipment_response.data,
+        "user_type": "farmers",
     }
 
     return render(request, 'farmers/allEquipments.html', context)
@@ -875,23 +989,7 @@ def all_equipments(request):
 def equipment_details(request, eqp_id):
     headers = {'Authorization': 'Token ' + request.session['token']}
     if request.method == 'POST':
-        data = request.POST
-        comment = data['comment']
-        equipment = eqp_id
-        comment_by = request.user.id
-
-        request.data = {
-            "comment_by": comment_by,
-            "equipment": equipment,
-            "comment": comment
-        }
-
-        comment_post_obj = EquipmentCommentView()
-        comment_post_response = comment_post_obj.post(request)
-        
-        # comment_post_endpoint = '/api/equipmentToDisplay/comments'
-        # comment_post_url = base_url + comment_post_endpoint
-        # comment_post_response = requests.post(comment_post_url, headers=headers, data=comment_post_data)
+        comment_post_response = comment_add_eqp(request, eqp_id)
 
         if comment_post_response.data.get('id') != None:
             print('Comment submitted successfully')
@@ -903,9 +1001,6 @@ def equipment_details(request, eqp_id):
 
     equipment_detail_obj = EquipmentsToDisplayDetails()
     equipment_detail_response = equipment_detail_obj.get(request, eqp_id)
-    # equipment_detail_endpoint = '/api/equipmentToDisplay/' + str(eqp_id)
-    # equipment_detail_url = base_url + equipment_detail_endpoint
-    # equipment_detail_response = requests.get(equipment_detail_url, headers=headers).data
     context = {
         "equipment_detail": equipment_detail_response.data,
     }
@@ -918,35 +1013,7 @@ def equipment_details(request, eqp_id):
 def purchase_request(request, eqp_id):
     headers = {'Authorization': 'Token ' + request.session['token']}
     if request.method == 'POST':
-        equipment_detail_obj = EquipmentsToDisplayDetails()
-        equipment_detail_response = equipment_detail_obj.get(request, eqp_id).data
-        # equipment_detail_endpoint = '/api/equipmentToDisplay/' + str(eqp_id)
-        # equipment_detail_url = base_url + equipment_detail_endpoint
-        # equipment_detail_response = requests.get(equipment_detail_url, headers=headers).json()
-        price_per_item = equipment_detail_response["price_to_buy_per_item"]
-
-        data = request.POST
-        equipment = eqp_id
-        sold_to = request.user.id
-        quantity = data["quantity"]
-        delivered_address = data['address']
-        total_price = int(price_per_item) * int(quantity)
-        remarks = data['remarks']
-
-        request.data = {
-            "equipment": equipment,
-            "sold_to": sold_to,
-            "quantity": quantity,
-            "delivered_address": delivered_address,
-            "total_price": total_price,
-            "remarks": remarks,
-        }
-        
-        buy_equipment_obj = BuyEquipmentView()
-        buy_equipment_response = buy_equipment_obj.post(request)
-        # buy_equipment_endpoint = '/api/equipmentToDisplay/buy'
-        # buy_equipment_url = base_url + buy_equipment_endpoint
-        # buy_equipment_response = requests.post(buy_equipment_url, data=buy_data, headers=headers)
+        buy_equipment_response = purchase_eqp_request(request, eqp_id)
 
         if buy_equipment_response.data.get('id') != None:
             print('Request submitted successfully')
@@ -964,42 +1031,8 @@ def purchase_request(request, eqp_id):
 def rent_request(request, eqp_id):
     headers = {'Authorization': 'Token ' + request.session['token']}
     if request.method == 'POST':
-        equipment_detail_obj = EquipmentsToDisplayDetails()
-        equipment_detail_response = equipment_detail_obj.get(request, eqp_id).data
-        # equipment_detail_endpoint = '/api/equipmentToDisplay/' + str(eqp_id)
-        # equipment_detail_url = base_url + equipment_detail_endpoint
-        # equipment_detail_response = requests.get(equipment_detail_url, headers=headers).json()
-        price_per_hour = equipment_detail_response["price_per_hour"]
-
-        data = request.POST
-        equipment = eqp_id
-        rented_to = request.user.id
-        rented_quantity = data["quantity"]
-
-        day = data["day"]
-        hours = data["hours"]
-        delivered_address = data['address']
-        rented_duration = (int(day) * 24) + int(hours)
-        total_price = rented_duration * int(rented_quantity) * int(price_per_hour)
-
-        remarks = data['remarks']
-
-        request.data = {
-            "equipment": equipment,
-            "rented_to": rented_to,
-            "rented_quantity": rented_quantity,
-            "delivered_address": delivered_address,
-            "rented_duration": rented_duration,
-            "total_price": total_price,
-            "remarks": remarks,
-        }
+        rent_equipment_response = rent_eqp_request(request, eqp_id)
         
-        rent_equipment_obj = RentEquipmentView()
-        rent_equipment_response = rent_equipment_obj.post(request)
-        # rent_equipment_endpoint = '/api/equipmentToDisplay/rent'
-        # rent_equipment_url = base_url + rent_equipment_endpoint
-        # rent_equipment_response = requests.post(rent_equipment_url, data=rent_data, headers=headers)
-
         if rent_equipment_response.data.get('id') != None:
             print('Request submitted successfully')
             return redirect('/farmers/allEquipments/')
@@ -1009,12 +1042,6 @@ def rent_request(request, eqp_id):
             return redirect('/farmers/equipmentdetails/' + str(eqp_id))
     return redirect('/farmers/equipmentdetails/' + str(eqp_id))
 
-# @login_required
-# @farmers_only
-# def edit_product(request):
-#     return render(request, 'farmers/editProduct.html')
-# def add_product(request):
-#     return render(request, 'farmers/addProduct.html')
 
 @login_required
 @farmers_only
@@ -1036,3 +1063,201 @@ def product_details(request, prod_id):
 
 
     return render(request, 'farmers/productDetails.html', context)
+
+
+@login_required
+@farmers_only
+def product_requests(request, action=None):
+    product_request_obj = FarmerProductRequests()
+    product_request_response = product_request_obj.get(request, request.user.id)
+    all_data = product_request_response.data
+
+    product_request = []
+    seen = ""
+    approved = ""
+    if action == None:
+        product_request = [prod_req for prod_req in all_data if not prod_req["approved"] and not prod_req["seen"]]
+        seen = False
+        approved = False
+    elif action == 'approved':
+        product_request = [prod_req for prod_req in all_data if prod_req["approved"]]
+        seen = True
+        approved = True
+    elif action == 'disapproved':
+        product_request = [prod_req for prod_req in all_data if not prod_req["approved"] and prod_req["seen"]]
+        seen = True
+        approved = False
+
+    context = {
+        "product_request": product_request,
+        "seen": seen,
+        "approved": approved
+    }
+
+    return render(request, 'farmers/productRequests.html', context)
+
+@login_required
+@farmers_only
+def approve_product_request(request, prod_req_id):
+    request.data = {
+        "approved": True
+    }
+    prod_req_obj = ChangeProductRequestStatus()
+    prod_req_response = prod_req_obj.put(request, prod_req_id)
+    if prod_req_response.data.get("success") != None:
+        print(prod_req_response.data)
+    else:
+        print(prod_req_response.data)
+    return redirect('/farmers/productRequests')
+
+
+@login_required
+@farmers_only
+def disapprove_product_request(request, prod_req_id):
+    request.data = {
+        "approved": False
+    }
+    prod_req_obj = ChangeProductRequestStatus()
+    prod_req_response = prod_req_obj.put(request, prod_req_id)
+    if prod_req_response.data.get("success") != None:
+        print(prod_req_response.data)
+    else:
+        print("Error")
+    return redirect('/farmers/productRequests')
+
+
+@login_required
+@farmers_only
+def equipment_bought_requests(request, action=None):
+    eqp_request, seen, approved = buy_eqp_req(request, action)
+
+    context = {
+        "eqp_request": eqp_request,
+        "seen": seen,
+        "approved": approved
+    }
+
+    return render(request, 'farmers/eqpBoughtRequests.html', context)
+
+
+@login_required
+@farmers_only
+def equipment_rented_requests(request, action=None):
+    eqp_request, seen, approved = rent_eqp_req(request, action)
+
+    context = {
+        "eqp_request": eqp_request,
+        "seen": seen,
+        "approved": approved
+    }
+
+    return render(request, 'farmers/eqpRentRequests.html', context)
+
+
+@login_required
+@farmers_only
+def approved_eqp_requests(request, action): 
+    eqp_request, table = eqp_approved(request, action)
+
+    context = {
+        "eqp_request": eqp_request,
+        "table": table
+    }
+
+    return render(request, 'farmers/eqpApproved.html', context)
+
+
+@login_required
+@farmers_only
+def edit_eqp_buy_requests(request, req_id):
+    eqp_req_obj = BuyEquipmentDetails()
+    eqp_req_response = eqp_req_obj.get(request, req_id)
+
+    if request.method == 'POST':
+        eqp_req_put_response = edit_eqp_buy(request, req_id)
+
+        if eqp_req_put_response.data.get('id') != None:
+            print("Updated Successfully")
+        else:
+            print(eqp_req_put_response.data)
+        return redirect("/farmers/eqpBuyRequests")
+
+    eqp_req_data = ""
+    if len(eqp_req_response.data) > 0:
+        if eqp_req_response.data["sold_to"]["id"] == request.user.id:
+            eqp_req_data = eqp_req_response.data
+        
+    context = {
+        "eqp_req_data": eqp_req_data
+    }
+    return render(request, "farmers/editEqpBuyRequest.html", context)
+
+
+@login_required
+@farmers_only
+def delete_eqp_buy_requests(request, req_id):
+    eqp_req_obj = BuyEquipmentDetails()
+    eqp_req_response = eqp_req_obj.get(request, req_id)
+    
+    if len(eqp_req_response.data) > 0:
+        if eqp_req_response.data["sold_to"]["id"] == request.user.id:
+            eqp_req_del_response = eqp_req_obj.delete(request, req_id)
+            if Response(eqp_req_del_response).status_code == 200:
+                print('Deleted Successfully')
+    else:
+        print("Sorry Cannot perform the request")
+    return redirect('/farmers/eqpBuyRequests')
+
+
+@login_required
+@farmers_only
+def edit_eqp_rent_requests(request, req_id):
+    eqp_req_obj = RentEquipmentDetails()
+    eqp_req_response = eqp_req_obj.get(request, req_id)
+    
+    if request.method == 'POST':
+        eqp_req_put_response = edit_eqp_rent(request, req_id)
+        if eqp_req_put_response.data.get('id') != None:
+            print("Updated Successfully")
+        else:
+            print(eqp_req_put_response.data)
+        return redirect("/farmers/eqpRentRequests")
+
+    eqp_req_data = ""
+    hours = ""
+    day = ""
+    if len(eqp_req_response.data) > 0:
+        if eqp_req_response.data["rented_to"]["id"] == request.user.id:
+            eqp_req_data = eqp_req_response.data
+            total_duration = eqp_req_data["rented_duration"]
+            if total_duration >= 24:
+                day = total_duration//24
+                hours = total_duration - (day*24)
+            else:
+                hours = total_duration
+
+    context = {
+        "eqp_req_data": eqp_req_data,
+        "hours": hours,
+        "day": day
+    }
+    return render(request, "farmers/editEqpRentRequest.html", context)
+
+
+@login_required
+@farmers_only
+def delete_eqp_rent_requests(request, req_id):
+    eqp_req_obj = RentEquipmentDetails()
+    eqp_req_response = eqp_req_obj.get(request, req_id)
+    
+    if len(eqp_req_response.data) > 0:
+        if eqp_req_response.data["rented_to"]["id"] == request.user.id:
+            eqp_req_del_response = eqp_req_obj.delete(request, req_id)
+            if Response(eqp_req_del_response).status_code == 200:
+                print('Deleted Successfully')
+    else:
+        print("Sorry Cannot perform the request")
+    return redirect('/farmers/eqpRentRequests')
+
+
+

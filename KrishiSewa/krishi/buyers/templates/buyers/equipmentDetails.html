@@ -1,0 +1,243 @@
+{% extends 'layout-farmers.html' %}
+
+{% load static %}
+
+{% block title %}
+<title>Equipment Details</title>
+<link href="{% static 'farmers/css/equipmentDetails.css' %}" rel="stylesheet">
+{% endblock title %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row mt-2" >
+        <div class="col">
+            <div class="image-box mt-2">
+                <figure class="view overlay rounded z-depth-1 main-img">
+
+                <img src="/{{equipment_detail.eqp_img}}"
+                  class="img-fluid z-depth-1" style="height: 350px; width: 80%; border-radius:10px;">
+
+            </figure>
+            </div>
+        </div>
+        <div class="col mt-3 custom-table">
+			<div class="row">
+				<div class="col col-9">
+					<img class="img-fluid" src="/{{equipment_detail.added_by.profile.profile_pic}}" alt="" style="height: 2rem; width: 2rem; border-radius: 50%;">
+                    <a href="/buyers/profile/{{equipment_detail.added_by.id}}">
+                        <span class="ml-3 text-capitalize">
+                            {{equipment_detail.added_by.first_name}} {{equipment_detail.added_by.last_name}}
+                        </span>
+                    </a>
+				</div>
+				<div class="col col-3">
+					<a href="" class="" data-toggle="tooltip" data-placement="bottom" title="Report">
+						<i class="far fa-flag" style="color: red; font-size: 1.5rem;"></i>
+					</a>
+				</div>
+			</div>
+
+			<h2 class="text-success mt-3"><b>{{equipment_detail.equipment.name}}</b></h2>
+            
+			<div class="table-responsive">
+				<table class="table table-sm table-borderless mb-0 mt-3">
+				  <tbody>
+                    <tr>
+                        <th class="pl-0 w-25" scope="row"><strong>Modal:</strong></th>
+                        <td style="font-size: 22px;">{{equipment_detail.modal}}</td>
+                    </tr>
+                    {% if equipment_detail.available_to_buy %}
+					<tr>
+					  <th class="pl-0 w-25" scope="row"><strong>Purchase For:</strong></th>
+					  <td style="font-size: 22px;">Rs. {{equipment_detail.price_to_buy_per_item}} per item</td>
+					</tr>
+                    {% endif %}
+                    {% if equipment_detail.available_for_rent %}
+					<tr>
+					  <th class="pl-0 w-25" scope="row"><strong>Rent For:</strong></th>
+					  <td style="font-size: 22px;">Rs. {{equipment_detail.price_per_hour}} per hour</td>
+					</tr>
+					<tr>
+					  <th class="pl-0 w-25" scope="row"><strong>Available for:</strong></th>
+					  <td style="font-size: 22px;">{{equipment_detail.duration}} hours</td>
+					</tr>
+                    {% endif %}
+				  </tbody>
+				</table>
+			</div>
+
+            <div class="accordion" id="accordionExample">
+                <div class="row m-0">
+                    {% if equipment_detail.available_to_buy %}
+                    <div class="col-12 col-md-6 my-2 pl-0">
+                        <div id="heading1">
+                            <h2 class="mb-0">
+                                <button class="btn d-block w-100 oPurchaseBtn" type="button" data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
+                                    Purchase
+                                </button>
+                            </h2>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if equipment_detail.available_for_rent %}
+                    <div class="col-12 col-md-6 my-2 pl-0">
+                        <div id="heading3">
+                            <h2 class="mb-0">
+                                <button class="btn d-block w-100 oRentBtn" type="button" data-toggle="collapse" data-target="#collapse2" aria-expanded="true" aria-controls="collapse2" >
+                                    Rent
+                                </button>
+                            </h2>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="collapse-content px-3 my-3">
+                    <div id="collapse1" class="collapse card" aria-labelledby="heading1" data-parent="#accordionExample">
+                        <div class="card-body">
+                            <h2 style="text-align:center; font-size:1.5rem;"><u>Purchase Now</u></h2>
+                            <form class="mx-auto" method="POST" action="/buyers/purchase/{{equipment_detail.id}}">
+                                {% csrf_token %}
+                                <div class="col mt-2">
+                                    <label for="quantity">Quantity</label><br>
+                                    <input type="number" class="form-control" id="purchasequantity" name="quantity" onchange="Purchasmultiply()" min="1">
+                                    <label for="address">Address</label>
+                                    <input type="text" class="form-control" id="address" name="address">
+                                    <label for="remarks">Remarks</label>
+                                    <textarea class="form-control" id="remarks" name="remarks" rows="2" cols="40"></textarea>
+                                    <label for="result">Total Price: </label>
+                                    <label id="purchaseresult"></label>
+                                    <!-- <input disabled class="form-control" id="purchaseresult" name="total_price"/> -->
+                                    <div class="col" style="text-align:center;">
+                                        <button type="submit" class="btn btn-success mt-2" style="width: 8rem;">Purchase</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div id="collapse2" class="collapse card" aria-labelledby="heading1" data-parent="#accordionExample">
+                        <div class="card-body">
+                            <h2 style="text-align:center; font-size:1.5rem;"><u>Rent Now</u></h2>
+                            <form class="mx-auto" method="POST" action="/buyers/rent/{{equipment_detail.id}}">
+                                {% csrf_token %}
+                                <div class="col mt-2">
+                                    <label for="quantity">Quantity</label><br>
+                                    <input type="number" class="form-control" id="rentquantity" name="quantity" onchange="Rentmultiply()">
+                                </div>
+                                <div class="col">
+                                    <div class="form-row align-items-center">
+                                        <div class="col-sm-8 my-1">
+                                            <label for="address">Day</label>
+                                            <input type="number" class="form-control" id="rentday" onchange="Rentmultiply()" name="day">
+                                        </div>
+                                        <div class="col-sm-4 my-1">
+                                            <label for="hours">Hours</label>
+                                            <input type="number" class="form-control" id="hours" onchange="Rentmultiply()" name="hours">
+                                        </div>
+                                    </div>
+                                    <label for="address">Address</label>
+                                    <input type="text" class="form-control" id="address" name="address">
+                                    <label for="remarks">Remarks</label>
+                                    <textarea class="form-control" id="remarks2" name="remarks" rows="2" cols="38"></textarea>
+                                    <label for="result">Total Rent Price:</label>
+                                    <label id="Rentresult"></label>
+                                    
+                                    <div class="col" style="text-align:center;">
+                                        <button type="submit" class="btn btn-success mt-2" style="width: 8rem;">Rent</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+		</div>
+    </div>
+    <div class="mt-4">
+        <h5 style="width:100%; border-bottom:1px solid silver; padding-bottom:20px;">
+            <b class="mb-3">Description</b>
+        </h5>
+        <p style="text-align:left; color: black;" >
+            {{equipment_detail.details}}
+        </p>
+    </div>
+</div>
+
+{{equipment_detail.price_to_buy_per_item|json_script:"buy_price"}}
+{{equipment_detail.price_per_hour|json_script:"rent_price"}}
+    
+<!--Comment-->
+<section class="content-item" id="comments">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 ml-2">
+                <form method="POST">
+                    {% csrf_token %}
+                    <h3 class="pull-left"><b>Comments</b></h3>
+                    <fieldset>
+                        <hr>
+                        <div class="media ml-2">
+                            <a href=""><img class="img-fluid mr-3" src="/{{user.profile.profile_pic}}" alt="" style="height: 2rem; width: 2rem; border-radius: 50%;"></a>
+                            <div class="media-body">
+                                <textarea class="form-control" id="message" placeholder="Add a comment..." rows="5" name="comment"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-xs-1 col-sm-12 col-lg-12">
+                            <button type="submit" class="btn btn-primary post-btn "><b>Post</b></button>
+                        </div>
+                    </fieldset>
+                </form>
+
+                <h6 style="color: #007bff;"><b>{{equipment_detail.comments|length}} Comments</b></h6><hr>
+
+                <!-- COMMENT 1 - START -->
+                {% for comment in equipment_detail.comments %}
+                <div class="media ml-2">
+                    <a href=""><img class="img-fluid" src="/{{comment.comment_by.profile.profile_pic}}" alt="" style="height: 2rem; width: 2rem; border-radius: 50%;"></a>
+                    <div class="media-body">
+                        <h6 class="media-heading ml-3">
+                            <b class="text-capitalize">{{comment.comment_by.first_name}} {{comment.comment_by.last_name}}</b> 
+                            <!-- <span style="float: right;">2 days ago</span> -->
+                        </h6>
+                        <p class="ml-3">
+                            {{comment.comment}}
+                        </p>
+                    </div>
+                </div>
+                {% endfor %}
+                <!-- COMMENT 1 - END -->
+
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script>
+
+    const buy_price = JSON.parse(document.getElementById('buy_price').textContent);
+    const rent_price = JSON.parse(document.getElementById('rent_price').textContent);
+
+    function Purchasmultiply(){
+        Quan = document.getElementById("purchasequantity").value;
+        result = Quan * buy_price;
+        document.getElementById("purchaseresult").innerHTML = "NRs." + result;
+    }
+
+
+    function Rentmultiply(){
+        Quan = document.getElementById("rentquantity").value;
+        day = document.getElementById("rentday").value*24;
+        hours = document.getElementById("hours").value;
+        totalduration= Number(hours)+Number(day);
+        result = Quan * rent_price * totalduration ;
+        document.getElementById("Rentresult").innerHTML = "NRs." + result;
+    }
+
+</script>
+
+{% endblock content %}

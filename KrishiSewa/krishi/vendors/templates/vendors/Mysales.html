@@ -1,0 +1,73 @@
+{% extends 'layout-farmers.html' %}
+
+{% block title %}
+<title>My Sales</title>
+{% endblock title %}
+
+{% block content %}
+<table class="table text-center">
+  <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col">Equipment Name</th>
+      <th scope="col">Sold/Rented To</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Duration</th>
+	    <th scope="col">Total Price</th>
+      <th scope="col">Date</th>
+      <th scope="col">Remarks</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    {% if my_sales|length > 0 %}
+    {% for sale in my_sales %}
+    <tr>
+      <th scope="row">{{forloop.counter}}</td>
+      <td>{{sale.equipment.equipment.name}}</td>
+      <td>
+        {% if sale.sold_to %}
+        {{sale.sold_to.first_name}} {{sale.sold_to.last_name}}
+        {% elif sale.rented_to %}
+        {{sale.rented_to.first_name}} {{sale.rented_to.last_name}}
+        {% endif %}
+      </td>
+      <td>
+      {{sale.quantity_sold}}
+        {% if sale.quantity_sold %}
+        {{sale.quantity_sold}}
+        {% elif sale.rented_quantity %}
+        {{sale.rented_quantity}}
+        {% endif %}
+      </td>
+      <td>
+        {% if sale.rented_duration %}
+        {{sale.rented_duration}}
+        {% else %}
+        -
+        {% endif %}
+      </td>
+	    <td>NRs. {{sale.total_price}}</td>
+      <td>
+        {% if sale.sold_date %}
+        {{sale.sold_date}}
+        {% else %}
+        {{sale.rented_date}}
+        {% endif %}
+      </td>
+      <td class="text-capitalize">
+        {% if sale.remarks %}
+          {{sale.remarks}}
+        {% else %}
+          -
+        {% endif %}
+      </td>
+      
+    </tr>
+    {% endfor %}
+    {% else %}
+    <h1 class="text-capitalize text-center">No sales present</h1>
+    {% endif %}
+  </tbody>
+</table>
+{% endblock content %}

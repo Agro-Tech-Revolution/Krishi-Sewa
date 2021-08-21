@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block title %}
-<title>Buy Product Farmers</title>
+<title>Buy Equipments Farmers</title>
 <link href="{% static 'farmers/css/farmersToVender.css' %}" rel="stylesheet">
 {% endblock title %}
 
@@ -58,7 +58,7 @@
             <div class="row">
 				{% for equipment in all_equipments %}
                 <div class="col-sm-12 col-md-6 col-lg-3">
-					<a href="/farmers/equipmentdetails/{{equipment.id}}">
+					<a href="/{{user_type}}/equipmentdetails/{{equipment.id}}">
                         <div class="card-flyer mx-auto">
                             <div class="text-box">
                                 <div class="image-box">

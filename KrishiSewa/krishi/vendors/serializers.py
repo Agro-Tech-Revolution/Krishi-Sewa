@@ -32,12 +32,12 @@ class BuyDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = BuyDetails
         fields = ['id', 'equipment', 'sold_to', 'quantity', 'delivered_address', 
-                  'total_price', 'sold_date', 'remarks', 'approved']
+                  'total_price', 'sold_date', 'remarks', 'approved', 'seen']
 
 
 class RentDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = RentDetails
         fields = ['id', 'equipment', 'rented_to', 'rented_quantity', 'delivered_address',
-                  'rented_duration', 'total_price', 'rented_date', 'remarks', 'approved']
+                  'rented_duration', 'total_price', 'rented_date', 'remarks', 'approved', 'seen']
     

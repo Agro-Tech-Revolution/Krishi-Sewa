@@ -30,7 +30,13 @@
 	    <td>{{expense.quantity}}</td>
       <td>{{expense.amount}}</td>
       <td>{{expense.expense_date}}</td>
-      <td>{{expense.remarks}}</td>
+      <td>
+        {% if expense.remarks %}
+          {{expense.remarks}}
+        {% else %}
+          -
+        {% endif %}
+      </td>
       <td>
         <a href="/farmers/editExpense/{{expense.id}}" class="btn btn-success">Edit</a>
         <a href="/farmers/deleteExpense/{{expense.id}}" class="btn btn-danger">Delete</a>

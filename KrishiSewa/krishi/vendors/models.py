@@ -31,7 +31,7 @@ class EquipmentToDisplay(models.Model):
     price_to_buy_per_item = models.FloatField(null=True)
     price_per_hour = models.FloatField(null=True)
     duration = models.FloatField(null=True) # this can be removed
-    details = models.CharField(max_length=200)
+    details = models.CharField(max_length=200, null=True)
     date = models.DateTimeField(auto_now_add=True)
     eqp_img = models.CharField(max_length=1200, null=True, default='static/eqp_images/no_image.png')
     added_by = models.ForeignKey(User, 
@@ -78,8 +78,9 @@ class BuyDetails(models.Model):
     delivered_address = models.CharField(max_length=100)
     total_price = models.FloatField()
     sold_date = models.DateTimeField(auto_now_add=True)
-    remarks = models.CharField(max_length=150, null=True)
+    remarks = models.CharField(max_length=150, null=True, blank=True)
     approved = models.BooleanField(default=False)
+    seen = models.BooleanField(default=False)
 
 
 class RentDetails(models.Model):
@@ -91,5 +92,6 @@ class RentDetails(models.Model):
     delivered_address = models.CharField(max_length=100)
     total_price = models.FloatField()
     rented_date = models.DateTimeField(auto_now_add=True)
-    remarks = models.CharField(max_length=150, null=True)
+    remarks = models.CharField(max_length=150, null=True, blank=True)
     approved = models.BooleanField(default=False)
+    seen = models.BooleanField(default=False)

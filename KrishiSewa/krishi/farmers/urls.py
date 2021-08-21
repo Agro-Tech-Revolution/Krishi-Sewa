@@ -5,11 +5,6 @@ urlpatterns = [
     path('', index),
     # path('addProductsForSale', products_for_sale),
 
-    # path('myProducts', my_products),
-    # path('myProducts/edit/<int:id>', edit_products),
-    # path('myProducts/delete/<int:id>', delete_product),
-    # path('myProducts/editComment', edit_comment),
-    # path('myProducts/delete/comment/<int:id>', delete_comment),
 
     path('addProduction', add_production),
     path('editProduction/<int:id>', edit_production),
@@ -17,11 +12,14 @@ urlpatterns = [
 
     # path('myProducts/sell/<int:id>', sell_product),
 
-    # path('mySales', my_sales),
+    path('mySales', my_sales),
     # path('editSales/<int:id>', edit_sales),
     # path('deleteSales/<int:id>', delete_sales),
 
     path('addHomeExpenses', add_home_expenses),
+    path('myHomeExpenses', my_home_expenses),
+    path('editHomeExpense/<int:exp_id>', edit_home_expense),
+    path('deleteHomeExpense/<int:exp_id>', delete_home_expense),
     
     path('myProduction', my_production),
     path('myStock', my_stock),
@@ -41,7 +39,6 @@ urlpatterns = [
     path('profile/<int:user_id>', profile),
     path('profile/<int:user_id>/edit', edit_profile),
 
-    # path('test/result/', result),
     path('npktest', npk_result),
 
     path('allEquipments/', all_equipments),
@@ -54,5 +51,24 @@ urlpatterns = [
     path('editproduct/<int:prod_id>', edit_product),
     path('deleteproduct/<int:prod_id>', delete_product),
     path('myproducts/<int:prod_id>', product_details),
+    
+    path('productRequests', product_requests),
+    path('productRequests/<str:action>', product_requests),
+    path('approveRequest/<int:prod_req_id>', approve_product_request),
+    path('disapproveRequest/<int:prod_req_id>', disapprove_product_request),
+
+    path('eqpBuyRequests', equipment_bought_requests),
+    path('eqpBuyRequests/<str:action>', equipment_bought_requests),
+    path('eqpuipments/<str:action>', approved_eqp_requests),
+
+    path('eqpRentRequests', equipment_rented_requests),
+    path('eqpRentRequests/<str:action>', equipment_rented_requests),
+    path('equipments/<str:action>', approved_eqp_requests),
+
+    path('editBuyRequest/<int:req_id>', edit_eqp_buy_requests),
+    path('deleteBuyRequest/<int:req_id>', delete_eqp_buy_requests),
+
+    path('editRentRequest/<int:req_id>', edit_eqp_rent_requests),
+    path('deleteRentRequest/<int:req_id>', delete_eqp_rent_requests),
 
 ]

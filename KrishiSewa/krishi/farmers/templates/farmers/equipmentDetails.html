@@ -24,7 +24,7 @@
         <div class="col mt-3 custom-table">
 			<div class="row">
 				<div class="col col-9">
-					<img class="img-fluid" src="/{{equipment_detail.added_by.profile.profile_pic}}" alt="" style="height: 2rem; border-radius: 50%;">
+					<img class="img-fluid" src="/{{equipment_detail.added_by.profile.profile_pic}}" alt="" style="height: 2rem; width: 2rem; border-radius: 50%;">
                     <a href="/farmers/profile/{{equipment_detail.added_by.id}}">
                         <span class="ml-3 text-capitalize">
                             {{equipment_detail.added_by.first_name}} {{equipment_detail.added_by.last_name}}
@@ -180,7 +180,7 @@
                     <fieldset>
                         <hr>
                         <div class="media ml-2">
-                            <a href=""><img class="img-fluid mr-3" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" style="height: 2rem; border-radius: 50%;"></a>
+                            <a href=""><img class="img-fluid mr-3" src="/{{user.profile.profile_pic}}" alt="" style="height: 2rem; width: 2rem; border-radius: 50%;"></a>
                             <div class="media-body">
                                 <textarea class="form-control" id="message" placeholder="Add a comment..." rows="5" name="comment"></textarea>
                             </div>
@@ -196,7 +196,7 @@
                 <!-- COMMENT 1 - START -->
                 {% for comment in equipment_detail.comments %}
                 <div class="media ml-2">
-                    <a href=""><img class="img-fluid" src="/{{comment.comment_by.profile.profile_pic}}" alt="" style="height: 2rem; border-radius: 50%;"></a>
+                    <a href=""><img class="img-fluid" src="/{{comment.comment_by.profile.profile_pic}}" alt="" style="height: 2rem; width: 2rem; border-radius: 50%;"></a>
                     <div class="media-body">
                         <h6 class="media-heading ml-3">
                             <b class="text-capitalize">{{comment.comment_by.first_name}} {{comment.comment_by.last_name}}</b> 

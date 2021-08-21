@@ -1,0 +1,180 @@
+{% extends 'layout-farmers.html' %}
+{% block title %}
+<title>Approved Equipment Requests</title>
+<!-- insert css of this page here -->
+{% endblock title %}
+
+
+{% block content %}
+
+
+
+
+        <div class="rounded mb-5 rounded p-4 mx-auto mt-5 shadow-lg p-3 mb-5 rounded" style="width:90%;">
+
+        <div class="text-center mb-3">
+          {% if table == 'buy' %}
+            <h3>Approved Buy Requests</h3>
+          {% elif table == 'rent' %}
+            <h3>Approved Rent Requests</h3>
+          {% endif %}
+            
+        </div>
+
+        <div class="form-inline justify-content-center">
+            <a href="/buyers/eqpuipments/bought" class="btn my-1 p-2 m-3 text-light" style="border-radius: 25px; padding: 7px; font-size: 18px; width:260px; background-color:#A67B5B">Buy Requests</a>
+            <a href="/buyers/eqpuipments/rented" class="btn my-1 p-2 m-3 text-light" style="border-radius: 25px; padding: 7px; font-size: 18px; width:260px; background-color:#A67B5B">Rent Requests</a>
+        </div>
+        
+
+        <div class="form-inline justify-content-center ml-2" style="color:#A67B5B">
+            <label>Filter by Date: </label>
+            <input type="date" class="ml-2" name="date" value="" />
+
+        <div class="form-inline  mr-sm-2">
+            <label class="my-1 mr-2 ml-3" style="color:#A67B5B" for="inlineFormCustomSelectPref">Filter by Category:</label>
+            <select class="custom-select my-1 mr-sm-2 ml-1" id="inlineFormCustomSelectPref">
+               <option selected>Choose...</option>
+               <option value="1">One</option>
+               <option value="2">Two</option>
+               <option value="3">Three</option>
+            </select>
+        </div>
+
+        </div>
+        <br>
+        <!-- <div class="form-inline justify-content-center mb-2">
+            <a href="/farmers/eqpBuyRequests/approved" class="btn btn-success my-1 p-2 m-2" style="border-radius: 25px; padding: 7px; font-size: 17px; width:170px">Approved</a>
+            <a href="/farmers/eqpBuyRequests/disapproved" class="btn btn-danger my-1 p-2 m-2" style="border-radius: 25px; padding: 7px; font-size: 17px; width:170px">Disapproved</a>
+            <a href="/farmers/eqpBuyRequests" class="btn btn-primary my-1 p-2 m-2" style="border-radius: 25px; padding: 7px; font-size: 17px; width:170px">Pending</a>
+        </div> -->
+
+      <div class="row">
+        <div class="container">
+            <div class="row justify-content-center m-3">
+              <div style="height:40vh; overflow-y: scroll;">
+              <table class="table table-striped table-hover table-borderless table-sm  text-center mt-2 bg-light" style="width:1300px;">
+                {% if table == 'buy' %}  
+                  <thead>
+                     <tr style="font-size:16px; color:#A67B5B">
+                        <th scope="col">S.N.</th>
+                        <th scope="col">Request By</th>
+                        
+                        <th scope="col">Address</th>
+                        <th scope="col">Requested Date</th>
+                        <th scope="col">Equipment</th>
+                        <th scope="col">Equipment Category</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Total Price</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Remarks</th>
+                        
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {% for eqp_req in eqp_request %}
+                      
+                      <tr  style="font-size:14px;">
+                        <th scope="row">{{forloop.counter}}</th>
+                        <td class="text-capitalize">{{eqp_req.sold_to.first_name}} {{eqp_req.sold_to.last_name}}</td>
+                        
+                        <td>{{eqp_req.delivered_address}}</td>
+                        <td>{{eqp_req.sold_date}}</td>
+                        <td>{{eqp_req.equipment.equipment.name}}</td>
+                        <td>{{eqp_req.equipment.equipment.category}}</td>
+                        <td>{{eqp_req.quantity}}</td>
+                        <td>{{eqp_req.total_price}}</td>
+                        <td>
+                          {% if eqp_req.approved %}
+                            Approved
+                          {% else %}
+                            Disapproved
+                          {% endif %}
+                          
+                        </td>
+                        <td class="text-capitalize">
+                          {% if eqp_req.remarks %}
+                          {{eqp_req.remarks}}
+                          {% else %}
+                          -
+                          {% endif %}
+                        </td>
+                        
+                      </tr>
+                      
+                      {% endfor %}
+                    </tbody>
+                {% elif table == 'rent' %}
+                <thead>
+                  <tr style="font-size:16px; color:#A67B5B">
+                     <th scope="col">S.N.</th>
+                     <th scope="col">Request By</th>
+                     <th scope="col">Phone</th>
+                     <th scope="col">Address</th>
+                     <th scope="col">Requested Date</th>
+                     <th scope="col">Equipment</th>
+                     <th scope="col">Equipment Category</th>
+                     <th scope="col">Quantity</th>
+                     <th scope="col">Rented Duration</th>
+                     <th scope="col">Total Price</th>
+                     <th scope="col">Status</th>
+                     <th scope="col">Remarks</th>
+                     
+                   </tr>
+                 </thead>
+
+                 <tbody>
+                   {% for eqp_req in eqp_request %}
+                   
+                   <tr  style="font-size:14px;">
+                     <th scope="row">{{forloop.counter}}</th>
+                     <td class="text-capitalize">{{eqp_req.rented_to.first_name}} {{eqp_req.rented_to.last_name}}</td>
+                     <td>{{eqp_req.rented_to.profile.contact}}</td>
+                     <td>{{eqp_req.delivered_address}}</td>
+                     <td>{{eqp_req.rented_date}}</td>
+                     <td>{{eqp_req.equipment.equipment.name}}</td>
+                     <td>{{eqp_req.equipment.equipment.category}}</td>
+                     <td>{{eqp_req.rented_quantity}}</td>
+                     <td>{{eqp_req.rented_duration}}</td>
+                     <td>{{eqp_req.total_price}}</td>
+                     <td>
+                       {% if eqp_req.approved %}
+                         Approved
+                       {% else %}
+                         Disapproved
+                       {% endif %}
+                       
+                     </td>
+                     <td class="text-capitalize">
+                       {% if eqp_req.remarks %}
+                       {{eqp_req.remarks}}
+                       {% else %}
+                       -
+                       {% endif %}
+                     </td>
+                     
+                   </tr>
+                   
+                   {% endfor %}
+                 </tbody>
+                {% endif %}
+
+                  </table>
+                  </div>
+                  </div>
+                  </div>
+                  </div>
+
+                </div>
+        </div>
+
+
+            
+
+
+
+
+
+
+{% endblock content %}

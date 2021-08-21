@@ -81,4 +81,10 @@ urlpatterns = [
 
     path('changeRequestStatus/<int:id>', ChangeProductRequestStatus.as_view()),
 
+    path('changeEqpBuyStatus/<int:id>', ChangeEqpBuyRequestStatus.as_view()),
+    path('changeEqpRentStatus/<int:id>', ChangeEqpRentRequestStatus.as_view()),
+
+    path('npktest', NPKTestView.as_view()),
+    path('imagetest', ImageTestView.as_view()),
+
 ]

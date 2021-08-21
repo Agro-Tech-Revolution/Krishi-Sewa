@@ -1,0 +1,134 @@
+
+{% extends 'layout-farmers.html' %}
+
+{% load static %}
+
+{% block title %}
+<title>Edit Rent Request</title>
+<link href="{% static 'farmers/css/editproduct.css' %}" rel="stylesheet">
+{% endblock title %}
+
+{% block content %}
+
+{% if eqp_req_data %}
+<div class="page-wrapper bg-gra-02 p-t-130 p-b-100 font-poppins mt-5">
+        <div class="container">
+          <div class="card border-0">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-6">
+                  <img src="/{{eqp_req_data.equipment.eqp_img}}" alt="" class="rounded img-fluid w-100">
+                </div>
+                <div class="col-6">
+                  <h2 class="text-success mt-3"><b>{{eqp_req_data.equipment.equipment.name}}</b></h2>
+                  <div class="table-responsive">
+                    <table class="table table-sm table-borderless mb-0 mt-3">
+                      <tbody>
+                                <tr>
+                                    <th class="pl-0 w-25" scope="row"><strong>Modal:</strong></th>
+                                    <td style="font-size: 22px;">{{eqp_req_data.equipment.modal}}</td>
+                                </tr>
+                                {% if eqp_req_data.equipment.available_to_buy %}
+                      <tr>
+                        <th class="pl-0 w-25" scope="row"><strong>Purchase For:</strong></th>
+                        <td style="font-size: 22px;">Rs. {{eqp_req_data.equipment.price_to_buy_per_item}} per item</td>
+                      </tr>
+                                {% endif %}
+                                {% if eqp_req_data.equipment.available_for_rent %}
+                      <tr>
+                        <th class="pl-0 w-25" scope="row"><strong>Rent For:</strong></th>
+                        <td style="font-size: 22px;">Rs. {{eqp_req_data.equipment.price_per_hour}} per hour</td>
+                      </tr>
+                      <tr>
+                        <th class="pl-0 w-25" scope="row"><strong>Available for:</strong></th>
+                        <td style="font-size: 22px;">{{eqp_req_data.equipment.duration}} hours</td>
+                      </tr>
+                                {% endif %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+  
+          </div>
+
+        </div>
+        
+        <div class="wrapper wrapper--w680">
+            <div class="card card-4" style="width: 100%;">
+                <div class="card-body">
+                    <p class="title">Edit Rent Request</p>
+                    <form method="POST">
+                      {% csrf_token %}
+                      
+                      <div class="">
+
+                        <div class="input-group-icon">
+                            <input class="input--style-4" id="rentquantity" onchange="Rentmultiply()" type="number" name="quantity" placeholder="Quantity" value="{{eqp_req_data.rented_quantity}}">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="col-md-6">
+                        <div class="input-group-icon">
+                          <input class="input--style-4" id="rentday" onchange="Rentmultiply()" type="number" name="day" placeholder="Day" value="{{day}}">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="input-group-icon">
+                          <input class="input--style-4" id="hours" onchange="Rentmultiply()" type="number" name="hours" placeholder="Hours" 
+                          value="{{hours}}">
+                        </div>
+                      </div>
+
+                      
+                  </div>
+
+        <div class="">
+          <div class="input-group-icon">
+            <input class="input--style-4" type="text" name="address" placeholder="Address" value="{{eqp_req_data.delivered_address}}">
+          </div>
+				</div>
+
+				<div class="" style="margin-top: 15px;">
+          <div class="input-group-icon">
+            <textarea class="input--style-4" name="remarks" placeholder="Remarks" rows="2">{% if eqp_req_data.remarks %}{{eqp_req_data.remarks}}{% endif %}</textarea>
+          </div>
+				</div>
+        
+        <div style="margin-top: 15px;">
+          <lable>Total Price: </lable>
+          <label id="Rentresult">NRs. {{eqp_req_data.total_price}}</label>
+        </div>
+
+                        
+        <div class="btn-block">
+					<button type="submit">Submit</button>
+				</div>
+    
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% else %}
+<h1 class="text-center">
+  Page Not Found
+</h1>
+{% endif %}
+{{eqp_req_data.equipment.price_per_hour|json_script:"rent_price"}}
+<script>
+  const rent_price = JSON.parse(document.getElementById('rent_price').textContent);
+  function Rentmultiply(){
+        Quan = document.getElementById("rentquantity").value;
+        day = document.getElementById("rentday").value*24;
+        hours = document.getElementById("hours").value;
+        totalduration= Number(hours)+Number(day);
+        result = Quan * rent_price * totalduration ;
+        document.getElementById("Rentresult").innerHTML = "NRs." + result;
+    }
+</script>
+
+
+{% endblock content %}
