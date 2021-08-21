@@ -1,0 +1,85 @@
+{% extends 'layout_admin.html' %}
+{% load static %}
+{% include bootstrap %}
+{% block title %}
+<title>Farmer</title>
+
+{% endblock title %}
+
+
+
+{% block content %}
+            <div class="container-fluid px-4">
+                        <div class="card md-12">
+                            <div class="card-header">Users</div>
+                            <div class="card-body">
+                             <div class="row text-center">
+                                  <div class="col md-4">
+                                    <div class="card text-white bg-primary" style="max-width: 18rem;">
+                                        <div class="card-header">Vendors</div>
+                                        <div class="card-body">
+                                          <h5 class="card-title text-center">50</h5>
+                                        </div>
+                                    </div>
+                                  </div>
+
+                              <div class="col md-4">
+                                <div class="card text-white bg-secondary" style="max-width: 18rem;">
+                                    <div class="card-header">Buyers</div>
+                                    <div class="card-body">
+                                      <h5 class="card-title text-center">10340</h5>
+                                    </div>
+                                  </div>
+                              </div>
+                              <div class="col md-4" id="farmer-card">
+                                <div class="card text-white bg-success" style="max-width: 18rem;">
+                                    <div class="card-header">Farmers</div>
+                                    <div class="card-body">
+                                      <h5 class="card-title text-center">50341</h5>
+                                    </div>
+                                  </div>
+                              </div>
+                         </div>
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-chart-area me-1"></i>
+                                Fruits and Vetable Productions (Metric Tone 'MT')
+                            </div>
+                            <div class="card-body"><canvas id="myAreaChart" width="100%" height="30"></canvas></div>
+                            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-bar me-1"></i>
+                                        Top Five-5 buying Products
+                                    </div>
+                                    <div class="card-body"><canvas id="buyerBarChart" width="100%" height="50"></canvas></div>
+                                    <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-pie me-1"></i>
+                                        Top Five-5 selling Equipments
+                                    </div>
+                                    <div class="card-body"><canvas id="vendorPieChart" width="100%" height="50"></canvas></div>
+                                    <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+                                </div>
+                            </div>
+                        </div>
+            </div>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+            <script src="{% static 'js/area-chart-db.js' %}"></script>
+            <script src="{% static 'js/chart-bar-db.js' %}"></script>
+            <script src="{% static 'js/chart-pie-db.js' %}"></script>
+
+
+
+{% endblock content %}

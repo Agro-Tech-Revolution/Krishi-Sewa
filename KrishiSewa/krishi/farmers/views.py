@@ -13,7 +13,7 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
 import numpy as np
 # from flask import Flask, request, render_template
-from django.core.files.storage import  default_storage
+from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 
 
@@ -468,8 +468,8 @@ Soil testing part -----------------------------------------
 #     return render(request, 'farmers/Npktest.html')
 
 
-@login_required
-@farmers_only
+# @login_required
+# @farmers_only
 def getNPK_Prediction(N, P, K, temp, humidity, ph):
     model = pickle.load(open('npk_model.sav', 'rb'))
     scaler = pickle.load(open('scaler.sav', 'rb'))
@@ -483,25 +483,25 @@ def getNPK_Prediction(N, P, K, temp, humidity, ph):
              21: 'watermelon', 15: 'muskmelon', 0: 'apple', 16: 'orange', 17: 'papaya', 4: 'coconut', 6: 'cotton',
              8: 'jute', 5: 'coffee'}
 
-    return crops[prediction]
+    print(prediction)
+    return crops[prediction[0]]
 
 
-@login_required
-@farmers_only
-def getNPK_Prediction(N, P, K, temp, humidity, ph):
-    model = pickle.load(open('npk_model.sav', 'rb'))
-    scaler = pickle.load(open('scaler.sav', 'rb'))
 
-    prediction = model.predict(scaler.transform([
-        [N, P, K, temp, humidity, ph]
-    ]))
-
-    crops = {20: 'rice', 11: 'maize', 3: 'chickpea', 9: 'kidneybeans', 18: 'pigeonpeas', 13: 'mothbeans',
-             14: 'mungbean', 2: 'blackgram', 10: 'lentil', 19: 'pomegranate', 1: 'banana', 12: 'mango', 7: 'grapes',
-             21: 'watermelon', 15: 'muskmelon', 0: 'apple', 16: 'orange', 17: 'papaya', 4: 'coconut', 6: 'cotton',
-             8: 'jute', 5: 'coffee'}
-
-    return crops[prediction]
+# def getNPK_Prediction(N, P, K, temp, humidity, ph):
+#     model = pickle.load(open('npk_model.sav', 'rb'))
+#     scaler = pickle.load(open('scaler.sav', 'rb'))
+#
+#     prediction = model.predict(scaler.transform([
+#         [N, P, K, temp, humidity, ph]
+#     ]))
+#
+#     crops = {20: 'rice', 11: 'maize', 3: 'chickpea', 9: 'kidneybeans', 18: 'pigeonpeas', 13: 'mothbeans',
+#              14: 'mungbean', 2: 'blackgram', 10: 'lentil', 19: 'pomegranate', 1: 'banana', 12: 'mango', 7: 'grapes',
+#              21: 'watermelon', 15: 'muskmelon', 0: 'apple', 16: 'orange', 17: 'papaya', 4: 'coconut', 6: 'cotton',
+#              8: 'jute', 5: 'coffee'}
+#
+#     return crops[prediction]
 
 
 @login_required
@@ -509,15 +509,16 @@ def getNPK_Prediction(N, P, K, temp, humidity, ph):
 def npk_result(request):
     if request.method == 'POST':
         data = request.POST
-        N = int(data['N'])
-        P = int(data['P'])
-        K = int(data['K'])
-        temp = int(data['temp'])
-        humidity = int(data['humidity'])
-        ph = int(data['ph'])
+        N = data['N']
+        P = data['P']
+        K = data['K']
+        temp = data['temp']
+        humidity = data['humidity']
+        ph = data['ph']
 
-        print(N)
-        result = getNPK_Prediction(N, P, K, temp, humidity, ph)
+        print(int(N))
+        result = getNPK_Prediction(int(N), int(P), int(K), int(temp), int(humidity), int(ph))
+        print(result)
         context = {'result': result}
         return render(request, 'farmers/Npktest.html', context)
     else:

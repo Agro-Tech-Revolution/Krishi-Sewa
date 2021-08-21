@@ -1,0 +1,76 @@
+{% extends 'layout_admin.html' %}
+{% load static %}
+{% include bootstrap %}
+{% block title %}
+<title>Admin Panel</title>
+<link rel="stylesheet" type="text/css" href="{% static 'css/bargraph.css' %}">
+{% endblock title %}
+
+
+
+{% block content %}
+
+    <script src="{% static 'js/barGraph.js' %}"></script>
+            <div class="container">
+                <div class="row">
+                  <div class="col md-4 mr-5">
+                    <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                        <div class="card-header">Vendors</div>
+                        <div class="card-body">
+                          <h5 class="card-title text-center">50</h5>
+                        </div>
+                      </div>
+                  </div>
+                  <div class="col md-4">
+                    <div class="card text-white bg-secondary mb-3" style="max-width: 18rem;">
+                        <div class="card-header">Buyers</div>
+                        <div class="card-body">
+                          <h5 class="card-title text-center">10340</h5>
+                        </div>
+                      </div>
+                  </div>
+                  <div class="col md-4 ml-5" id="farmer-card">
+                    <div class="card text-white bg-success mb-3" style="max-width: 18rem;">
+                        <div class="card-header">Farmers</div>
+                        <div class="card-body">
+                          <h5 class="card-title text-center">50341</h5>
+                        </div>
+                      </div>
+                  </div>
+
+                </div>
+              </div>
+              <div id="wrapper2">
+                <div class="chart">
+                    <h2>Agriculture Production</h2>
+                    <table id="data-table" border="1" cellpadding="10" cellspacing="0" summary="Agriculture Product">
+                        <thead>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <th scope="col">Rice</th>
+                                <th scope="col">Weat</th>
+                                <th scope="col">Maize</th>
+                                <th scope="col">Beans</th>
+                                <th scope="col">Apple</th>
+                                <th scope="col">Mango</th>
+                                <th scope="col">Orange</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>90</td>
+                                <td>100</td>
+                                <td>80</td>
+                                <td>95</td>
+                                <td>80</td>
+                                <td>95</td>
+                                <td>80</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+
+{% endblock content %}

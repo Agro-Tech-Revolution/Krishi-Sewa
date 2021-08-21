@@ -1,0 +1,150 @@
+{% extends 'layout_admin.html' %}
+{% load static %}
+{% include bootstrap %}
+{% block title %}
+<title>Reports on Products/title>
+
+
+{% endblock title %}
+
+{% block content %}
+    {% for error in errors %}
+    {{error}}
+    {% endfor %}
+    <div class="container-fluid px-4">
+        <div class="card">
+            <div class="card-header text-center">
+                <h3 class="text-secondary">Report on Products</h3>
+              </div>
+            <div class="card-body">
+                <div class="table-responsive overflow-auto mt-4" style="height: 500px; overflow: scroll">
+                <table class="table table-hover">
+                  <thead class="thead">
+                    <tr>
+                      <th scope="col">SN</th>
+                      <th scope="col">Reported by</th>
+                      <th scope="col">Reported On</th>
+                      <th scope="col">Report Type</th>
+                      <th scope="col">Date & Time</th>
+                      <th scope="col">View Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                      <th scope="row">1</th>
+                      <td>Mark</td>
+                      <td>123450-rice</td>
+                      <td>Fake content</td>
+                      <td>2021/01/02 09:30</td>
+
+                      <td>
+                          <a href="#"
+                               class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#UserReport">
+                            View Details</a>
+                      </td>
+
+                    </tr>
+                  <tr>
+                      <th scope="row">1</th>
+                      <td>Mark</td>
+                      <td>123450-tractor</td>
+                      <td>Fake content</td>
+                      <td>2021/01/02 09:30</td>
+
+                      <td>
+                          <a href="#"
+                               class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#UserReport">
+                            View Details</a>
+                      </td>
+
+                    </tr>
+                  <tr>
+                      <th scope="row">1</th>
+                      <td>Mark</td>
+                      <td>123450-tractor</td>
+                      <td>Fake content</td>
+                      <td>2021/01/02 09:30</td>
+
+                      <td>
+                          <a href="#"
+                               class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#UserReport">
+                            View Details</a>
+                      </td>
+
+                    </tr>
+                  <tr>
+                      <th scope="row">1</th>
+                      <td>Mark</td>
+                      <td>123450-tractor</td>
+                      <td>Fake content</td>
+                      <td>2021/01/02 09:30</td>
+
+                      <td>
+                          <a href="#"
+                               class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#UserReport">
+                            View Details</a>
+                      </td>
+
+                    </tr>
+
+                                  {% for user in users %}
+                    <tr>
+                      <th scope="row">{{ forllop.counter }}</th>
+                      <td>{{ product.user_name }}</td>
+                      <td>{{ product.user_type }}</td>
+                        <td>
+                            <a href="#"
+                               class="btn btn-secondary btn-sm">
+                            View Details</a>
+
+                         </td>
+
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="UserReport" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header font-weight-light">
+                          Reported by : Akash Karmacharya
+
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                          <div class="row">
+                              <div class="col-md-4 ml-auto font-weight-bold">12345-tractor</div>
+                              <div class="col-md-4 font-weight-light">Report Type: Fake Content</div>
+
+                            </div>
+                          <br>
+
+                        Aenean porttitor libero nec felis sagittis, dapibus dapibus magna pellentesque. Sed cursus dui sed purus mollis pellentesque.
+                          Curabitur convallis, orci ut venenatis tristique, lacus arcu auctor magna, sed mollis lectus lorem at ante.
+
+                        <br>
+                        <div class="col-md-4 ml-auto font-weight-light">2021/01/09, 09:20</div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Resolved</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+
+{% endblock content %}
+

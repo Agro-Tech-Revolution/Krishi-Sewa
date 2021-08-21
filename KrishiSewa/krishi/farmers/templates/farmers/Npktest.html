@@ -14,13 +14,13 @@
 </div>
 <form method="POST">
   {% csrf_token %}
-<div class="products">
+  <div class="products">
       <div class="container">
         <h1 class="lg-title">NPK Testing</h1>
 
         <div class="product-items">
           <!-- Nitrogen -->
-          <form method="POST">
+
           <div class="product">
             <div class="product-content">
               <div class="product-img">
@@ -82,7 +82,7 @@
           <div class="product">
             <div class="product-content">
               <div class="product-img">
-                <img src="{% static 'farmers/images/temperature.jpg' %}" alt="product image" />
+                <img src="{% static 'farmers/images/tempr.jpg' %}" alt="product image" />
               </div>
             </div>
 
@@ -94,10 +94,10 @@
 
           <!-- Humidity--->
 
-          <!-- <div class="product">
+          <div class="product">
             <div class="product-content">
               <div class="product-img">
-                <img src="{% static 'farmers/images/hum.png' %}" width="50%" alt="product image" />
+                <img src="{% static 'farmers/images/humi.jpg' %}" class="img-thumbnail" alt="product image" />
               </div>
             </div>
 
@@ -107,16 +107,18 @@
               <input class="box" type="number" name="humidity" />
 
             </div>
-          </div> -->
-          </form>
+          </div>
 
 
-      </div>
-    </div>
+
+
+        </div>
 </div>
-    <div class="submit-button">
+  </div>
+                <div class="submit-button">
                   <button type="submit" class="btn btn-light">Submit</button>
                 </div>
+
 </form>
 
 

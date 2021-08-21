@@ -1,0 +1,101 @@
+{% extends 'layout_admin.html' %}
+{% load static %}
+{% include bootstrap %}
+{% block title %}
+<title>Add Product</title>
+<style>
+    #sel{
+        width: 700px;
+    }
+
+    #sel option{
+        width: 700px;
+        height: 60px;
+    }
+
+</style>
+{% endblock title %}
+
+{% block content %}
+    {% for error in errors %}
+    {{error}}
+    {% endfor %}
+    <div class="container-fluid px-4">
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="card">
+            <div class="card-header text-center bg-success">
+                <h2 class="text-light">Add Equipments</h2>
+              </div>
+          <div class="card-body">
+             <div class="row m-4">
+            <div class="col">
+                <label class="mr-5 pr-4">Equipment :</label>
+                <input type="text" placeholder="Enter equipment name" name="name" style="height: 40px; width: 70%">
+            </div>
+            <div class="col">
+                <label class="mr-5 pr-4">Categories : </label>
+                <select name="category">
+                {% for category in categories %}
+                <option value="{{category}}">{{category}}</option>
+                {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="row m-4">
+            <div class="col">
+                <label class="pr-3">Equipment Image : </label>
+                <input type="file" placeholder="Choose file" name="image">
+            </div>
+        </div>
+
+              </div>
+             <div class="card-footer">
+        <div class="row text-center">
+            <div class="col text-center">
+             <button type="submit" class="btn btn-success w-25">Submit</button>
+
+             </div>
+            </div>
+
+          </div>
+        </div>
+
+       </form>
+        <div class="table-responsive overflow-auto mt-4" style="height: 500px; overflow: scroll">
+        <table class="table table-striped">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">SN</th>
+              <th scope="col">Equipment Name</th>
+              <th scope="col">Equipment Category</th>
+                <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for equipment in equipments %}
+            <tr>
+              <th scope="row">{{ forllop.counter }}</th>
+              <td>{{ product.equip_name }}</td>
+              <td>{{ product.equip_category }}</td>
+                <td>
+                    <a href="#"
+                       class="btn btn-primary btn-sm">
+                    Update</a>
+                <a href="#"
+                       class="btn btn-danger btn-sm" onclick="return confirm('Are you sure want to update this equipment?')">
+                    Delete</a>
+                 </td>
+
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        </div>
+    </div>
+
+
+{% endblock content %}
+

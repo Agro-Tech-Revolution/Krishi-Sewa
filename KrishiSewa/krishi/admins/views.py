@@ -11,10 +11,14 @@ base_url = 'http://127.0.0.1:8000'
 def index(request):
     return render(request, 'admins/admins.html')
 
+def dashboard(request):
+    return render(request, 'admins/DB.html')
 
+def test(request):
+    return render(request, 'admins/dashboard.html')
 
-@login_required
-@admin_only
+# @login_required
+# @admin_only
 def add_products(request):
     categories = ["Cereals", "Pulses", "Vegetables", "Fruits", "Nuts", "Oilseeds",
                   "Sugars and Starches", "Fibres", "Beverages", "Narcotics", "Spices", 
@@ -48,3 +52,36 @@ def add_products(request):
             print(error)
      
     return render(request, 'admins/addProducts.html', context)
+
+def add_equipments(request):
+    return render(request, 'admins/addEquipments.html')
+    
+def users(request):
+    return render(request, 'admins/users.html')
+
+def report_user(request):
+    return render(request, 'admins/reportUsers.html')
+
+def report_equipment(request):
+    return render(request, 'admins/reportEquipment.html')
+
+def report_product(request):
+    return render(request, 'admins/reportProduct.html')
+
+def famers(request):
+    return render(request, 'admins/farmers/farmers.html')
+
+def vendors(request):
+    return render(request, 'admins/vendors/vendors.html')
+
+def buyers(request):
+    return render(request, 'admins/buyers/buyers.html')
+
+def farmer_list(request):
+    return render(request, 'admins/farmers/farmer_list.html')
+
+def vendors_list(request):
+    return render(request, 'admins/vendors/vendor_list.html')
+
+def buyers_list(request):
+    return render(request, 'admins/buyers/buyers_list.html')

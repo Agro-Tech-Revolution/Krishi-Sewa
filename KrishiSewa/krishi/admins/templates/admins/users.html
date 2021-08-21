@@ -1,0 +1,108 @@
+{% extends 'layout_admin.html' %}
+{% load static %}
+{% include bootstrap %}
+{% block title %}
+<title>Action on Users</title>
+
+
+{% endblock title %}
+
+{% block content %}
+    {% for error in errors %}
+    {{error}}
+    {% endfor %}
+    <div class="container-fluid px-4">
+        <div class="card">
+            <div class="card-header text-center">
+                <h3 class="text-success">Available Users</h3>
+              </div>
+            <div class="card-body">
+                <div class="table-responsive overflow-auto mt-4" style="height: 500px; overflow: scroll">
+                <table class="table table-hover">
+                  <thead class="thead">
+                    <tr>
+                      <th scope="col">SN</th>
+                      <th scope="col">User Name</th>
+                      <th scope="col">Address</th>
+                      <th scope="col">Contact Number</th>
+                      <th scope="col">User Type</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                      <th scope="row">1</th>
+                      <td>Mark</td>
+                      <td>Kathmandu</td>
+                      <td>9293123844</td>
+                      <td>Farmer</td>
+                      <td>
+                          <a href="#"
+                               class="btn btn-success btn-sm">
+                            Update to Admin</a>
+                        <a href="#"
+                               class="btn btn-danger btn-sm" onclick="return confirm('Are you sure want to update this user?')">
+                            Delete</a>
+                      </td>
+
+                    </tr>
+                    <tr>
+                      <th scope="row">2</th>
+                      <td>Jacob</td>
+                      <td>Kathmandu</td>
+                      <td>9293123844</td>
+                      <td>Buyer</td>
+                      <td>
+                          <a href="#"
+                               class="btn btn-success btn-sm">
+                            Update to Admin</a>
+                        <a href="#"
+                               class="btn btn-danger btn-sm" onclick="return confirm('Are you sure want to update this user?')">
+                            Delete</a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">3</th>
+                      <td>Larry</td>
+                      <td>Kathmandu</td>
+                      <td>9293123844</td>
+                      <td>Vendor</td>
+                      <td>
+                          <a href="#"
+                               class="btn btn-success btn-sm">
+                            Update to Admin</a>
+                        <a href="#"
+                               class="btn btn-danger btn-sm" onclick="return confirm('Are you sure want to update this user?')">
+                            Delete</a>
+                      </td>
+                    </tr>
+                                  {% for user in users %}
+                    <tr>
+                      <th scope="row">{{ forllop.counter }}</th>
+                      <td>{{ product.user_name }}</td>
+                      <td>{{ product.user_type }}</td>
+                        <td>
+                            <a href="#"
+                               class="btn btn-success btn-sm">
+                            Update to Admin</a>
+                        <a href="#"
+                               class="btn btn-danger btn-sm" onclick="return confirm('Are you sure want to update this user?')">
+                            Delete</a>
+                         </td>
+
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+                </div>
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+
+{% endblock content %}
+

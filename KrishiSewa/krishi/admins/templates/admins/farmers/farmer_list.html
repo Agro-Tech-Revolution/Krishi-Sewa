@@ -1,0 +1,141 @@
+{% extends 'layout_admin.html' %}
+{% load static %}
+{% include bootstrap %}
+{% block title %}
+<title>Farmer</title>
+
+{% endblock title %}
+
+
+
+{% block content %}
+
+
+            <div class="container-fluid px-4">
+                        <h2 class="">Farmer Details</h2>
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="#">List of Farmers</a></li>
+                            <li class="breadcrumb-item"><a href="#">Rankings</a></li>
+                        </ol>
+
+                            <div class="card">
+                                <div class="card-header align-items-end">
+                                    <div class="row align-items-end">
+                                        <div class="col">
+                                            <h3 class="text-success">FARMER LIST</h3>
+                                        </div>
+                                        <div class="col align-items-end">
+                                            <form class="form-inline my-2 my-lg-0">
+                                              <input class="form-control mr-sm-2" id="searchtxt" oninput="searchRecord();" type="search" placeholder="Search" aria-label="Search">
+                                              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                  </div>
+                                <div class="card-body">
+                                    <div class="table-responsive overflow-auto mt-4" style="height: 500px; overflow: scroll">
+                                    <table class="table table-hover" id="table1">
+                                      <thead class="thead">
+                                        <tr>
+                                          <th scope="col">SN</th>
+                                          <th scope="col">Name</th>
+                                          <th scope="col">Address</th>
+                                          <th scope="col">Contact No</th>
+                                          <th scope="col">Crop Production(MT)</th>
+                                          <th scope="col">Sells(Thousand)</th>
+                                          <th scope="col">Farming Area(Hector)</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                      <tr>
+                                          <td>1</td>
+                                          <td>Mark</td>
+                                          <td>Nepalgunj</td>
+                                          <td>081-548642</td>
+                                          <td>200</td>
+                                          <td>5100</td>
+                                          <td>5</td>
+                                        </tr>
+                                      <tr>
+                                          <td>2</td>
+                                          <td>Aark</td>
+                                          <td>Bepalgunj</td>
+                                          <td>081-548642</td>
+                                          <td>200</td>
+                                          <td>5100</td>
+                                          <td>5</td>
+                                        </tr>
+                                      <tr>
+                                          <td>3</td>
+                                          <td>Bark</td>
+                                          <td>Cepalgunj</td>
+                                          <td>081-548642</td>
+                                          <td>200</td>
+                                          <td>5100</td>
+                                          <td>5</td>
+                                        </tr>
+                                      <tr>
+                                          <td>4</td>
+                                          <td>Cark</td>
+                                          <td>Depalgunj</td>
+                                          <td>081-548642</td>
+                                          <td>200</td>
+                                          <td>5100</td>
+                                          <td>5</td>
+                                        </tr>
+                                      <tr>
+                                          <td>5</td>
+                                          <td>Dark</td>
+                                          <td>Eepalgunj</td>
+                                          <td>081-548642</td>
+                                          <td>200</td>
+                                          <td>5100</td>
+                                          <td>5</td>
+                                        </tr>
+
+                                      </tbody>
+                                    </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+                        </div>
+<script>
+    function searchRecord() {
+            var input,table,tr,td, filter, i, txtdata;
+            input=document.getElementById("searchtxt");
+            filter=input.value.toUpperCase();
+            table=document.getElementById("table1");
+            tr=table.getElementsByTagName("tr");
+
+            for(i=0; i<tr.length; i++){
+                td=tr[i].getElementsByTagName("td")[0];
+                td1=tr[i].getElementsByTagName("td")[1];
+                td2=tr[i].getElementsByTagName("td")[2];
+
+                if(td){
+                    txtdata=td.innerText;
+                    txtdata1 = td1.innerText;
+                    txtdata3 = td2.innerText;
+                    if(txtdata.toUpperCase().indexOf(filter)>-1){
+                        tr[i].style.display="";
+                    } else if(txtdata1.toUpperCase().indexOf(filter)>-1) {
+                        tr[i].style.dsiplay = "";
+
+                    } else if(txtdata3.toUpperCase().indexOf(filter)>-1){
+                        tr[i].style.dsiplay="";
+                    }
+                    else {
+                       tr[i].style.display="none";
+                    }
+
+                }
+
+            }
+
+        }
+</script>
+
+{% endblock content %}
