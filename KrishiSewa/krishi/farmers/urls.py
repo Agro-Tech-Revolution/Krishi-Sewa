@@ -35,6 +35,7 @@ urlpatterns = [
     path('imagetest/', image_test1),
     # path('imagetest_result/', get_image_model)
     # path('test_img', imageTest),
+    path('chatbox',chat_box),
 
     
 ]

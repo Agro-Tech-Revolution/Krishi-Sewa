@@ -560,4 +560,9 @@ def image_test1(request):
 # def image_test(request):
 #     return render(request, 'farmers/imagetest.html')
 
+@login_required
+@farmers_only
+def chat_box(request):
+    return render(request, 'farmers/chatbox.html')
+
 

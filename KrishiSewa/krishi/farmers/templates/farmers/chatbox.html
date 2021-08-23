@@ -1,0 +1,226 @@
+{% extends 'layout-farmers.html' %}
+{% load static %}
+
+{% block title %}
+<title>NPK Testing</title>
+<link rel="stylesheet" href="{% static 'farmers/css/chatbox.css' %}">
+
+{% endblock title %}
+
+{% block content %}
+
+<section>
+
+    <div id="frame">
+        <div id="sidepanel">
+            <div id="profile">
+                <div class="wrap">
+                    <img id="profile-img" src="{% static 'farmers/images/1.png' %}" class="online" alt="" />
+                    <p>Iamnoone</p>
+                    <i class="fa fa-chevron-down expand-button" aria-hidden="true"></i>
+
+                </div>
+            </div>
+
+
+            <!-- <div id="search">
+                <label for=""><i class="fa fa-search" aria-hidden="true"></i></label>
+                <input type="text" placeholder="Search contacts..." />
+            </div> -->
+
+            <div id="contacts">
+                <ul>
+                    <li class="contact">
+                        <div class="wrap">
+
+                            <img src= "{% static 'farmers/images/2.png' %}" alt="" />
+                            <div class="meta">
+                                <p class="name">Akash Karmacharya</p>
+                                <p class="preview">deleniti atque corrupti quos dolores.</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="contact active">
+                        <div class="wrap">
+
+                            <img src= "{% static 'farmers/images/2.png' %}" alt="" />
+                            <div class="meta">
+                                <p class="name">Pawan Bohora</p>
+                                <p class="preview"> corrupti quos dolores</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="contact">
+                        <div class="wrap">
+
+                            <img src="{% static 'farmers/images/2.png' %}" alt="" />
+                            <div class="meta">
+                                <p class="name">Elisha Gautam</p>
+                                <p class="preview"> corrupti quos dolores</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="contact">
+                        <div class="wrap">
+
+                            <img src="{% static 'farmers/images/2.png' %}" alt="" />
+                            <div class="meta">
+                                <p class="name">Rejina Adhikari</p>
+                                <p class="preview"> I'm Donna..</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="contact">
+                        <div class="wrap">
+
+                            <img src="{% static 'farmers/images/2.png' %}" alt="" />
+                            <div class="meta">
+                                <p class="name">Purnima Kumari</p>
+                                <p class="preview">Have you finished the draft on the assignment?</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="contact">
+                        <div class="wrap">
+
+                            <img src="{% static 'farmers/images/2.png' %}" alt="" />
+                            <div class="meta">
+                                <p class="name">Saswot Shankar Shrestha</p>
+                                <p class="preview">Thanks !!</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="contact">
+                        <div class="wrap">
+
+                            <img src="{% static 'farmers/images/2.png' %}" alt="" />
+                            <div class="meta">
+                                <p class="name">Anuj Maharjan</p>
+                                <p class="preview"> quos dolores</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="contact">
+                        <div class="wrap">
+
+                            <img src="{% static 'farmers/images/2.png' %}" alt="" />
+                            <div class="meta">
+                                <p class="name">Clu didi</p>
+                                <p class="preview">deleniti dolores</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="contact">
+                        <div class="wrap">
+
+                            <img src="{% static 'farmers/images/2.png' %}" alt="" />
+                            <div class="meta">
+                                <p class="name">Punya Gautam</p>
+                                <p class="preview">ti quos dolores isn't over.</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="contact">
+                        <div class="wrap">
+
+                            <img src="{% static 'farmers/images/2.png' %}" alt="" />
+                            <div class="meta">
+                                <p class="name">Rishi Dhamala</p>
+                                <p class="preview"><span>You:</span> That's bullshit.</p>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+
+        </div>
+        <div class="content">
+            <div class="contact-profile">
+                <img src="{% static 'farmers/images/1.png' %}" alt="" />
+                <p>Bibek Shahi</p>
+            </div>
+            <div class="messages">
+                <ul>
+                    <li class="sent">
+                        <img src="{% static 'farmers/images/1.png' %}" alt="" />
+                        <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores</p>
+                        <span class="message-time-sent">21:32</span>
+                    </li>
+
+                    <li class="replies">
+                        <p> praesentium voluptatum deleniti atque corrupti quos dolores</p>
+
+                    </li>
+                    <span class="message-time-reply">21:32</span>
+
+
+                    <li class="replies">
+                        <p>Excuses don't win championships.</p>
+
+                    </li>
+                    <span class="message-time-reply">21:32</span>
+
+                    <li class="sent">
+                        <img src="{% static 'farmers/images/1.png' %}" alt="" />
+                        <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores</p>
+                        <span class="message-time-sent">21:32</span>
+                    </li>
+
+                    <li class="replies">
+                        <p>deleniti atque corrupti quos dolores.</p>
+
+                    </li>
+                    <span class="message-time-reply">21:32</span>
+
+                    <li class="replies">
+                        <p>I can read and remember whole book in 30min and write it bhatatatatta..</p>
+
+                    </li>
+                    <span class="message-time-reply">21:32</span>
+
+                    <li class="sent">
+                        <img src="{% static 'farmers/images/1.png' %}" alt="" />
+                        <p>What are you talking about? </p>
+                        <span class="message-time-sent">21:32</span>
+                    </li>
+
+                    <li class="replies">
+                        <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores.</p>
+
+                    </li>
+                    <span class="message-time-reply">21:32</span>
+
+                    <li class="sent">
+                        <img src="{% static 'farmers/images/1.png' %}" alt="" />
+                        <p>praesentium voluptatum deleniti atque corrupti quos dolores</p>
+                        <span class="message-time-sent">21:32</span>
+                    </li>
+
+                    <li class="replies">
+                        <p>blanditiis praesentium voluptatum deleniti atque corrupti quos dolores.</p>
+
+                    </li>
+                    <span class="message-time-reply">21:32</span>
+
+                    <li class="sent">
+                        <img src="{% static 'farmers/images/1.png' %}" alt="" />
+                        <p>prai quos dolores</p>
+                        <span class="message-time-sent">21:32</span>
+                    </li>
+
+                </ul>
+            </div>
+            <div class="message-input">
+                <div class="wrap">
+                <input type="text" placeholder="Write your message..." />
+                <button class="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+
+</section>
+
+{% endblock content %}
