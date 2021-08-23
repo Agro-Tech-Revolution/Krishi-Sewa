@@ -565,4 +565,7 @@ def image_test1(request):
 def chat_box(request):
     return render(request, 'farmers/chatbox.html')
 
+def information_port(request):
+    return render(request, 'farmers/information.html')
+
 

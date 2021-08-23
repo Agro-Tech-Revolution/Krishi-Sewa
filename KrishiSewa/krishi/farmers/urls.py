@@ -36,6 +36,7 @@ urlpatterns = [
     # path('imagetest_result/', get_image_model)
     # path('test_img', imageTest),
     path('chatbox',chat_box),
+    path('information',information_port)
 
     
 ]
