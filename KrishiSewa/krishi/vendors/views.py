@@ -6,9 +6,9 @@ from rest_framework.response import Response
 from farmers.utils import *
 from .utils import *
 from django.core.files.storage import  default_storage
-from django.core.files.base import ContentFile
 from PIL import Image
 from api.views import *
+from admins.api.views import *
 
 # Create your views here.
 

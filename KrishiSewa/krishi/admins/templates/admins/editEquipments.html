@@ -2,7 +2,7 @@
 {% load static %}
 {% include bootstrap %}
 {% block title %}
-<title>Add Equipment</title>
+<title>Edit Equipment</title>
 <style>
     #sel{
         width: 300px;
@@ -34,13 +34,17 @@
              <div class="row m-4">
             <div class="col">
                 <label class="mr-3 pr-4">Equipment :</label>
-                <input type="text" placeholder="Enter equipment name" name="name" style="height: 40px; width: 70%">
+                <input type="text" placeholder="Enter equipment name" name="name" value="{{equipment.name}}" style="height: 40px; width: 70%">
             </div>
             <div class="col">
                 <label class="mr-5 pr-4">Categories : </label>
                 <select id='sel' name="category">
                 {% for category in categories %}
+                {% if category == equipment.category %}
+                <option value="{{category}}" selected>{{category}}</option>
+                {% else %}
                 <option value="{{category}}">{{category}}</option>
+                {% endif %}
                 {% endfor %}
                 </select>
             </div>
@@ -60,36 +64,7 @@
         </div>
 
        </form>
-        <div class="table-responsive overflow-auto mt-4" style="height: 500px; overflow: scroll">
-        <table class="table table-striped">
-          <thead class="thead-dark">
-            <tr>
-              <th scope="col">SN</th>
-              <th scope="col">Equipment Name</th>
-              <th scope="col">Equipment Category</th>
-                <th scope="col">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-          {% for equipment in all_equipments %}
-            <tr>
-              <th scope="row">{{ forloop.counter }}</th>
-              <td>{{ equipment.name }}</td>
-              <td>{{ equipment.category }}</td>
-                <td>
-                    <a href="/admins/editEquipments/{{equipment.id}}"
-                       class="btn btn-primary btn-sm">
-                    Update</a>
-                <a href="/admins/deleteEquipments/{{equipment.id}}"
-                       class="btn btn-danger btn-sm" onclick="return confirm('Are you sure want to update this equipment?')">
-                    Delete</a>
-                 </td>
-
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-        </div>
+        
     </div>
 
 

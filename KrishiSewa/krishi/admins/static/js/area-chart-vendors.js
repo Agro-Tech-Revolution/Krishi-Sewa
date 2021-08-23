@@ -2,12 +2,25 @@
 Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 Chart.defaults.global.defaultFontColor = '#292b2c';
 
+const sales_data = JSON.parse(document.getElementById('sales_data').textContent);
+const all_eqp = [ "Tractor", "Harvester", "ATV or UTV", "Plows", "Harrows",
+                  "Fertilizer Spreaders", "Seeders", "Balers", "Other",];
+
+var eqp_sales = [];
+for(var i=0; i<all_eqp.length; i++) {
+  var key = all_eqp[i]
+  eqp_sales[i] = sales_data[key]
+}     
+const max_val = Math.max(...eqp_sales) + 100                   
+                  
+
 // Area Chart Example
 var ctx = document.getElementById("myAreaChart");
 var myLineChart = new Chart(ctx, {
   type: 'line',
   data: {
-    labels: ["Tractors", "Kodalo", "Pipes", "Cutter", "Rice-Harvesters", "Loader"],
+    // labels: ["Tractors", "Kodalo", "Pipes", "Cutter", "Rice-Harvesters", "Loader"],
+    labels: all_eqp,
     datasets: [{
       label: "Sells",
       lineTension: 0.3,
@@ -20,7 +33,7 @@ var myLineChart = new Chart(ctx, {
       pointHoverBackgroundColor: "rgba(2,117,216,1)",
       pointHitRadius: 50,
       pointBorderWidth: 2,
-      data: [10000, 30162, 26263, 18394, 18287, 28682],
+      data: eqp_sales,
     }],
   },
   options: {
@@ -39,7 +52,7 @@ var myLineChart = new Chart(ctx, {
       yAxes: [{
         ticks: {
           min: 0,
-          max: 40000,
+          max: max_val,
           maxTicksLimit: 5
         },
         gridLines: {

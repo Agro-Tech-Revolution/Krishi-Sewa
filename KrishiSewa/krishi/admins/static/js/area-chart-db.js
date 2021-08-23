@@ -4,12 +4,21 @@ Chart.defaults.global.defaultFontColor = '#292b2c';
 
 // Area Chart Example
 var ctx = document.getElementById("myAreaChart");
+const productions = JSON.parse(document.getElementById('productions').textContent);
+const labels = ["Cereals", "Pulses", "Vegetables", "Fruits", "Nuts", "Oilseeds",
+                "Sugars and Starches", "Fibres", "Beverages", "Narcotics", "Spices", 
+                "Condiments", "Others"]
+var production_data = [];
+for(var i=0; i<labels.length; i++) {
+  var key = labels[i]
+  production_data[i] = productions[key]
+}     
+const max_val = Math.max(...production_data) + 100    
+
 var myLineChart = new Chart(ctx, {
   type: 'line',
   data: {
-    labels: ["Cereals", "Pulses", "Vegetables", "Fruits", "Nuts", "Oilseeds",
-                  "Sugars and Starches", "Fibres", "Beverages", "Narcotics", "Spices", 
-                  "Condiments", "Others"],
+    labels: labels,
     datasets: [{
       label: "Vegetable and Fruits",
       lineTension: 0.3,
@@ -22,7 +31,7 @@ var myLineChart = new Chart(ctx, {
       pointHoverBackgroundColor: "rgba(2,117,216,1)",
       pointHitRadius: 50,
       pointBorderWidth: 2,
-      data: [10000, 30162, 26263, 18394, 18287, 28682, 31274, 33259, 25849, 24159, 32651, 31984, 38451],
+      data: production_data,
     }],
   },
   options: {
@@ -41,7 +50,7 @@ var myLineChart = new Chart(ctx, {
       yAxes: [{
         ticks: {
           min: 0,
-          max: 40000,
+          max: max_val,
           maxTicksLimit: 5
         },
         gridLines: {

@@ -43,53 +43,74 @@
         <div class="formDiv">
           <h1>Create Account</h1>
           <p class="text">Sign up with Email Address</p>
-          <div class="form-input">
-            <input
-              type="text"
-              name="fName"
-              placeholder="Enter your firstname"
-              required/>
-          </div>
-          <div class="form-input">
-            <input type="text" name="lname" placeholder="Enter your lastname" />
-          </div>
-          <div class="form-input">
-            <input type="email" name="email" placeholder="Enter your email" />
-          </div>
-          <div class="form-input">
-            <input
-              type="text"
-              name="username"
-              placeholder="Create a username"
-            />
-          </div>
+          <form method='POST'>
+            {%csrf_token %}
+            <div class="form-input">
+              <input
+                type="text"
+                name="fname"
+                placeholder="Enter your firstname"
+                required/>
+            </div>
+            <div class="form-input">
+              <input type="text" name="lname" placeholder="Enter your lastname" />
+            </div>
+            <div class="form-input">
+              <input type="email" name="email" placeholder="Enter your email" />
+            </div>
+            <div class="form-input">
+              <input
+                type="text"
+                name="username"
+                placeholder="Create a username"
+              />
+            </div>
+            <div class="radio-container pb-3">
+              <h3>Are you?</h3>
+  
+              <input type="radio" id="farmers" name="user_type" value="Farmers" />
+              <label for="farmers">Farmer</label>
+  
+              <input type="radio" id="buyers" name="user_type" value="Buyers" />
+              <label for="buyers">Buyer</label>
+  
+              <input type="radio" id="vendors" name="user_type" value="Vendors" />
+              <label for="vendors">Vendor</label>
+            </div> 
+  
+            <div class="form-input mt-3">
+              <span><i class="fas fa-user"></i></span>
+              <input
+                type="text"
+                name="password"
+                placeholder="Create a password"
+                required
+              />
+            </div>
+            <div class="form-input">
+              <span><i class="fa fa-key"></i></span>
+              <input
+                type="password"
+                name="cpassword"
+                placeholder="Confirm your password"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <button type="submit" class="btn btn-block text-uppercase">
+                SIGN UP
+              </button>
+            </div>
+          </form>
+          
 
-          <div class="form-input">
-            <span><i class="fas fa-user"></i></span>
-            <input
-              type="text"
-              name="password"
-              placeholder="Create a password"
-              required
-            />
-          </div>
-          <div class="form-input">
-            <span><i class="fa fa-key"></i></span>
-            <input
-              type="password"
-              name="cpassword"
-              placeholder="Confirm your password"
-              required
-            />
-          </div>
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
     integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
   </head>
-  <body>
-    <div class="container">
+  <body> -->
+    <!-- <div class="container">
       <div class="titlelogo">
-        <!-- <img src="{% static 'accounts/images/logo.jpg' %}" class="logo" /> -->
+        <img src="{% static 'accounts/images/logo.jpg' %}" class="logo" />
         <h1>Get Started</h1>
       </div>
       <div class="content">
@@ -112,12 +133,12 @@
               <span class="details">Email</span>
               <input name="email" type="text" placeholder="Enter your email" required />
             </div>
-            <!--------------------------------------------------------radiobutton------------------------------- --------------- -->
+            ------------------------------------------------------radiobutton------------------------------- ---------------
             <div class="main-radiobutton">
               <h2>Are you?</h2>
               <div class="radiobuttons">
                 <label class="custom-radio">
-                  <input type="radio" name="user_type" value="FARMERS" checked />
+                  <input type="radio" name="user_type" value="Farmers" checked />
                   <span class="radio-btn"
                     ><i class="fas fa-check"></i>
                     <div class="person-check">
@@ -127,7 +148,7 @@
                   </span>
                 </label>
                 <label class="custom-radio">
-                  <input type="radio" name="user_type" value="BUYERS" />
+                  <input type="radio" name="user_type" value="Buyers" />
                   <span class="radio-btn"
                     ><i class="las la-check"></i>
                     <div class="person-check">
@@ -137,7 +158,7 @@
                   </span>
                 </label>
                 <label class="custom-radio">
-                  <input type="radio" name="user_type" value="VENDORS" />
+                  <input type="radio" name="user_type" value="Vendors" />
                   <span class="radio-btn"
                     ><i class="las la-check"></i>
                     <div class="person-check">
@@ -150,7 +171,7 @@
             </div>
 
 
-          <div class="radio-container">
+           <div class="radio-container">
             <h3>Are you?</h3>
 
             <input type="radio" id="farmers" name="category" value="FARMERS" />
@@ -161,7 +182,7 @@
 
             <input type="radio" id="Vendors" name="category" value="VENDORS" />
             <label for="vendor">Vendor</label>
-          </div>
+          </div> 
 
           <div class="checkBox">
             <input type="checkbox" name="checkbox" id="checkbox" />
@@ -183,6 +204,6 @@
           <button class="btn2">LOGIN</button>
         </div>
       </div>
-    </div>
+    </div> -->
   </body>
 </html>

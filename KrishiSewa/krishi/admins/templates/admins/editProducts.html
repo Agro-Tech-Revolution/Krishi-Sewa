@@ -2,7 +2,7 @@
 {% load static %}
 {% include bootstrap %}
 {% block title %}
-<title>Add Product</title>
+<title>Edit Product</title>
 <style>
     #sel{
     width: 300px;
@@ -28,25 +28,34 @@
 
         <div class="card">
             <div class="card-header text-center bg-success">
-                <h2 class="text-light">Add Products</h2>
+                <h2 class="text-light">Edit Products</h2>
               </div>
           <div class="card-body">
              <div class="row m-4">
             <div class="col">
                 <label class="mr-5 pr-4">Product :</label>
-                <input type="text" placeholder="Enter product name" name="name" style="height:40px; width:70%;">
+                <input type="text" placeholder="Enter product name" name="name" style="height:40px; width:70%;" value="{{product.prod_name}}">
             </div>
             <div class="col">
                 <label class="mr-5 pr-4">Categories : </label>
                 <select id="sel" name="category">
                 {% for category in categories %}
+                {% if category == product.prod_category %}
+                <option value="{{category}}" selected>{{category}}</option>
+                {% else %}
                 <option value="{{category}}">{{category}}</option>
+                {% endif %}
                 {% endfor %}
                 </select>
             </div>
         </div>
         <div class="row m-4">
             <div class="col">
+                <div class="pb-3">
+                  <label>Current Image:</label> <br>
+                <img src="/{{product.prod_img}}" class="img-fluid rounded" style="width: 250px; height: 250px;">
+                </div>
+                
                 <label class="pr-3">Product Image : </label>
                 <input size="35%" type="file" placeholder="Choose file" name="image">
             </div>
@@ -66,36 +75,7 @@
         </div>
 
        </form>
-        <div class="table-responsive overflow-auto mt-4" style="height: 500px; overflow: scroll">
-        <table class="table table-striped">
-          <thead class="thead-dark">
-            <tr>
-              <th scope="col">SN</th>
-              <th scope="col">Product Name</th>
-              <th scope="col">Product Category</th>
-                <th scope="col">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-          {% for product in all_products %}
-            <tr>
-              <th scope="row">{{ forloop.counter }}</th>
-              <td>{{ product.prod_name }}</td>
-              <td>{{ product.prod_category }}</td>
-                <td>
-                    <a href="/admins/editProducts/{{product.id}}"
-                       class="btn btn-primary btn-sm">
-                    Update</a>
-                <a href="/admins/deleteProducts/{{product.id}}"
-                       class="btn btn-danger btn-sm" onclick="return confirm('Are you sure want to update this product?')">
-                    Delete</a>
-                 </td>
-
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-        </div>
+        
     </div>
 
 

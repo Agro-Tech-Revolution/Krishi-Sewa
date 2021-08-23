@@ -7,7 +7,7 @@ var ctx = document.getElementById("myBarChart");
 var buyerLineChart = new Chart(ctx, {
   type: 'bar',
   data: {
-    labels: ["Beverages", "Narcotics", "Spices", "Fruits", "Vetables"]
+    labels: ["Beverages", "Narcotics", "Spices", "Fruits", "Vetables"],
     datasets: [{
       label: "Products",
       backgroundColor: "rgba(2,117,216,1)",

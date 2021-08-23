@@ -2,6 +2,9 @@ from django.shortcuts import render
 from accounts.auth import *
 from django.contrib.auth.decorators import login_required
 from rest_framework.response import Response
+from django.core.files.storage import  default_storage
+from PIL import Image
+from admins.api.views import *
 
 # Create your views here.
 base_url = 'http://127.0.0.1:8000'
@@ -11,77 +14,337 @@ base_url = 'http://127.0.0.1:8000'
 def index(request):
     return render(request, 'admins/admins.html')
 
-def dashboard(request):
-    return render(request, 'admins/DB.html')
 
+@login_required
+@admin_only
+def dashboard(request):
+    db_obj = DashboardView()
+    db_response = db_obj.get(request)
+    context = {
+        'db_data': db_response.data
+    }
+    return render(request, 'admins/DB.html', context)
+
+
+@login_required
+@admin_only
 def test(request):
     return render(request, 'admins/dashboard.html')
 
-# @login_required
-# @admin_only
+
+@login_required
+@admin_only
 def add_products(request):
-    categories = ["Cereals", "Pulses", "Vegetables", "Fruits", "Nuts", "Oilseeds",
-                  "Sugars and Starches", "Fibres", "Beverages", "Narcotics", "Spices", 
-                  "Condiments", "Others"]
-    context = {
-        "categories": categories
-    }
+    prod_obj = ProductsAPIView()
     if request.method == 'POST':
         data = request.POST
         prod_name = data['name']
         prod_category = data['category']
-        # prod_img = request.FILES["image"]
         
+        try:
+            prod_img = request.FILES["image"]
+        except:
+            prod_img = None
+        
+        image_path = ''
+        if not prod_img == None:
+            try:
+                Image.open(prod_img)
+                image_path = default_storage.save('static/product_images/' + str(prod_img), prod_img)
+            except:
+                print("Not Valid Image")
+                return redirect('/admins/addProducts/')
 
-        product_data = {
+        request.data = {
             "prod_name": prod_name,
             "prod_category": prod_category,
-            # "prod_img": prod_img,
+            "prod_img": image_path,
         }
         
-        product_endpoint = '/api/products/'
-        product_url = base_url + product_endpoint
-        headers = {'Authorization': 'Token ' + request.session['token']}
-
-        product_response = requests.post(product_url, data=product_data, headers=headers)
+        
+        product_response = prod_obj.post(request)
         # print(product_response.json().get('id'))
-        if product_response.json().get('id') != None:
+        if product_response.data.get('id') != None:
             print('Product added successfully')
         else:
-            error = product_response.json()
+            error = product_response.data
             print(error)
-     
+    
+    all_products = prod_obj.get(request)
+
+    categories = ["Cereals", "Pulses", "Vegetables", "Fruits", "Nuts", "Oilseeds",
+                  "Sugars and Starches", "Fibres", "Beverages", "Narcotics", "Spices", 
+                  "Condiments", "Others"]
+    context = {
+        "categories": categories,
+        "all_products": all_products.data
+    }
+    
     return render(request, 'admins/addProducts.html', context)
 
-def add_equipments(request):
-    return render(request, 'admins/addEquipments.html')
-    
-def users(request):
-    return render(request, 'admins/users.html')
 
+@login_required
+@admin_only
+def edit_product_details(request, prod_id):
+    prod_obj = ProductDetails()
+    prod_data = prod_obj.get(request, prod_id).data
+
+    if request.method == 'POST':
+        data = request.POST
+        prod_name = data["name"]
+        prod_category = data["category"]
+
+        try:
+            prod_img = request.FILES["image"]
+        except:
+            prod_img = None
+        
+        image_path = prod_data["prod_img"]
+        if not prod_img == None:
+            try:
+                Image.open(prod_img)
+                image_path = default_storage.save('static/product_images/' + str(prod_img), prod_img)
+            except:
+                print("Not Valid Image")
+                return redirect('/admins/addProducts/')
+
+        request.data = {
+            "prod_name": prod_name,
+            "prod_category": prod_category,
+            "prod_img": image_path,
+        }
+        
+        product_response = prod_obj.put(request, prod_id)
+        if product_response.data.get('id') != None:
+            print('Updated Successfully')
+            return redirect('/admins/addProducts/')
+        else:
+            error = product_response.data
+            print(error)
+            return redirect('/admins/editProducts/' + str(prod_id))
+
+    categories = ["Cereals", "Pulses", "Vegetables", "Fruits", "Nuts", "Oilseeds",
+                  "Sugars and Starches", "Fibres", "Beverages", "Narcotics", "Spices", 
+                  "Condiments", "Others"]
+    context = {
+        "categories": categories,
+        "product": prod_data
+    }
+    return render(request, 'admins/editProducts.html', context)
+
+
+@login_required
+@admin_only
+def delete_product(request, prod_id):
+    prod_obj = ProductDetails()
+    prod_response = prod_obj.delete(request, prod_id)
+    if Response(prod_response).status_code == 200:
+        print('Deleted Successfully')
+    return redirect('/admins/addProducts/')
+
+
+@login_required
+@admin_only
+def add_equipments(request):
+    eqp_obj = EquipmentAPIView()
+    if request.method == 'POST':
+        data = request.POST
+        name = data["name"]
+        category = data["category"]
+
+        request.data = {
+            'name': name,
+            'category': category
+        }
+
+        eqp_post_response = eqp_obj.post(request)
+        if eqp_post_response.data.get('id') != None:
+            print("Equipment Added Successfully")
+        else:
+            error = eqp_post_response.data
+            print(error)
+        return redirect('/admins/addEquipments/')
+
+    all_equipments = eqp_obj.get(request)
+
+    categories = [ "Tractor", "Harvester", "ATV or UTV", "Plows", "Harrows",
+                    "Fertilizer Spreaders", "Seeders", "Balers", "Other",]
+    context = {
+        "categories": categories,
+        "all_equipments" : all_equipments.data,
+    } 
+
+    return render(request, 'admins/addEquipments.html', context)
+
+
+@login_required
+@admin_only
+def edit_equipment_details(request, eqp_id):
+    eqp_obj = EquipmentDetails()
+    eqp_data = eqp_obj.get(request, eqp_id).data
+
+    if request.method == 'POST':
+        data = request.POST 
+        name = data["name"]
+        category = data["category"]
+
+        request.data = {
+            'name': name,
+            'category': category
+        }
+
+        eqp_response = eqp_obj.put(request, eqp_id)
+        if eqp_response.data.get('id') != None:
+            print('Updated Successfully')
+            return redirect('/admins/addEquipments/')
+        else:
+            error = eqp_response.data 
+            print(error)
+            return redirect('/admins/editEquipments/' + str(eqp_id))
+
+    categories = [ "Tractor", "Harvester", "ATV or UTV", "Plows", "Harrows",
+                    "Fertilizer Spreaders", "Seeders", "Balers", "Other",]
+    context = {
+        "categories": categories,
+        "equipment" : eqp_data,
+    } 
+
+    return render(request, 'admins/editEquipments.html', context)
+
+
+@login_required
+@admin_only
+def delete_equipment(request, eqp_id):
+    eqp_obj = EquipmentDetails()
+    eqp_response = eqp_obj.delete(request, eqp_id)
+    if Response(eqp_response).status_code == 200:
+        print('Deleted Successfully')
+    return redirect('/admins/addEquipments/')
+
+
+@login_required
+@admin_only  
+def users(request):
+    user_obj = AvailableUsersView()
+    all_users = user_obj.get(request).data 
+    context = {
+        'all_users': all_users
+    }
+
+    return render(request, 'admins/users.html', context)
+
+
+@login_required
+@admin_only
+def disable_user_account(request, user_id):
+    request.data = {
+        'is_active': False
+    }
+    action_obj = ActionOnUserView()
+    action_response = action_obj.put(request, user_id)
+    if action_response.data.get('success') != None:
+        print('Account disabled')
+    else:
+        print(action_response.data)
+    return redirect('/admins/users/')
+
+
+@login_required
+@admin_only
+def activate_user_account(request, user_id):
+    request.data = {
+        'is_active': True
+    }
+    action_obj = ActionOnUserView()
+    action_response = action_obj.put(request, user_id)
+    if action_response.data.get('success') != None:
+        print('Account Activated')
+    else:
+        print(action_response.data)
+    return redirect('/admins/users/')
+
+
+@login_required
+@admin_only
 def report_user(request):
     return render(request, 'admins/reportUsers.html')
 
+
+@login_required
+@admin_only
 def report_equipment(request):
     return render(request, 'admins/reportEquipment.html')
 
+
+@login_required
+@admin_only
 def report_product(request):
     return render(request, 'admins/reportProduct.html')
 
+
+@login_required
+@admin_only
 def famers(request):
-    return render(request, 'admins/farmers/farmers.html')
+    db_obj = DashboardView()
+    db_response = db_obj.get(request)
+    context = {
+        'db_data': db_response.data
+    }
+    return render(request, 'admins/farmers/farmers.html', context)
 
+
+@login_required
+@admin_only
 def vendors(request):
-    return render(request, 'admins/vendors/vendors.html')
+    db_obj = DashboardView()
+    db_response = db_obj.get(request)
+    context = {
+        'sales_data': db_response.data
+    }
 
+    return render(request, 'admins/vendors/vendors.html', context)
+
+
+@login_required
+@admin_only
 def buyers(request):
-    return render(request, 'admins/buyers/buyers.html')
+    db_obj = DashboardView()
+    db_response = db_obj.get(request)
+    context = {
+        'prod_data': db_response.data
+    }
+    return render(request, 'admins/buyers/buyers.html', context)
 
+
+@login_required
+@admin_only
 def farmer_list(request):
-    return render(request, 'admins/farmers/farmer_list.html')
+    farmer_obj = FarmersListView()
+    farmer_data = farmer_obj.get(request).data 
+    context = {
+        "all_farmers": farmer_data
+    }
 
+    return render(request, 'admins/farmers/farmer_list.html', context)
+
+
+@login_required
+@admin_only
 def vendors_list(request):
-    return render(request, 'admins/vendors/vendor_list.html')
+    vendor_obj = VendorsListView()
+    vendor_data = vendor_obj.get(request).data 
+    context = {
+        "all_vendors": vendor_data
+    }
+    return render(request, 'admins/vendors/vendor_list.html', context)
 
+
+@login_required
+@admin_only
 def buyers_list(request):
-    return render(request, 'admins/buyers/buyers_list.html')
+    buyer_obj = BuyersListView()
+    buyer_data = buyer_obj.get(request).data 
+    context = {
+        "all_buyers": buyer_data
+    }
+    return render(request, 'admins/buyers/buyers_list.html', context)

@@ -31,67 +31,27 @@
                   </thead>
                   <tbody>
                   <tr>
-                      <th scope="row">1</th>
-                      <td>Mark</td>
-                      <td>Kathmandu</td>
-                      <td>9293123844</td>
-                      <td>Farmer</td>
+                    {% for user_data in all_users %}
+                      <th scope="row">{{forloop.counter}}</th>
+                      <td>{{user_data.full_name}}</td>
+                      <td>{{user_data.address}}</td>
+                      <td>{{user_data.contact}}</td>
+                      <td>{{user_data.user_type}}</td>
                       <td>
-                          <a href="#"
-                               class="btn btn-success btn-sm">
-                            Update to Admin</a>
-                        <a href="#"
-                               class="btn btn-danger btn-sm" onclick="return confirm('Are you sure want to update this user?')">
-                            Delete</a>
+                        {% if user_data.is_active %}
+                          <a href="/admins/disableUser/{{user_data.user}}"
+                               class="btn btn-danger btn-sm" onclick="return confirm('Are you sure want to disable this account?')">
+                            Disable User Account</a>
+                        {% else %}
+                        <a href="/admins/activateUser/{{user_data.user}}"
+                               class="btn btn-success btn-sm" >
+                            Activate User Account</a>
+                        {% endif %}
                       </td>
 
                     </tr>
-                    <tr>
-                      <th scope="row">2</th>
-                      <td>Jacob</td>
-                      <td>Kathmandu</td>
-                      <td>9293123844</td>
-                      <td>Buyer</td>
-                      <td>
-                          <a href="#"
-                               class="btn btn-success btn-sm">
-                            Update to Admin</a>
-                        <a href="#"
-                               class="btn btn-danger btn-sm" onclick="return confirm('Are you sure want to update this user?')">
-                            Delete</a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th scope="row">3</th>
-                      <td>Larry</td>
-                      <td>Kathmandu</td>
-                      <td>9293123844</td>
-                      <td>Vendor</td>
-                      <td>
-                          <a href="#"
-                               class="btn btn-success btn-sm">
-                            Update to Admin</a>
-                        <a href="#"
-                               class="btn btn-danger btn-sm" onclick="return confirm('Are you sure want to update this user?')">
-                            Delete</a>
-                      </td>
-                    </tr>
-                                  {% for user in users %}
-                    <tr>
-                      <th scope="row">{{ forllop.counter }}</th>
-                      <td>{{ product.user_name }}</td>
-                      <td>{{ product.user_type }}</td>
-                        <td>
-                            <a href="#"
-                               class="btn btn-success btn-sm">
-                            Update to Admin</a>
-                        <a href="#"
-                               class="btn btn-danger btn-sm" onclick="return confirm('Are you sure want to update this user?')">
-                            Delete</a>
-                         </td>
-
-                    </tr>
-                  {% endfor %}
+                    {% endfor %}
+                    
                   </tbody>
                 </table>
                 </div>

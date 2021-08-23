@@ -14,9 +14,9 @@
             <div class="container-fluid px-4">
                         <h2 class="">Buyers Details</h2>
                         <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-                            <li class="breadcrumb-item"><a href="#">List of Farmers</a></li>
-                            <li class="breadcrumb-item"><a href="#">Rankings</a></li>
+                            <li class="breadcrumb-item"><a href="/admins/">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="/admins/buyers-list">List of Buyers</a></li>
+                            <li class="breadcrumb-item"><a href="/admins/buyers/">Rankings</a></li>
                         </ol>
 
                             <div class="card">
@@ -47,48 +47,29 @@
                                         </tr>
                                       </thead>
                                       <tbody>
+                                      {% for buyer in all_buyers %}
                                       <tr>
-                                          <td>1</td>
-                                          <td>Mark</td>
-                                          <td>Nepalgunj</td>
-                                          <td>081-548642</td>
-                                          <td>200</td>
+                                          <td>{{forloop.counter}}</td>
+                                          <td>{{buyer.full_name}}</td>
+                                          <td>
+                                            {% if buyer.address %}
+                                            {{buyer.address}}
+                                            {% else %}
+                                            -
+                                            {% endif %}
+                                          </td>
+                                          <td>
+                                            {% if buyer.contact %}
+                                            {{buyer.contact}}
+                                            {% else %}
+                                            -
+                                            {% endif %}
+                                          </td>
+                                          <td>{{buyer.purchases}}</td>
 
-                                        </tr>
-                                      <tr>
-                                          <td>2</td>
-                                          <td>Aark</td>
-                                          <td>Bepalgunj</td>
-                                          <td>081-548642</td>
-                                          <td>200</td>
-
-                                        </tr>
-                                      <tr>
-                                          <td>3</td>
-                                          <td>Bark</td>
-                                          <td>Cepalgunj</td>
-                                          <td>081-548642</td>
-                                          <td>200</td>
-
-                                        </tr>
-                                      <tr>
-                                          <td>4</td>
-                                          <td>Cark</td>
-                                          <td>Depalgunj</td>
-                                          <td>081-548642</td>
-                                          <td>200</td>
-
-                                        </tr>
-                                      <tr>
-                                          <td>5</td>
-                                          <td>Dark</td>
-                                          <td>Eepalgunj</td>
-                                          <td>081-548642</td>
-                                          <td>200</td>
-
-                                        </tr>
-
-                                      </tbody>
+                                      </tr>
+                                      {% endfor %}
+                                     </tbody>
                                     </table>
                                     </div>
                                 </div>

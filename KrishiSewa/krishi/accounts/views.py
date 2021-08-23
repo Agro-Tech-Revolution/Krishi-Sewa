@@ -112,7 +112,7 @@ def register_view(request):
 
         user_type = request.POST.get('user_type')
         
-        user_data = {
+        request.data = {
             "first_name": fname,
             "last_name": lname,
             "username": username,
@@ -120,21 +120,26 @@ def register_view(request):
             "password": password
         }
         
-        user_endpoint = "/api/users/"
-        user_url = base_url + user_endpoint
-        r = requests.post(user_url, data=user_data)
-        if Response(r).status_code == 200:
-            id = r.json().get('id')
-            profile_data = {
+        user_obj = UserAPIView()
+        user_response = user_obj.post(request)
+        # user_endpoint = "/api/users/"
+        # user_url = base_url + user_endpoint
+        # r = requests.post(user_url, data=user_data)
+        if user_response.data.get('id') != None:
+            id = user_response.data.get('id')
+            request.data = {
                 "user": id,
                 "user_type": user_type
             }
+            print(request.data)
+            profile_obj = CreateProfile()
+            profile_response = profile_obj.post(request)
 
-            profile_endpoint = "/api/profile/"
-            profile_url = base_url + profile_endpoint
-            profile_request = requests.post(profile_url, data=profile_data)
+            # profile_endpoint = "/api/profile/"
+            # profile_url = base_url + profile_endpoint
+            # profile_request = requests.post(profile_url, data=profile_data)
             
-            if Response(profile_request).status_code == 200:
+            if profile_response.data.get('user') != None:
                 print("User successfully created")
                 return redirect('/login')
         else:

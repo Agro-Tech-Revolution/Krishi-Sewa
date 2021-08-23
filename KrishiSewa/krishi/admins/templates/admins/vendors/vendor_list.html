@@ -2,7 +2,7 @@
 {% load static %}
 {% include bootstrap %}
 {% block title %}
-<title>Farmer</title>
+<title>Vendor</title>
 
 {% endblock title %}
 
@@ -14,9 +14,9 @@
             <div class="container-fluid px-4">
                         <h2 class="">Vendors Details</h2>
                         <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-                            <li class="breadcrumb-item"><a href="#">List of Farmers</a></li>
-                            <li class="breadcrumb-item"><a href="#">Rankings</a></li>
+                            <li class="breadcrumb-item"><a href="/admins/">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="/admins/vendors-list">List of Vendors</a></li>
+                            <li class="breadcrumb-item"><a href="/admins/vendors/">Rankings</a></li>
                         </ol>
 
                             <div class="card">
@@ -48,47 +48,27 @@
                                         </tr>
                                       </thead>
                                       <tbody>
+                                      {% for vendor in all_vendors %}
                                       <tr>
-                                          <td>1</td>
-                                          <td>Mark</td>
-                                          <td>Nepalgunj</td>
-                                          <td>081-548642</td>
-                                          <td>200</td>
-
+                                          <td>{{forloop.counter}}</td>
+                                          <td>{{vendor.full_name}}</td>
+                                          <td>
+                                            {% if vendor.address %}
+                                            {{vendor.address}}
+                                            {% else %}
+                                            -
+                                            {% endif %}
+                                          </td>
+                                          <td>
+                                            {% if vendor.contact %}
+                                            {{vendor.contact}}
+                                            {% else %}
+                                            -
+                                            {% endif %}
+                                          </td>
+                                          <td>{{vendor.sales}}</td>
                                         </tr>
-                                      <tr>
-                                          <td>2</td>
-                                          <td>Aark</td>
-                                          <td>Bepalgunj</td>
-                                          <td>081-548642</td>
-                                          <td>200</td>
-
-                                        </tr>
-                                      <tr>
-                                          <td>3</td>
-                                          <td>Bark</td>
-                                          <td>Cepalgunj</td>
-                                          <td>081-548642</td>
-                                          <td>200</td>
-
-                                        </tr>
-                                      <tr>
-                                          <td>4</td>
-                                          <td>Cark</td>
-                                          <td>Depalgunj</td>
-                                          <td>081-548642</td>
-                                          <td>200</td>
-
-                                        </tr>
-                                      <tr>
-                                          <td>5</td>
-                                          <td>Dark</td>
-                                          <td>Eepalgunj</td>
-                                          <td>081-548642</td>
-                                          <td>200</td>
-
-                                        </tr>
-
+                                        {% endfor %}
                                       </tbody>
                                     </table>
                                     </div>

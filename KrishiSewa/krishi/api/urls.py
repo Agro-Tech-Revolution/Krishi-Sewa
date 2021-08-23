@@ -12,8 +12,8 @@ urlpatterns = [
     path('profile/<int:user_id>/edit', UpdateProfileView.as_view()),
 
     # products
-    path('products/', ProductsAPIView.as_view()),
-    path('products/<int:id>', ProductDetails.as_view()),
+    # path('products/', ProductsAPIView.as_view()),
+    # path('products/<int:id>', ProductDetails.as_view()),
 
     path('productsOnSale/', ProductsForSaleView.as_view()),
     path('productsOnSale/<int:id>', ProductsForSaleDetails.as_view()),
@@ -49,8 +49,8 @@ urlpatterns = [
     path('homeExpenses/user/<int:user_id>', MyHomeExpense.as_view()),
 
     # equipments
-    path('equipment/', EquipmentAPIView.as_view()),
-    path('equipment/<int:id>', EquipmentDetails.as_view()),
+    # path('equipment/', EquipmentAPIView.as_view()),
+    # path('equipment/<int:id>', EquipmentDetails.as_view()),
     
     path('equipmentToDisplay/', EquipmentsToDisplayView.as_view()),
     path('equipmentToDisplay/<int:id>', EquipmentsToDisplayDetails.as_view()),

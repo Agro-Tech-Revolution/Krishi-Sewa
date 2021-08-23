@@ -1,4 +1,3 @@
-from farmers.serializers import ProductSerializer
 from django.shortcuts import render, HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -214,55 +213,55 @@ class NoteDetails(APIView):
             return Response({})
 
 
-class ProductsAPIView(APIView):
-    def get(self, request):
-        products = Products.objects.all()
-        serializer = ProductSerializer(products, many=True)
-        return Response(serializer.data)
+# class ProductsAPIView(APIView):
+#     def get(self, request):
+#         products = Products.objects.all()
+#         serializer = ProductSerializer(products, many=True)
+#         return Response(serializer.data)
 
-    def post(self, request):
-        serializer = ProductSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def post(self, request):
+#         serializer = ProductSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ProductDetails(APIView):
-    def get_object(self, id):
-        try:
-            return Products.objects.get(id=id)
-        except Products.DoesNotExist:
-            return None
+# class ProductDetails(APIView):
+#     def get_object(self, id):
+#         try:
+#             return Products.objects.get(id=id)
+#         except Products.DoesNotExist:
+#             return None
 
-    def get(self, request, id):
-        product = self.get_object(id)
-        if product != None:
-            serializer = ProductSerializer(product)
-            return Response(serializer.data)
-        else:
-            return Response({})
+#     def get(self, request, id):
+#         product = self.get_object(id)
+#         if product != None:
+#             serializer = ProductSerializer(product)
+#             return Response(serializer.data)
+#         else:
+#             return Response({})
 
-    def put(self, request, id):
-        product = self.get_object(id)
+#     def put(self, request, id):
+#         product = self.get_object(id)
 
-        if product != None:
-            serializer = ProductSerializer(product, data=request.data)
+#         if product != None:
+#             serializer = ProductSerializer(product, data=request.data)
 
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response({})
+#             if serializer.is_valid():
+#                 serializer.save()
+#                 return Response(serializer.data)
+#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#         else:
+#             return Response({})
 
-    def delete(self, request, id):
-        product = self.get_object(id)
-        if product != None:
-            product.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        else:
-            return Response({})
+#     def delete(self, request, id):
+#         product = self.get_object(id)
+#         if product != None:
+#             product.delete()
+#             return Response(status=status.HTTP_204_NO_CONTENT)
+#         else:
+#             return Response({})
 
 
 class ProductsForSaleView(APIView):
@@ -965,53 +964,53 @@ class MyHomeExpense(APIView):
 
 
 # equipments
-class EquipmentAPIView(APIView):
-    def get(self, request):
-        equipments = Equipment.objects.all()
-        serializer = EquipmentSerializer(equipments, many=True)
-        return Response(serializer.data)
+# class EquipmentAPIView(APIView):
+#     def get(self, request):
+#         equipments = Equipment.objects.all()
+#         serializer = EquipmentSerializer(equipments, many=True)
+#         return Response(serializer.data)
 
-    def post(self, request):
-        serializer = EquipmentSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def post(self, request):
+#         serializer = EquipmentSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class EquipmentDetails(APIView):
-    def get_object(self, id):
-        try:
-            return Equipment.objects.get(id=id)
-        except Equipment.DoesNotExist:
-            return None
+# class EquipmentDetails(APIView):
+#     def get_object(self, id):
+#         try:
+#             return Equipment.objects.get(id=id)
+#         except Equipment.DoesNotExist:
+#             return None
 
-    def get(self, request, id):
-        equipment = self.get_object(id)
-        if equipment != None:
-            serializer = EquipmentSerializer(equipment)
-            return Response(serializer.data)
-        else:
-            return Response({})
+#     def get(self, request, id):
+#         equipment = self.get_object(id)
+#         if equipment != None:
+#             serializer = EquipmentSerializer(equipment)
+#             return Response(serializer.data)
+#         else:
+#             return Response({})
             
-    def put(self, request, id):
-        equipment = self.get_object(id)
-        if equipment != None:
-            serializer = EquipmentSerializer(equipment, data=request.data)
+#     def put(self, request, id):
+#         equipment = self.get_object(id)
+#         if equipment != None:
+#             serializer = EquipmentSerializer(equipment, data=request.data)
 
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response({})
+#             if serializer.is_valid():
+#                 serializer.save()
+#                 return Response(serializer.data)
+#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#         else:
+#             return Response({})
 
-    def delete(self, request, id):
-        equipment = self.get_object(id)
-        if equipment != None:
-            equipment.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response({})
+#     def delete(self, request, id):
+#         equipment = self.get_object(id)
+#         if equipment != None:
+#             equipment.delete()
+#             return Response(status=status.HTTP_204_NO_CONTENT)
+#         return Response({})
 
 
 class EquipmentsToDisplayView(APIView):

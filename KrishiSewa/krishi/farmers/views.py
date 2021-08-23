@@ -17,7 +17,7 @@ import numpy as np
 from django.core.files.storage import default_storage
 from PIL import Image
 from django.core.files.base import ContentFile
-
+from admins.api.views import *
 
 # Create your views here.
 # base_url = 'http://127.0.0.1:8000'
