@@ -52,3 +52,9 @@ class UpdateProfileSerializer(serializers.ModelSerializer):
         fields = ['user', 'bio', 'contact', 'profile_pic', 'address']
 
 
+class ReportUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReportUser
+        fields = '__all__'
+
+

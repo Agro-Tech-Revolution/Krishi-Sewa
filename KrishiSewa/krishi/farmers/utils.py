@@ -295,6 +295,25 @@ def edit_eqp_rent(request, req_id):
     return eqp_req_put_response
 
 
+def report_eqp(request, eqp_id):
+    data = request.POST 
+    report_category = data["report-category"]
+    report_description = data["description"]
+    reported_by = request.user.id
+    reported_equipment = eqp_id
+
+    request.data = {
+        "report_category": report_category,
+        "report_description": report_description,
+        "reported_by": reported_by,
+        "reported_equipment": reported_equipment,
+    }
+
+    eqp_report_obj = EquipmentReportView()
+    eqp_report_response = eqp_report_obj.post(request)
+    return eqp_report_response
+
+
 
 def getNPK_Prediction(N, P, K, temp, humidity, ph):
     model = pickle.load(open('npk_model.sav', 'rb'))

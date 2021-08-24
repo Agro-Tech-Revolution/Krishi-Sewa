@@ -5,6 +5,7 @@
 {% block title %}
 <title>Product Details</title>
 <link href="{% static 'farmers/css/equipmentDetails.css' %}" rel="stylesheet">
+<link href="{% static 'farmers/css/addProduct.css' %}" rel="stylesheet">
 {% endblock title %}
 
 {% block content %}
@@ -32,9 +33,48 @@
                     </a>
 				</div>
 				<div class="col col-3">
-					<a href="" class="" data-toggle="tooltip" data-placement="bottom" title="Report">
+					{% if not reported %}
+					<a href="#" class="" data-toggle="modal" data-target="#exampleModal" data-placement="bottom" title="Report">
 						<i class="far fa-flag" style="color: red; font-size: 1.5rem;"></i>
 					</a>
+                    {% endif %}
+                    
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" >
+                            <div class="modal-content" >
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Report Product Form</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="POST" action="/buyers/reportProd/{{product_detail.id}}">
+                                        {% csrf_token %}
+                                        <div class="input-group">
+                                            <select class="selectProduct input--style-4" id="" name="report-category">
+                                                {% for category in report_category %}
+                                                <option value="{{category}}">{{category}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                                                            
+                                        <div class="" style="margin-top: 15px;">
+
+                                            <div class="input-group-icon">
+                                                <textarea class="input--style-4" name="description" placeholder="Reason" rows="2"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="btn-block">
+                                            <button type="submit">Report</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 				</div>
 			</div>
 

@@ -912,11 +912,19 @@ def profile(request, user_id):
     headers = {'Authorization': 'Token ' + request.session['token']}
     user_detail_obj = GetUserDetails()
     user_detail_response = user_detail_obj.get(request, user_id)
-    # user_detail_endpoint = '/api/users/id/' + str(user_id) + '/details'
-    # user_detail_url = base_url + user_detail_endpoint
-    # user_detail_response = requests.get(user_detail_url, headers=headers).json()
+
+    user_report_data = user_detail_response.data.get('reports') 
+    reported = False
+    for report in user_report_data:
+        if report["reported_by"] == request.user.id:
+            reported = True
+            break
+
+    report_category = ["False Information", "Fake Account", "Posts Disturbing content", "Something Else"]
     context = {
-        'user_data': user_detail_response.data
+        'user_data': user_detail_response.data,
+        'report_category': report_category,
+        'reported': reported
     }
     return render(request, 'farmers/profile.html', context)
 
@@ -929,9 +937,6 @@ def edit_profile(request, user_id):
 
     user_detail_obj = GetUserDetails()
     user_detail_response = user_detail_obj.get(request, user_id).data
-    # user_detail_endpoint = '/api/users/id/' + str(user_id) + '/details'
-    # user_detail_url = base_url + user_detail_endpoint
-    # user_detail_response = requests.get(user_detail_url, headers=headers).json()
 
     current_profile_pic = user_detail_response["profile_pic"]
 
@@ -943,46 +948,7 @@ def edit_profile(request, user_id):
         else:
             error = user_put_response.data
             print(error)
-        return redirect('/farmers/profile/' + str(user_id) + '/edit')
-        # data = request.POST
-        # username = request.user.username
-        # first_name = data["first_name"]
-        # last_name = data["last_name"]
-        # email = data["email"]
-        # user = user_id
-        # bio = data["bio"]
-        # contact = data["contact"]
-        # address = data["address"]
-
-        # try:
-        #     profile_pic = request.FILES["profile_pic"]
-        # except:
-        #     profile_pic = None
-
-        # image_path = current_profile_pic
-        # if not profile_pic == None:
-        #     try:
-        #         Image.open(profile_pic)
-        #         image_path = default_storage.save('static/profile_pic/' + str(profile_pic), profile_pic)
-        #     except:
-        #         print("Not Valid Image")
-        #         return redirect('/farmers/profile/' + str(user_id) + '/edit')
-        
-        # request.data = {
-        #     "username": username,
-        #     "first_name": first_name,
-        #     "last_name": last_name,
-        #     "email": email,
-        #     "user": user,
-        #     "bio": bio,
-        #     "contact": contact,
-        #     "address": address,
-        #     "profile_pic": image_path,
-        # }
-        # # print(data_to_update)
-        # update_profile_obj = UpdateProfileView()
-        # user_put_response = update_profile_obj.put(request, user_id)
-        
+        return redirect('/farmers/profile/' + str(user_id) + '/edit')       
 
     context = {
         'user_data': user_detail_response
@@ -1025,11 +991,36 @@ def equipment_details(request, eqp_id):
 
     equipment_detail_obj = EquipmentsToDisplayDetails()
     equipment_detail_response = equipment_detail_obj.get(request, eqp_id)
+
+    report_category = ["False Information", "Fake Equipments", "Misinformation",  "Something Else"]
+
+    eqp_report_data = equipment_detail_response.data.get('reports') 
+    reported = False
+    for report in eqp_report_data:
+        if report["reported_by"]["id"] == request.user.id:
+            reported = True
+            break
+
     context = {
         "equipment_detail": equipment_detail_response.data,
+        "report_category": report_category,
+        "reported": reported
     }
     return render(request, 'farmers/equipmentDetails.html', context)
 
+
+@login_required
+@farmers_only
+def report_eqp_view(request, eqp_id):
+    if request.method == 'POST':
+        eqp_report_response = report_eqp(request, eqp_id)
+        if eqp_report_response.data.get('id') != 'None':
+            print('Reported Successfully')
+        else:
+            print(eqp_report_response.data)
+            return redirect('/farmers/equipmentDetails/'+str(eqp_id))
+
+    return redirect('/farmers/allEquipments/')
 
 
 @login_required

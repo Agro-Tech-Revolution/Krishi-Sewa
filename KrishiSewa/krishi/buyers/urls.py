@@ -24,6 +24,9 @@ urlpatterns = [
     path('purchase/<int:eqp_id>', purchase_request),
     path('rent/<int:eqp_id>', rent_request),
 
+    path('reportEqp/<int:eqp_id>', report_eqp_view),
+    path('reportProd/<int:prod_id>', report_prod_view),
+
     path('eqpBuyRequests', equipment_bought_requests),
     path('eqpBuyRequests/<str:action>', equipment_bought_requests),
     path('eqpuipments/<str:action>', approved_eqp_requests),
@@ -37,6 +40,9 @@ urlpatterns = [
 
     path('editRentRequest/<int:req_id>', edit_eqp_rent_requests),
     path('deleteRentRequest/<int:req_id>', delete_eqp_rent_requests),
+
+    path('profile/<int:user_id>', profile),
+    path('profile/<int:user_id>/edit', edit_profile),
 
 
     # path('viewEquipments/editComment', edit_eqp_comment),

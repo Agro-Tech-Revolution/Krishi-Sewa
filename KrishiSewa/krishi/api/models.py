@@ -19,6 +19,22 @@ class Profile(models.Model):
     bio = models.TextField(null=True, blank=True)
 
 
+class ReportUser(models.Model):
+    categories = [
+        ("False Information", "False Information"),
+        ("Fake Account", "Fake Account"),
+        ("Posts Disturbing content", "Posts Disturbing content"),
+        ("Something Else", "Something Else"),
+    ]
+
+    reported_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    reported_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='reported_user')
+    report_category = models.CharField(max_length=50, choices=categories, default="Fake Account")
+    report_description = models.CharField(max_length=200)
+    reported_date = models.DateTimeField(auto_now_add=True)
+
+
+
 
 
 

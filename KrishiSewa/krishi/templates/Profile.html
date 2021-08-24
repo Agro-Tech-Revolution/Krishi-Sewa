@@ -83,7 +83,44 @@
           {% if user_data.user == user.id %}
             <a href="/{{user_data.user_type}}/profile/{{user_data.user}}/edit" class="btn btn-primary ml-4">Edit Profile</a>
           {% else %}
-            <a href="#" class="btn btn-primary ml-4">Report</a>
+            {% if not reported %}
+            <a href="#" class="btn btn-primary ml-4" data-toggle="modal" data-target="#exampleModal">Report</a>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" >
+                    <div class="modal-content" >
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Report User Form</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST" action="/reportuser/{{user_data.user}}/">
+                                {% csrf_token %}
+                                <div class="input-group">
+                                    <select class="selectProduct input--style-4" id="" name="report-category">
+                                        {% for category in report_category %}
+                                        <option value="{{category}}">{{category}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                                                    
+                                <div class="" style="margin-top: 15px;">
+
+                                    <div class="input-group-icon">
+                                        <textarea class="input--style-4" name="description" placeholder="Reason" rows="2"></textarea>
+                                    </div>
+                                </div>
+                                <div class="btn-block">
+                                    <button type="submit">Report</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
           {% endif %}
         </div>
 

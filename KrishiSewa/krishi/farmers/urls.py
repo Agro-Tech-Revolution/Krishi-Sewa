@@ -46,6 +46,8 @@ urlpatterns = [
     path('purchase/<int:eqp_id>', purchase_request),
     path('rent/<int:eqp_id>', rent_request),
 
+    path('reportEqp/<int:eqp_id>', report_eqp_view),
+
     path('addproduct/', add_product),
     path('myproducts/', my_products),
     path('editproduct/<int:prod_id>', edit_product),

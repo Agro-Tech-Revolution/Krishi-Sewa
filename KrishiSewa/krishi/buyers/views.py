@@ -16,83 +16,6 @@ def report_form(request):
     return render(request, 'buyers/ReportForm.html')
 
 
-# @login_required
-# @buyers_only
-# def view_products(request):
-#     headers = {'Authorization': 'Token ' + request.session['token']}
-#     if request.method=='POST':
-#         comment_post_response = comment_add(request)
-#         if Response(comment_post_response).status_code == 200:
-#             print('Comment Added Successfully')
-#             return redirect('/buyers/viewProducts')
-    
-#     product_endpoint = '/api/products/' 
-#     product_url = base_url + product_endpoint
-#     product_response = requests.get(product_url, headers=headers)
-
-#     all_products = []
-#     if Response(product_response).status_code == 200:
-#         all_products = product_response.json()
-
-
-#     report_categories = ["False Information", "Fake Products", "Misinformation", "Something Else"]
-    
-#     context = {
-#         "all_products": all_products,
-#         "report_categories": report_categories
-#     } 
-
-#     return render(request, 'buyers/allProducts.html', context)
-
-
-# @login_required
-# @buyers_only
-# def edit_comment(request):
-#     comment_put_response = comment_edit(request)
-    
-#     if Response(comment_put_response).status_code == 200:
-#         print('Comment Updated Successfully')
-#     return redirect('/buyers/viewProducts')
-
-
-# @login_required
-# @buyers_only
-# def delete_comment(request, id):
-#     comment_del_response = comment_delete(request, id)
-    
-#     if Response(comment_del_response).status_code == 200:
-#         print('Deleted Successfully')
-#     return redirect('/buyers/viewProducts')
-
-
-# @login_required
-# @buyers_only
-# def report_product(request):
-#     headers = {'Authorization': 'Token ' + request.session['token']}
-#     if request.method == 'POST':
-#         data = request.POST
-#         reported_product = data['prod_id']
-#         report_category = data['category']
-#         report_description = data['description']
-#         reported_by = request.user.id
-
-#         request.data = {
-#             "reported_by": reported_by,
-#             "reported_product": reported_product,
-#             "report_category": report_category,
-#             "report_description": report_description
-#         }
-
-#         report_obj = ProductReportView()
-#         report_response = report_obj.post(request)
-#         # report_endpoint = '/api/products/reports'
-#         # report_url = base_url + report_endpoint
-#         # report_response = requests.post(report_url, data=report_data, headers=headers)
-#         if Response(report_response).status_code == 200:
-#             print("Product Reported Successfully")
-#         return redirect('/buyers/viewProducts')
-
-
 # products start
 @login_required
 @buyers_only
@@ -125,10 +48,50 @@ def product_details(request, prod_id):
 
     product_detail_obj = ProductsForSaleDetails()
     product_detail_response = product_detail_obj.get(request, prod_id)
+    
+    report_category = ["False Information", "Fake Products", "Misinformation",  "Something Else"]
+
+    prod_report_data = product_detail_response.data.get('product_reports') 
+    reported = False
+    for report in prod_report_data:
+        if report["reported_by"]["id"] == request.user.id:
+            reported = True
+            break
+
     context = {
         "product_detail": product_detail_response.data,
+        "report_category": report_category,
+        "reported": reported
     }
     return render(request, 'buyers/productDetails.html', context)
+
+
+@login_required
+@buyers_only
+def report_prod_view(request, prod_id):
+    if request.method == 'POST':
+        data = request.POST 
+        report_category = data["report-category"]
+        report_description = data["description"]
+        reported_by = request.user.id
+        reported_product = prod_id
+
+        request.data = {
+            "report_category": report_category,
+            "report_description": report_description,
+            "reported_by": reported_by,
+            "reported_product": reported_product,
+        }
+
+        prod_report_obj = ProductReportView()
+        prod_report_response = prod_report_obj.post(request)
+        if prod_report_response.data.get('id') != 'None':
+            print('Reported Successfully')
+        else:
+            print(prod_report_response.data)
+            return redirect('/buyers/productdetails/'+str(prod_id))
+
+    return redirect('/buyers/allProducts/')
 
 
 @login_required
@@ -305,10 +268,36 @@ def equipment_details(request, eqp_id):
 
     equipment_detail_obj = EquipmentsToDisplayDetails()
     equipment_detail_response = equipment_detail_obj.get(request, eqp_id)
+
+    report_category = ["False Information", "Fake Equipments", "Misinformation",  "Something Else"]
+
+    eqp_report_data = equipment_detail_response.data.get('reports') 
+    reported = False
+    for report in eqp_report_data:
+        if report["reported_by"]["id"] == request.user.id:
+            reported = True
+            break
+
     context = {
         "equipment_detail": equipment_detail_response.data,
+        "report_category": report_category,
+        "reported": reported
     }
     return render(request, 'buyers/equipmentDetails.html', context)
+
+
+@login_required
+@buyers_only
+def report_eqp_view(request, eqp_id):
+    if request.method == 'POST':
+        eqp_report_response = report_eqp(request, eqp_id)
+        if eqp_report_response.data.get('id') != 'None':
+            print('Reported Successfully')
+        else:
+            print(eqp_report_response.data)
+            return redirect('/buyers/equipmentDetails/'+str(eqp_id))
+
+    return redirect('/buyers/allEquipments/')
 
 
 @login_required
@@ -480,120 +469,51 @@ def delete_eqp_rent_requests(request, req_id):
     return redirect('/buyers/eqpRentRequests')
 
 
+@login_required
+@buyers_only
+def profile(request, user_id):
+    headers = {'Authorization': 'Token ' + request.session['token']}
+    user_detail_obj = GetUserDetails()
+    user_detail_response = user_detail_obj.get(request, user_id)
+
+    user_report_data = user_detail_response.data.get('reports') 
+    reported = False
+    for report in user_report_data:
+        if report["reported_by"] == request.user.id:
+            reported = True
+            break
+
+    report_category = ["False Information", "Fake Account", "Posts Disturbing content", "Something Else"]
+    context = {
+        'user_data': user_detail_response.data,
+        'report_category': report_category,
+        'reported': reported
+    }
+    return render(request, 'buyers/profile.html', context)
 
 
+@login_required
+@buyers_only
+def edit_profile(request, user_id):
+    headers = {'Authorization': 'Token ' + request.session['token']}
 
-# @login_required
-# @buyers_only
-# def view_equipments(request):
-#     headers = {'Authorization': 'Token ' + request.session['token']}
-#     if request.method=='POST':
-#         comment_post_response = eqp_comment_add(request)
-#         if Response(comment_post_response).status_code == 200:
-#             print('Comment Added Successfully')
-#             return redirect('/buyers/viewEquipments')
-    
-#     equipment_get_endpoint = '/api/equipment/' 
-#     equipmet_get_url = base_url + equipment_get_endpoint
-#     equipment_get_response = requests.get(equipmet_get_url, headers=headers)
+    user_detail_obj = GetUserDetails()
+    user_detail_response = user_detail_obj.get(request, user_id).data
 
-#     all_equipments = []
-#     if Response(equipment_get_response).status_code == 200:
-#         all_equipments = equipment_get_response.json()
+    current_profile_pic = user_detail_response["profile_pic"]
 
-#     # calling comment api to get all the comments 
-#     comment_endpoint = '/api/equipment/comments'
-#     comment_url = base_url + comment_endpoint
-#     comment_response = requests.get(comment_url, headers=headers)
+    if request.method == 'POST':
+        user_put_response = update_profile_data(request, user_id, current_profile_pic)
+        if user_put_response.data.get('username') != None:
+            print('Profile updated successfully')
+            return redirect('/buyers/profile/' + str(user_id))
+        else:
+            error = user_put_response.data
+            print(error)
+        return redirect('/buyers/profile/' + str(user_id) + '/edit')       
 
-#     all_comments = []
-#     if Response(comment_response).status_code == 200:
-#         all_comments = comment_response.json()
+    context = {
+        'user_data': user_detail_response
+    }
+    return render(request, 'buyers/editProfile.html', context)
 
-#     # modifiying comments keys and values so that the name of the person who commmented can be seen
-#     for comment in all_comments:
-#         user_endpoint = '/api/users/id/'+str(comment['comment_by'])
-#         user_url = base_url + user_endpoint
-#         user_response = requests.get(user_url, headers=headers)
-#         if Response(user_response).status_code == 200:
-#             comment['comment_by'] = user_response.json()
-    
-#     # appending comments of a equipment to equipments dictionary
-#     for equipment in all_equipments:
-#         comments_for_a_equipment = []
-#         for comment in all_comments:
-#             if comment['equipment'] == equipment['id']:
-#                 comments_for_a_equipment.append(comment)
-#         equipment['comments'] = comments_for_a_equipment
-
-#     # calling report api to find all the equipments that the logged in user has reported
-#     report_endpoint = '/api/equipment/reports/users/' + str(request.user.id)
-#     report_url = base_url + report_endpoint
-#     report_response = requests.get(report_url, headers=headers)
-
-#     my_reports = []
-#     if Response(report_response).status_code == 200:
-#         my_reports = report_response.json()
-
-#     # appending report data to product dictionary
-#     for report in my_reports:
-#         for equipment in all_equipments:
-#             if report["reported_equipment"] == equipment["id"]:
-#                 equipment["reported"] = True
-#             else:
-#                 equipment["reported"] = False
-
-#     report_categories = ["False Information", "Fake Equipments", "Misinformation", "Something Else"]
-    
-#     context = {
-#         "all_equipments": all_equipments,
-#         "categories": report_categories
-#     } 
-
-#     return render(request, 'buyers/allEquipments.html', context)
-
-
-# @login_required
-# @buyers_only
-# def edit_eqp_comment(request):
-#     comment_put_response = eqp_comment_edit(request)
-    
-#     if Response(comment_put_response).status_code == 200:
-#         print('Comment Updated Successfully')
-#     return redirect('/buyers/viewEquipments')
-
-
-# @login_required
-# @buyers_only
-# def delete_eqp_comment(request, id):
-#     comment_del_response = eqp_comment_delete(request, id)
-    
-#     if Response(comment_del_response).status_code == 200:
-#         print('Deleted Successfully')
-#     return redirect('/buyers/viewEquipments')
-
-
-# @login_required
-# @buyers_only
-# def report_equipment(request):
-#     headers = {'Authorization': 'Token ' + request.session['token']}
-#     if request.method == 'POST':
-#         data = request.POST
-#         reported_equipment = data['eqp_id']
-#         report_category = data['category']
-#         report_description = data['description']
-#         reported_by = request.user.id
-
-#         report_data = {
-#             "reported_by": reported_by,
-#             "reported_equipment": reported_equipment,
-#             "report_category": report_category,
-#             "report_description": report_description
-#         }
-
-#         report_endpoint = '/api/equipment/reports'
-#         report_url = base_url + report_endpoint
-#         report_response = requests.post(report_url, data=report_data, headers=headers)
-#         if Response(report_response).status_code == 200:
-#             print("Equipment Reported Successfully")
-#         return redirect('/buyers/viewEquipments')

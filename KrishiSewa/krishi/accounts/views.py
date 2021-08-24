@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
-import requests
 from rest_framework.response import Response
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from .auth import *
 # from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.authtoken.models import Token
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -146,6 +146,32 @@ def register_view(request):
             print("Error in creating user")
 
     return render(request, 'accounts/register.html')
+
+
+@login_required
+def report_user(request, user_id):
+    if request.method == 'POST':
+        data = request.POST 
+        reported_by = request.user.id
+        reported_user = user_id
+        report_category = data["report-category"]
+        report_description = data["description"]
+
+        request.data = {
+            "reported_by": reported_by,
+            "reported_user": reported_user,
+            "report_category": report_category,
+            "report_description": report_description,
+        }
+        
+        report_user_obj = ReportUserView()
+        report_user_response = report_user_obj.post(request)
+
+        if report_user_response.data.get('id') != None:
+            print("Reported Successfully")
+        else:
+            print(report_user_response.data)
+    return redirect('/')
 
 
 def logout_user(request):

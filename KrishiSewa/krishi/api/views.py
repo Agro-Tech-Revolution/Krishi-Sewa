@@ -114,7 +114,6 @@ class UpdateProfileView(APIView):
 
             profile_serializer = UpdateProfileSerializer(profile, data=request.data)
             user_serializer = UpdateUserSerializer(user, data=request.data)
-            print(user)
             if profile_serializer.is_valid() and user_serializer.is_valid():
                 
                 profile_serializer.save()
@@ -130,13 +129,17 @@ class GetUserDetails(APIView):
         try:
             user = User.objects.get(id=user_id)
             profile = Profile.objects.get(user=user_id)
+            report_data = ReportUser.objects.filter(reported_user=user_id)
 
             user_serializer = UpdateUserSerializer(user)
             profile_serializer = UpdateProfileSerializer(profile)
+            report_serializer = ReportUserSerializer(report_data, many=True)
 
             user_dict = user_serializer.data
             profile_dict = profile_serializer.data
+            report_dict = report_serializer.data
             user_dict.update(profile_dict)
+            user_dict["reports"] = report_dict
             
             if profile.user_type.upper() == 'FARMERS':
                 user_dict["total_sales"] = 0
@@ -147,11 +150,30 @@ class GetUserDetails(APIView):
             elif profile.user_type.upper() == 'BUYERS':
                 user_dict["total_purchase"] = 0
 
+            
+
             user_dict["user_type"] = profile.user_type.lower()
 
             return Response(user_dict)
         except User.DoesNotExist:
             return Response({}, status=status.HTTP_404_NOT_FOUND)
+
+
+class ReportUserView(APIView):
+    def get(self, request):
+        report_user = ReportUser.objects.all()
+        serializer = ReportUserSerializer(report_user, many=True)
+
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = ReportUserSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class NoteAPIView(APIView):
@@ -211,57 +233,6 @@ class NoteDetails(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             return Response({})
-
-
-# class ProductsAPIView(APIView):
-#     def get(self, request):
-#         products = Products.objects.all()
-#         serializer = ProductSerializer(products, many=True)
-#         return Response(serializer.data)
-
-#     def post(self, request):
-#         serializer = ProductSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-# class ProductDetails(APIView):
-#     def get_object(self, id):
-#         try:
-#             return Products.objects.get(id=id)
-#         except Products.DoesNotExist:
-#             return None
-
-#     def get(self, request, id):
-#         product = self.get_object(id)
-#         if product != None:
-#             serializer = ProductSerializer(product)
-#             return Response(serializer.data)
-#         else:
-#             return Response({})
-
-#     def put(self, request, id):
-#         product = self.get_object(id)
-
-#         if product != None:
-#             serializer = ProductSerializer(product, data=request.data)
-
-#             if serializer.is_valid():
-#                 serializer.save()
-#                 return Response(serializer.data)
-#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-#         else:
-#             return Response({})
-
-#     def delete(self, request, id):
-#         product = self.get_object(id)
-#         if product != None:
-#             product.delete()
-#             return Response(status=status.HTTP_204_NO_CONTENT)
-#         else:
-#             return Response({})
 
 
 class ProductsForSaleView(APIView):
@@ -964,55 +935,6 @@ class MyHomeExpense(APIView):
 
 
 # equipments
-# class EquipmentAPIView(APIView):
-#     def get(self, request):
-#         equipments = Equipment.objects.all()
-#         serializer = EquipmentSerializer(equipments, many=True)
-#         return Response(serializer.data)
-
-#     def post(self, request):
-#         serializer = EquipmentSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-# class EquipmentDetails(APIView):
-#     def get_object(self, id):
-#         try:
-#             return Equipment.objects.get(id=id)
-#         except Equipment.DoesNotExist:
-#             return None
-
-#     def get(self, request, id):
-#         equipment = self.get_object(id)
-#         if equipment != None:
-#             serializer = EquipmentSerializer(equipment)
-#             return Response(serializer.data)
-#         else:
-#             return Response({})
-            
-#     def put(self, request, id):
-#         equipment = self.get_object(id)
-#         if equipment != None:
-#             serializer = EquipmentSerializer(equipment, data=request.data)
-
-#             if serializer.is_valid():
-#                 serializer.save()
-#                 return Response(serializer.data)
-#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-#         else:
-#             return Response({})
-
-#     def delete(self, request, id):
-#         equipment = self.get_object(id)
-#         if equipment != None:
-#             equipment.delete()
-#             return Response(status=status.HTTP_204_NO_CONTENT)
-#         return Response({})
-
-
 class EquipmentsToDisplayView(APIView):
     def get(self, request):
         all_equipments = EquipmentToDisplay.objects.filter(to_display=True)

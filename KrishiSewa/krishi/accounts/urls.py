@@ -10,6 +10,6 @@ urlpatterns = [
     path('history', history),
     path('feedback', feedback),
     path('logout', logout_user),
-    
+    path('reportuser/<int:user_id>/', report_user),
 ]
 
