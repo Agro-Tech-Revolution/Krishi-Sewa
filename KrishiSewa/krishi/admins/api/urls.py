@@ -16,6 +16,12 @@ urlpatterns = [
     path('farmers-list/', FarmersListView.as_view()),
     path('vendors-list/', VendorsListView.as_view()),
     path('buyers-list/', BuyersListView.as_view()),
+    
+    path('eqp-reports/', EqpReports.as_view()),
+    path('prod-reports/', ProdReports.as_view()),
+    path('user-reports/', ReportUserView.as_view()),
+
+    path('tickets/', TicketView.as_view()),
 
     # path('vendors-sales', VendorEqpSalesView.as_view()),
 

@@ -1,15 +1,18 @@
-from admins.api.serializers import AvailableUserSerializer
+from admins.api.serializers import AvailableUserSerializer, TicketResponseSerializer, TicketSerializer
 from numpy.core.fromnumeric import product
 from farmers.serializers import ProductSerializer
+from api.serializers import UserSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from api.models import *
+from admins.models import *
 from vendors.models import *
 from farmers.models import *
 from rest_framework import status
 from farmers.serializers import *
 from vendors.serializers import *
-from django.db.models import Sum, Q
+from api.serializers import *
+from django.db.models import Sum, Q, Count
 import os
 
 
@@ -96,8 +99,6 @@ class DashboardView(APIView):
             'equipment': eqp_categories
         }
         return Response(data)
-
-
 
 
 class AvailableUsersView(APIView):
@@ -347,3 +348,179 @@ class BuyersListView(APIView):
             user_data.append(data)
         return Response(user_data)
 
+
+class EqpReports(APIView):
+    def get(self, request):
+        all_reports = EquipmentReport.objects.all().values(
+                                                            'reported_equipment'
+                                                        ).annotate(
+                                                            total_reports=Count('id')
+                                                        ).order_by('-total_reports')
+        for report in all_reports:
+            report_equipment = EquipmentReport.objects.filter(reported_equipment=report['reported_equipment'])
+            report_equipment_details = EquipmentReportSerializer(report_equipment, many=True).data
+            reported_by = []
+            for report_data in report_equipment_details:
+                user_report_details = User.objects.get(id=report_data['reported_by'])
+                user_report_data = UserSerializer(user_report_details).data
+                user_report_data["report_category"] = report_data["report_category"]
+                user_report_data["report_description"] = report_data["report_description"]
+                user_report_data["reported_date"] = report_data["reported_date"]
+                reported_by.append(user_report_data)
+                
+
+            report['reported_by'] = reported_by
+
+            equipment_report_details = EquipmentToDisplay.objects.get(id=report['reported_equipment'])
+            equipment_report_data = EquipmentToDisplaySerializer(equipment_report_details).data
+
+            equipment_details = Equipment.objects.get(id=equipment_report_data['equipment'])
+            equipment_details_data = EquipmentSerializer(equipment_details).data
+
+            eqp_added_user_details = User.objects.get(id=equipment_report_data['added_by'])
+            eqp_added_user_data = UserSerializer(eqp_added_user_details).data
+
+            equipment_report_data["added_by"] = eqp_added_user_data
+            equipment_report_data['equipment'] = equipment_details_data
+            report['reported_equipment'] = equipment_report_data
+            report["total_reports"] = report["total_reports"]                                                        
+        
+        return Response(all_reports)
+
+
+class ProdReports(APIView):
+    def get(self, request):
+        all_reports = ProductReport.objects.all().values(
+                                                            'reported_product'
+                                                        ).annotate(
+                                                            total_reports=Count('id')
+                                                        ).order_by('-total_reports')
+        for report in all_reports:
+            report_product = ProductReport.objects.filter(reported_product=report['reported_product'])
+            report_product_details = ProductReportSerializer(report_product, many=True).data
+            reported_by = []
+            for report_data in report_product_details:
+                user_report_details = User.objects.get(id=report_data['reported_by'])
+                user_report_data = UserSerializer(user_report_details).data
+                user_report_data["report_category"] = report_data["report_category"]
+                user_report_data["report_description"] = report_data["report_description"]
+                user_report_data["reported_date"] = report_data["reported_date"]
+                reported_by.append(user_report_data)
+                
+
+            report['reported_by'] = reported_by
+
+            product_report_details = ProductsForSale.objects.get(id=report['reported_product'])
+            product_report_data = ProductForSaleSerializer(product_report_details).data
+
+            product_details = Products.objects.get(id=product_report_data['product'])
+            product_details_data = ProductSerializer(product_details).data
+
+            prod_added_user_details = User.objects.get(id=product_report_data['added_by'])
+            prod_added_user_data = UserSerializer(prod_added_user_details).data
+
+            product_report_data["added_by"] = prod_added_user_data
+            product_report_data['product'] = product_details_data
+            report['reported_product'] = product_report_data
+            report["total_reports"] = report["total_reports"]                                                        
+        
+        return Response(all_reports)
+
+
+class ReportUserView(APIView):
+    def get(self, request):
+        all_reports = ReportUser.objects.all().values(
+                                                        'reported_user'
+                                                    ).annotate(
+                                                        total_reports=Count('id')
+                                                    ).order_by('-total_reports')
+        for report in all_reports:
+            report_user = ReportUser.objects.filter(reported_user=report['reported_user'])
+            report_user_details = ReportUserSerializer(report_user, many=True).data
+            reported_by = []
+            for report_data in report_user_details:
+                user_report_details = User.objects.get(id=report_data['reported_by'])
+                user_report_data = UserSerializer(user_report_details).data
+                user_report_data["report_category"] = report_data["report_category"]
+                user_report_data["report_description"] = report_data["report_description"]
+                user_report_data["reported_date"] = report_data["reported_date"]
+                reported_by.append(user_report_data)
+            report['reported_by'] = reported_by
+
+            reported_user_details = User.objects.get(id=report['reported_user'])
+            reported_user_data = UserSerializer(reported_user_details).data
+            report["reported_user"] = reported_user_data
+            report["total_reports"] = report["total_reports"]                                                        
+        
+        return Response(all_reports)
+
+
+class TicketView(APIView):
+    def get(self, request):
+        tickets = Ticket.objects.all()
+        ticket_data = TicketSerializer(tickets, many=True).data
+        for ticket in ticket_data:
+            ticket_to = User.objects.get(id=ticket["ticket_to"])
+            ticket_to_data = UserSerializer(ticket_to).data 
+            profile_for_ticket_to = Profile.objects.get(user=ticket["ticket_to"])
+            profile_data_for_ticket_to = UpdateProfileSerializer(profile_for_ticket_to).data 
+
+            ticket_to_data["profile"] = profile_data_for_ticket_to
+            ticket["ticket_to"] = ticket_to_data
+
+        return Response(ticket_data)
+
+    def post(self, request):
+        serializer = TicketSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UpdateTicketStatus(APIView):
+    def put(self, request, ticket_id):
+        ticket = Ticket.objects.filter(id=ticket_id)
+        if len(ticket) > 0:
+            serializer = TicketSerializer(product, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({})
+
+
+class TicketResponseView(APIView):
+    def get(self, request):
+        ticket_response = TicketResponse.objects.all()
+        ticket_response_data = TicketResponseSerializer(ticket_response, many=True).data
+        for tick_resp in ticket_response_data:
+            ticket = Ticket.objects.get(tick_resp["ticket"])
+            ticket_data = TicketSerializer(ticket).data 
+
+            ticket_to = User.objects.get(id=ticket_data["ticket_to"])
+            ticket_to_data = UserSerializer(ticket_to).data 
+            profile_for_ticket_to = Profile.objects.get(user=ticket_data["ticket_to"])
+            profile_data_for_ticket_to = UpdateProfileSerializer(profile_for_ticket_to).data 
+
+            ticket_to_data["profile"] = profile_data_for_ticket_to
+            ticket_data["ticket_to"] = ticket_to_data
+            tick_resp["ticket"] = ticket_data
+
+            response_by = User.objects.get(id=tick_resp["response_by"])
+            response_by_data = UserSerializer(response_by).data
+
+            profile_for_response_by = Profile.objects.get(user=tick_resp["response_by"])
+            profile_data_for_response_by = UpdateProfileSerializer(profile_for_response_by).data
+            response_by_data["profile"] = profile_data_for_response_by
+            tick_resp["response_by"] = response_by_data
+
+        return Response(ticket_response_data)
+
+    def post(self, request):
+        serializer = TicketResponseSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

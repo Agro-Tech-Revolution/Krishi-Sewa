@@ -2,7 +2,7 @@
 {% load static %}
 {% include bootstrap %}
 {% block title %}
-<title>Reports on Products/title>
+<title>Reports on Products</title>
 
 
 {% endblock title %}
@@ -18,125 +18,133 @@
               </div>
             <div class="card-body">
                 <div class="table-responsive overflow-auto mt-4" style="height: 500px; overflow: scroll">
-                <table class="table table-hover">
+                <table class="table text-center table-hover">
                   <thead class="thead">
                     <tr>
                       <th scope="col">SN</th>
-                      <th scope="col">Reported by</th>
                       <th scope="col">Reported On</th>
-                      <th scope="col">Report Type</th>
-                      <th scope="col">Date & Time</th>
-                      <th scope="col">View Details</th>
+                      <th scope="col">Product Added By</th>
+                      <th scope="col">Total Reports</th>
+                      <th scope="col">Action</th>
+                      <th scope="col" colspan=4>Report Details</th>
+                      
                     </tr>
                   </thead>
                   <tbody>
-                  <tr>
-                      <th scope="row">1</th>
-                      <td>Mark</td>
-                      <td>123450-rice</td>
-                      <td>Fake content</td>
-                      <td>2021/01/02 09:30</td>
-
-                      <td>
-                          <a href="#"
-                               class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#UserReport">
-                            View Details</a>
-                      </td>
-
-                    </tr>
-                  <tr>
-                      <th scope="row">1</th>
-                      <td>Mark</td>
-                      <td>123450-tractor</td>
-                      <td>Fake content</td>
-                      <td>2021/01/02 09:30</td>
-
-                      <td>
-                          <a href="#"
-                               class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#UserReport">
-                            View Details</a>
-                      </td>
-
-                    </tr>
-                  <tr>
-                      <th scope="row">1</th>
-                      <td>Mark</td>
-                      <td>123450-tractor</td>
-                      <td>Fake content</td>
-                      <td>2021/01/02 09:30</td>
-
-                      <td>
-                          <a href="#"
-                               class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#UserReport">
-                            View Details</a>
-                      </td>
-
-                    </tr>
-                  <tr>
-                      <th scope="row">1</th>
-                      <td>Mark</td>
-                      <td>123450-tractor</td>
-                      <td>Fake content</td>
-                      <td>2021/01/02 09:30</td>
-
-                      <td>
-                          <a href="#"
-                               class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#UserReport">
-                            View Details</a>
-                      </td>
-
-                    </tr>
-
-                                  {% for user in users %}
+                    {% for report in report_data %}
                     <tr>
-                      <th scope="row">{{ forllop.counter }}</th>
-                      <td>{{ product.user_name }}</td>
-                      <td>{{ product.user_type }}</td>
-                        <td>
-                            <a href="#"
-                               class="btn btn-secondary btn-sm">
-                            View Details</a>
+                      <th scope="row" >{{forloop.counter}}</th>
+                      <td>{{report.reported_product.product.prod_name}}</td>
+                      <td class="text-capitalize">{{report.reported_product.added_by.first_name}} {{report.reported_product.added_by.last_name}}</td>
+                      <td>{{report.total_reports}}</td>
+                      <td>
+                        <button 
+                          type="button" 
+                          data-toggle="modal" 
+                          data-target="#TicketCreate{{forloop.counter}}" 
+                          class="btn btn-sm btn-primary"
+                        >
+                          Create Ticket
+                        </button>
+                        <!-- Modal -->
+                        <div class="modal fade" id="TicketCreate{{forloop.counter}}" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header font-weight-light">
+                                  <div class="h3">
+                                    Create Ticket
+                                  </div>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                  <form method='POST' action="/admins/create-ticket/product/{{report.reported_product.id}}/{{report.reported_product.added_by.id}}/">
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                      <label for="title" class="col-sm-2 col-form-label">Title</label>
+                                      <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="title" placeholder="Title" name="title">
+                                      </div>
+                                    </div>
+                                    <div class="form-group row">
+                                      <label for="description" class="col-sm-2 col-form-label">Description</label>
+                                    
+                                      <div class="col-sm-10">
+                                        <textarea class="form-control" class="form-control" id="description" rows="3" placeholder="Enter the description" name="description"></textarea>
+                                        
+                                      </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+                                  </form>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <table class="table table-hover">
+                          <tr>
+                            <th scope="col">Reported By</th>
+                            <th scope="col">Report Type</th>
+                            <th scope="col">Date & Time</th>
+                            <th scope="col">View Details</th>
+                          </tr>
+                          {% for users in report.reported_by %}
+                            <tr>
+                              <td class="text-capitalize">{{users.first_name}} {{users.last_name}}</td>
+                              <td>{{users.report_category}}</td>
+                              <td>{{users.reported_date}}</td>
+                              <td>
+                                  <a href="#"
+                                      class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#UserReport{{report.reported_product.id}}{{forloop.counter}}">
+                                    View Details</a>
+                              </td>
+                            </tr>
+                            <!-- Modal -->
+                            <div class="modal fade" id="UserReport{{report.reported_product.id}}{{forloop.counter}}" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header font-weight-light">
+                                      Reported by : <span class="text-capitalize">{{users.first_name}} {{users.last_name}}</span>
 
-                         </td>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <div class="row">
+                                          <div class="col-md-4 ml-auto font-weight-bold h3">{{report.reported_product.product.prod_name}}</div>
+                                          <div class="col-md-4 font-weight-light text-capitalize">Report Type: {{users.report_category}}</div>
 
+                                      </div>
+                                      <hr>
+                                      <div>
+                                        {{users.report_description}}
+                                      </div>
+                                      <br>
+                                    <div class="col-md-4 ml-auto font-weight-light">{{users.reported_date}}</div>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Resolved</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          {% endfor %}
+                        </table>
+                      </td>
+                      
                     </tr>
                   {% endfor %}
                   </tbody>
                 </table>
                 </div>
 
-                <!-- Modal -->
-                <div class="modal fade" id="UserReport" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                    <div class="modal-content">
-                      <div class="modal-header font-weight-light">
-                          Reported by : Akash Karmacharya
-
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div class="modal-body">
-                          <div class="row">
-                              <div class="col-md-4 ml-auto font-weight-bold">12345-tractor</div>
-                              <div class="col-md-4 font-weight-light">Report Type: Fake Content</div>
-
-                            </div>
-                          <br>
-
-                        Aenean porttitor libero nec felis sagittis, dapibus dapibus magna pellentesque. Sed cursus dui sed purus mollis pellentesque.
-                          Curabitur convallis, orci ut venenatis tristique, lacus arcu auctor magna, sed mollis lectus lorem at ante.
-
-                        <br>
-                        <div class="col-md-4 ml-auto font-weight-light">2021/01/09, 09:20</div>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Resolved</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
             </div>
 
         </div>

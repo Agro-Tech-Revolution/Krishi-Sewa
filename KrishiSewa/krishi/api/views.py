@@ -400,10 +400,12 @@ class ProductReportView(APIView):
             product_details = Products.objects.get(id=product_report_data['product'])
             product_details_data = ProductSerializer(product_details).data
 
+            total_report_counts = len(product_report_data["product_reports"])
+
             product_report_data['product'] = product_details_data
 
             report['reported_product'] = product_report_data
-
+            report["total_reports"] = total_report_counts
         return Response(report_data)
     
     def post(self, request):
@@ -1014,9 +1016,28 @@ class EquipmentReportView(APIView):
     # permission_classes = [IsAuthenticated]
     # authentication_classes = (TokenAuthentication,)
     def get(self, request):
-        reports = EquipmentReport.objects.all()
-        serializer = EquipmentReportSerializer(reports, many=True)
-        return Response(serializer.data)
+        reports_details = EquipmentReport.objects.all()
+        report_data = EquipmentReportSerializer(reports_details, many=True).data
+
+        for report in report_data:
+            user_report_details = User.objects.get(id=report['reported_by'])
+            user_report_data = UserSerializer(user_report_details).data
+            report['reported_by'] = user_report_data
+
+            equipment_report_details = EquipmentToDisplay.objects.get(id=report['reported_equipment'])
+            equipment_report_data = EquipmentToDisplaySerializer(equipment_report_details).data
+
+            equipment_details = Equipment.objects.get(id=equipment_report_data['equipment'])
+            equipment_details_data = EquipmentSerializer(equipment_details).data
+
+            total_report_counts = len(equipment_report_data["reports"])
+
+            equipment_report_data['equipment'] = equipment_details_data
+
+            report['reported_equipment'] = equipment_report_data
+            report["total_reports"] = total_report_counts
+
+        return Response(report_data)
     
     def post(self, request):
         serializer = EquipmentReportSerializer(data=request.data)

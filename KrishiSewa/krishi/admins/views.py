@@ -267,19 +267,34 @@ def activate_user_account(request, user_id):
 @login_required
 @admin_only
 def report_user(request):
-    return render(request, 'admins/reportUsers.html')
+    report_obj = ReportUserView()
+    report_data = report_obj.get(request).data
+    context = {
+        "report_data": report_data
+    }
+    return render(request, 'admins/reportUsers.html', context)
 
 
 @login_required
 @admin_only
 def report_equipment(request):
-    return render(request, 'admins/reportEquipment.html')
+    report_obj = EqpReports()
+    report_data = report_obj.get(request).data
+    context = {
+        "report_data": report_data
+    }
+    return render(request, 'admins/reportEquipment.html', context)
 
 
 @login_required
 @admin_only
 def report_product(request):
-    return render(request, 'admins/reportProduct.html')
+    report_obj = ProdReports()
+    report_data = report_obj.get(request).data
+    context = {
+        "report_data": report_data
+    }
+    return render(request, 'admins/reportProduct.html', context)
 
 
 @login_required
@@ -348,3 +363,38 @@ def buyers_list(request):
         "all_buyers": buyer_data
     }
     return render(request, 'admins/buyers/buyers_list.html', context)
+
+
+@login_required
+@admin_only
+def create_ticket(request, category, link_id, user_id):
+    if request.method == 'POST':
+        data = request.POST
+        title = data["title"]
+        description = data["description"]
+        link = "/"
+        if category == 'equipment':
+            link = '/vendors/myEquipments/'+str(link_id)
+        elif category == 'product':
+            link = '/farmers/myproducts/'+str(link_id)
+        elif category == 'user':
+            user_type_obj = GetProfileType()
+            user_type_data = user_type_obj.get(request, user_id).data
+            user_type = user_type_data["user_type"]
+            link = '/' + user_type.lower() + '/profile/'+str(user_id)
+        
+        request.data = {
+            "title": title,
+            "description": description,
+            "link": link,
+            "category": category.capitalize(),
+            "ticket_to": user_id
+        }
+
+        ticket_obj = TicketView()
+        ticket_response = ticket_obj.post(request)
+        if ticket_response.data.get('id') != None:
+            print('Ticket Created Successfully')
+        else:
+            print(ticket_response.data)
+    return redirect('/admins/report'+category.capitalize())

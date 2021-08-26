@@ -111,7 +111,7 @@
                 <!-- COMMENT 1 - START -->
                 {% for comment in product_data.product_comments %}
                 <div class="media ml-2">
-                    <a href=""><img class="img-fluid" src="/{{comment.comment_by.profile.profile_pic}}" alt="" style="height: 2rem; border-radius: 50%;"></a>
+                    <a href=""><img class="img-fluid" src="/{{comment.comment_by.profile.profile_pic}}" alt="" style="height: 2rem; width: 2rem; border-radius: 50%;"></a>
                     <div class="media-body">
                         <h6 class="media-heading ml-3">
                           <b class="text-capitalize">{{comment.comment_by.first_name}} {{comment.comment_by.last_name}}</b> 

@@ -18,13 +18,17 @@ urlpatterns = [
     path('activateUser/<int:user_id>', activate_user_account),
 
     path('reportUser/', report_user),
-    path('reportEquip/', report_equipment),
+    path('reportEquipment/', report_equipment),
     path('reportProduct/', report_product),
     path('farmers/', famers),
     path('buyers/', buyers),
     path('vendors/', vendors),
     path('farmers-list', farmer_list),
     path('vendors-list', vendors_list),
-    path('buyers-list', buyers_list)
+    path('buyers-list', buyers_list),
+
+    path('create-ticket/<str:category>/<int:link_id>/<int:user_id>/', create_ticket),
+
+
 
 ]
