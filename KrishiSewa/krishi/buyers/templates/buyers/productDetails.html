@@ -1,4 +1,4 @@
-{% extends 'layout-farmers.html' %}
+{% extends 'layout-buyers.html' %}
 
 {% load static %}
 
@@ -9,7 +9,7 @@
 {% endblock title %}
 
 {% block content %}
-
+{% if not reported %}
 <div class="container">
     <div class="row mt-2" >
         <div class="col">
@@ -243,5 +243,8 @@
     }
 
 </script>
+{% else %}
+<h1 class="text-center">No Page Found</h1>
+{% endif %}
 
 {% endblock content %}

@@ -1,0 +1,47 @@
+{% load static %}
+<nav id="sidebar">
+    <div class="sidebar-header">
+        <img src="{% static 'farmers/images/logo1.png' %}" alt="logo">
+    </div>
+
+    <ul class="list-unstyled components">
+        
+        <li>
+            <a href="#productSubMenu" data-toggle="collapse" aria-expanded="false" class="soil-test">
+                Product<i class="fas fa-chevron-down drop-down"></i>
+            </a>
+            <ul class="collapse list-unstyled" id="productSubMenu">
+                <li><a href="/buyers/allProducts/">Buy Product</a></li>
+                <li><a href="/buyers/prodBuyRequests">Product Requests</a></li>
+                <li><a href="/buyers/approvedProducts">Products Bought</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#equipmentSubMenu" data-toggle="collapse" aria-expanded="false" class="soil-test">
+                Equipment<i class="fas fa-chevron-down drop-down"></i>
+            </a>
+            <ul class="collapse list-unstyled" id="equipmentSubMenu">
+                <li><a href="/buyers/allEquipments/">Buy Equipment</a></li>
+                <li><a href="/buyers/eqpBuyRequests">Bought Requests</a></li>
+                <li><a href="/buyers/eqpRentRequests">Rented Requests</a></li>
+                <li><a href="/buyers/equipments/bought">Paid Equipments</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="/buyers/profile/{{request.user.id}}">Profile</a>
+        </li>
+        <li>
+            <a href="/buyers/view-ticket/">Ticket</a>
+        </li>
+        <li>
+            <a href="#">Feedback</a>
+        </li>
+        
+        
+    </ul>
+
+    <ul class="list-unstyled CTAs">
+        <li><a href="" class="download">Instruction</a></li>
+        <li><a href="/logout" class="article">Logout</a></li>
+    </ul>
+</nav>

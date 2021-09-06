@@ -11,9 +11,8 @@
                 Soil Testing<i class="fas fa-chevron-down drop-down"></i>
             </a>
             <ul class="collapse list-unstyled" id="homeSubmenu">
-                <li><a href="#">NPK Testing</a></li>
-                <li><a href="#">Image Testing</a></li>
-                
+                <li><a href="/farmers/npktest">NPK Testing</a></li>
+                <li><a href="/farmers/imagetest">Image Testing</a></li>
             </ul>
         </li>
         <li>
@@ -26,18 +25,62 @@
             <a href="#">Write Notes</a>
         </li>
         <li>
-            <a href="#">Something</a>
+            <a href="#productSubMenu" data-toggle="collapse" aria-expanded="false" class="soil-test">
+                Product<i class="fas fa-chevron-down drop-down"></i>
+            </a>
+            <ul class="collapse list-unstyled" id="productSubMenu">
+                <li><a href="/farmers/addproduct/">Add Product For Sale</a></li>
+                <li><a href="/farmers/myproducts/">My Products</a></li>
+                <li><a href="/farmers/productRequests">Product Requests</a></li>
+                <li><a href="/farmers/mySales">My Sales</a></li>
+            </ul>
         </li>
         <li>
-            <a href="#">Something</a>
+            <a href="#equipmentSubMenu" data-toggle="collapse" aria-expanded="false" class="soil-test">
+                Equipment<i class="fas fa-chevron-down drop-down"></i>
+            </a>
+            <ul class="collapse list-unstyled" id="equipmentSubMenu">
+                <li><a href="/farmers/allEquipments/">Buy Equipment</a></li>
+                <li><a href="/farmers/eqpBuyRequests">Bought Requests</a></li>
+                <li><a href="/farmers/eqpRentRequests">Rented Requests</a></li>
+                <li><a href="/farmers/equipments/bought">Paid Equipments</a></li>
+            </ul>
         </li>
         <li>
-            <a href="#">Something</a>
+            <a href="/farmers/addProduction">Production</a>
         </li>
+        <li>
+            <a href="/farmers/myProduction">My Production</a>
+        </li>
+        <li>
+            <a href="#expenseSubMenu" data-toggle="collapse" aria-expanded="false" class="soil-test">
+                Expenses<i class="fas fa-chevron-down drop-down"></i>
+            </a>
+            <ul class="collapse list-unstyled" id="expenseSubMenu">
+                <li><a href="/farmers/addHomeExpenses">Add Home Expenses</a></li>
+                <li><a href="/farmers/addExpenses">Add Normal Expenses</a></li>
+                <li><a href="/farmers/myHomeExpenses">My Home Expenses</a></li>
+                <li><a href="/farmers/myExpenses">My Normal Expenses</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="/farmers/myStock">Stock</a>
+        </li>
+        <li>
+            <a href="/farmers/detailReport">Profit Loss Report</a>
+        </li>
+        <li>
+            <a href="/farmers/profile/{{request.user.id}}">Profile</a>
+        </li>
+        <li>
+            <a href="/farmers/view-ticket/">Ticket</a>
+        </li>
+        
+        
     </ul>
 
     <ul class="list-unstyled CTAs">
         <li><a href="" class="download">Instruction</a></li>
-        <li><a href="" class="article">Logout</a></li>
+        <li><a href="/logout" class="article">Logout</a></li>
     </ul>
 </nav>

@@ -257,9 +257,6 @@ def add_production(request):
     categories = ['Cereals', 'Pulses', 'Vegetables', 'Fruits', 'Nuts', 'Oilseeds',
                   'Sugars and Starches', 'Fibres', 'Beverages', 'Narcotics',
                   'Spices', 'Condiments', 'Others']
-    # product_get_endpoint = '/api/products/'
-    # product_get_url = base_url + product_get_endpoint
-    # product_get_response = requests.get(product_get_url, headers=headers)
     context = {
         "products": product_get_response.data,
         "categories": categories
@@ -301,18 +298,18 @@ def edit_production(request, id):
             return redirect('/farmers/myProduction')
 
     production_get_response = production_obj.get(request, id)
-    # production_get_endpoint = '/api/products/production/' + str(id)
-    # production_get_url = base_url + production_get_endpoint
-    # production_get_response = requests.get(production_get_url, headers=headers)
 
     product_get_obj = ProductsAPIView()
     product_get_response = product_get_obj.get(request)
-    # product_get_endpoint = '/api/products/'
-    # product_get_url = base_url + product_get_endpoint
-    # product_get_response = requests.get(product_get_url, headers=headers)
+
+    categories = ['Cereals', 'Pulses', 'Vegetables', 'Fruits', 'Nuts', 'Oilseeds',
+                  'Sugars and Starches', 'Fibres', 'Beverages', 'Narcotics',
+                  'Spices', 'Condiments', 'Others']
+
     context = {
         "production_data": production_get_response.data,
         "products": product_get_response.data,
+        "categories": categories
     }
     return render(request, 'farmers/editProduction.html', context)
 
@@ -331,115 +328,6 @@ def delete_production(request, id):
         print('Deleted Successfully')
 
     return redirect('/farmers/myProduction')
-
-
-# @login_required
-# @farmers_only
-# def sell_product(request, id):
-#     headers = {'Authorization': 'Token ' + request.session['token']}
-#     if request.method == 'POST':
-#         data = request.POST
-#         sold_product = data["sold_product"]
-#         sold_by = request.user.id
-#         sold_to = data["sold_to"]
-#         quantity_sold = data["quantity_sold"]
-#         sold_price = data["sold_price"]
-#         remarks = data["remarks"]
-
-#         sold_data = {
-#             "sold_product": sold_product,
-#             "sold_by": sold_by,
-#             "sold_to": sold_to,
-#             "quantity_sold": quantity_sold,
-#             "sold_price": sold_price,
-#             "remarks": remarks,
-#         }
-
-#         sell_product_endpoint = '/api/sellProducts/'
-#         sell_product_url = base_url + sell_product_endpoint
-#         sell_product_response = requests.post(sell_product_url, data=sold_data, headers=headers)
-
-#         if sell_product_response.json().get('id') != None:
-#             print('Product sold successfully')
-#             return redirect('/farmers/myProducts')
-#         else:
-#             error = sell_product_response.json()
-#             print(error)
-#             return redirect('/farmers/myProducts/')
-
-#     product_get_endpoint = '/api/productsOnSale/' + str(id)
-#     product_get_url = base_url + product_get_endpoint
-#     product_get_response = requests.get(product_get_url, headers=headers)
-
-#     context = {
-#         'product_detail': product_get_response.json(),
-#     }
-
-#     return render(request, 'farmers/sellProducts.html', context)
-
-
-# @login_required
-# @farmers_only
-# def edit_sales(request, id):
-#     headers = {'Authorization': 'Token ' + request.session['token']}
-#     if request.method == 'POST':
-#         data = request.POST
-#         sold_product = data["sold_product"]
-#         sold_by = request.user.id
-#         sold_to = data["sold_to"]
-#         quantity_sold = data["quantity_sold"]
-#         sold_price = data["sold_price"]
-#         remarks = data["remarks"]
-
-#         sold_data = {
-#             "sold_product": sold_product,
-#             "sold_by": sold_by,
-#             "sold_to": sold_to,
-#             "quantity_sold": quantity_sold,
-#             "sold_price": sold_price,
-#             "remarks": remarks,
-#         }
-
-#         edit_sell_product_endpoint = '/api/sellProducts/' + str(id)
-#         edit_sell_product_url = base_url + edit_sell_product_endpoint
-#         edit_sell_product_response = requests.put(edit_sell_product_url, data=sold_data, headers=headers)
-
-#         if edit_sell_product_response.json().get('id') != None:
-#             print('Product sold successfully')
-#             return redirect('/farmers/mySales')
-#         else:
-#             error = edit_sell_product_response.json()
-#             print(error)
-#             return redirect('/farmers/mySales')
-
-#     sales_get_endpoint = '/api/sellProducts/' + str(id)
-#     sales_get_url = base_url + sales_get_endpoint
-#     sales_get_response = requests.get(sales_get_url, headers=headers)
-
-#     product_get_endpoint = '/api/productsOnSale/' + str(sales_get_response.json()["sold_product"]["id"])
-#     product_get_url = base_url + product_get_endpoint
-#     product_get_response = requests.get(product_get_url, headers=headers)
-
-#     context = {
-#         "sales_data": sales_get_response.json(),
-#         'product_detail': product_get_response.json(),
-#     }
-
-#     return render(request, 'farmers/editSales.html', context)
-
-
-# @login_required
-# @farmers_only
-# def delete_sales(request, id):
-#     headers = {'Authorization': 'Token ' + request.session['token']}
-#     sales_del_endpoint = '/api/sellProducts/' + str(id)
-#     sales_del_url = base_url + sales_del_endpoint
-#     sales_del_response = requests.delete(sales_del_url, headers=headers)
-
-#     if Response(sales_del_response).status_code == 200:
-#         print('Deleted Successfully')
-
-#     return redirect('/farmers/mySales')
 
 
 @login_required
@@ -750,7 +638,7 @@ def profit_loss_report(request):
         "net_amount": abs(report_response.data["NetAmount"])
     }
 
-    return render(request, 'farmers/details.html', context)
+    return render(request, 'farmers/profit_loss.html', context)
 
 
 """
@@ -962,11 +850,18 @@ def all_equipments(request):
     headers = {'Authorization': 'Token ' + request.session['token']}
     eqp_display_obj = EquipmentsToDisplayView()
     all_equipment_response = eqp_display_obj.get(request)
-    # all_equipment_endpoint = '/api/equipmentToDisplay/'
-    # all_equipment_url = base_url + all_equipment_endpoint
-    # all_equipment_response = requests.get(all_equipment_url, headers=headers).json()
+    eqp_data = all_equipment_response.data
+    eqp_reported = []
+    for eqp in eqp_data:
+        for eqp_reports in eqp["reports"]:
+            if eqp_reports["reported_by"]["id"] == request.user.id:
+                eqp_reported.append(eqp)
+    
+    for eqp in eqp_reported:
+        eqp_data.remove(eqp)
+
     context = {
-        "all_equipments": all_equipment_response.data,
+        "all_equipments": eqp_data,
         "user_type": "farmers",
     }
 
@@ -993,13 +888,15 @@ def equipment_details(request, eqp_id):
     equipment_detail_response = equipment_detail_obj.get(request, eqp_id)
 
     report_category = ["False Information", "Fake Equipments", "Misinformation",  "Something Else"]
-
-    eqp_report_data = equipment_detail_response.data.get('reports') 
-    reported = False
-    for report in eqp_report_data:
-        if report["reported_by"]["id"] == request.user.id:
-            reported = True
-            break
+    if len(equipment_detail_response.data) > 0:
+        eqp_report_data = equipment_detail_response.data.get('reports') 
+        reported = False
+        for report in eqp_report_data:
+            if report["reported_by"]["id"] == request.user.id:
+                reported = True
+                break
+    else:
+        reported = True
 
     context = {
         "equipment_detail": equipment_detail_response.data,
@@ -1274,5 +1171,16 @@ def delete_eqp_rent_requests(request, req_id):
         print("Sorry Cannot perform the request")
     return redirect('/farmers/eqpRentRequests')
 
+
+@login_required
+@farmers_only
+def view_ticket(request):
+    my_ticket_obj = MyTickets()
+    my_ticket_data = my_ticket_obj.get(request, request.user.id).data
+    
+    context = {
+        "all_tickets": my_ticket_data
+    }
+    return render(request, 'farmers/viewTicket.html', context)
 
 

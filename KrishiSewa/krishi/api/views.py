@@ -236,6 +236,8 @@ class NoteDetails(APIView):
 
 
 class ProductsForSaleView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = (TokenAuthentication,)
     def get(self, request):
         products_for_sale = ProductsForSale.objects.filter(to_display=True)
         product_data = get_product_details(products_for_sale)
@@ -276,7 +278,7 @@ class ProductsForSaleDetails(APIView):
                 product_data = modify_product_details_data(product_for_sale_data)
                 return Response(product_data, status=status.HTTP_200_OK)
             else:
-                return Response(status=status.HTTP_204_NO_CONTENT)
+                return Response({}, status=status.HTTP_204_NO_CONTENT)
         else:
             return Response({})
     
@@ -408,10 +410,7 @@ class ProductReportView(APIView):
             report["total_reports"] = total_report_counts
         return Response(report_data)
     
-    def post(self, request):
-        product_id = request.data['reported_product']
-        product = Products.objects.get(id=product_id)
-        
+    def post(self, request):        
         serializer = ProductReportSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -536,21 +535,24 @@ class ProductionDetails(APIView):
                                                                         product_id=prev_production_product_id
                                                                         )
                     stock_of_prev_to_update = product_stock_to_update[0].stock - prev_production_qty
-                    product_stock_to_update.update(stock=stock_of_prev_to_update)
-        
-                    # finding new product_stock object to update its stock
-                    product_stock = ProductStock.objects.filter(farmer_id=farmer_id, product_id=product_id)
-                    if len(product_stock) != 0:    
-                        # if the object exists, update its value            
-                        updated_stock = product_stock[0].stock + new_production_qty
-                        product_stock.update(stock=updated_stock)
+                    if stock_of_prev_to_update >= 0:
+                        product_stock_to_update.update(stock=stock_of_prev_to_update)
+            
+                        # finding new product_stock object to update its stock
+                        product_stock = ProductStock.objects.filter(farmer_id=farmer_id, product_id=product_id)
+                        if len(product_stock) != 0:    
+                            # if the object exists, update its value            
+                            updated_stock = product_stock[0].stock + new_production_qty
+                            product_stock.update(stock=updated_stock)
+                        else:
+                            # if the object does not exist, create new stock object
+                            farmer = User.objects.get(id=farmer_id)
+                            product = Products.objects.get(id=product_id)
+                            ProductStock.objects.create(farmer_id=farmer,
+                                                        product_id=product,
+                                                        stock=new_production_qty)
                     else:
-                        # if the object does not exist, create new stock object
-                        farmer = User.objects.get(id=farmer_id)
-                        product = Products.objects.get(id=product_id)
-                        ProductStock.objects.create(farmer_id=farmer,
-                                                    product_id=product,
-                                                    stock=new_production_qty)
+                        return Response({"Bad Request": "The production of previous product is already used. So cannot update the value."})
                 serializer.save()
                 return Response(serializer.data)   
 
@@ -966,7 +968,7 @@ class EquipmentsToDisplayDetails(APIView):
                 equipment_data = modify_equipment_detail_data(equipment_to_modify)
                 return Response(equipment_data)
             else: 
-                return Response(status=status.HTTP_204_NO_CONTENT)
+                return Response({}, status=status.HTTP_204_NO_CONTENT)
         else:
             return Response({})
 

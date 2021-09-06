@@ -33,5 +33,7 @@ urlpatterns = [
 
     path('mysales', my_sales),
     path('mysales/<str:action>', my_sales),
+
+    path('view-ticket/', view_ticket),
     
 ]

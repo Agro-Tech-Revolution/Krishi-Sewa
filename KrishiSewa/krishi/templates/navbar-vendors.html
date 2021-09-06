@@ -1,0 +1,44 @@
+{% load static %}
+<nav id="sidebar">
+    <div class="sidebar-header">
+        <img src="{% static 'farmers/images/logo1.png' %}" alt="logo">
+    </div>
+
+    <ul class="list-unstyled components">
+        
+        <li>
+            <a href="/vendors/addEquipments">Add Equipment For Sale</a>
+        </li>
+        <li>
+            <a href="/vendors/myEquipments">My Equipments</a>
+        </li>
+        <li>
+            <a href="#equipmentSubMenu" data-toggle="collapse" aria-expanded="false" class="soil-test">
+                Equipment Requests<i class="fas fa-chevron-down drop-down"></i>
+            </a>
+            <ul class="collapse list-unstyled" id="equipmentSubMenu">
+                
+                <li><a href="/vendors/eqpBuyRequests">Equipment Buy Requests</a></li>
+                <li><a href="/vendors/eqpRentRequests">Equipment Rent Requests</a></li>
+                <li><a href="/vendors/mysales">My Sales</a></li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="/vendors/profile/{{request.user.id}}">Profile</a>
+        </li>
+        <li>
+            <a href="/vendors/view-ticket/">Ticket</a>
+        </li>
+        <li>
+            <a href="#">Feedback</a>
+        </li>
+        
+        
+    </ul>
+
+    <ul class="list-unstyled CTAs">
+        <li><a href="" class="download">Instruction</a></li>
+        <li><a href="/logout" class="article">Logout</a></li>
+    </ul>
+</nav>

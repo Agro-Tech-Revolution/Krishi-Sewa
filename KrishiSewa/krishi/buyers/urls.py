@@ -29,8 +29,7 @@ urlpatterns = [
 
     path('eqpBuyRequests', equipment_bought_requests),
     path('eqpBuyRequests/<str:action>', equipment_bought_requests),
-    path('eqpuipments/<str:action>', approved_eqp_requests),
-
+    
     path('eqpRentRequests', equipment_rented_requests),
     path('eqpRentRequests/<str:action>', equipment_rented_requests),
     path('equipments/<str:action>', approved_eqp_requests),
@@ -43,6 +42,8 @@ urlpatterns = [
 
     path('profile/<int:user_id>', profile),
     path('profile/<int:user_id>/edit', edit_profile),
+
+    path('view-ticket/', view_ticket),
 
 
     # path('viewEquipments/editComment', edit_eqp_comment),

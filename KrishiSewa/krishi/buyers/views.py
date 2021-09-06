@@ -3,6 +3,7 @@ from accounts.auth import *
 from django.contrib.auth.decorators import login_required
 from farmers.utils import *
 from vendors.utils import *
+from admins.api.views import *
 
 # Create your views here.
 @login_required
@@ -22,9 +23,19 @@ def report_form(request):
 def all_products(request):
     prod_display_obj = ProductsForSaleView()
     all_product_response = prod_display_obj.get(request)
+    prod_data = all_product_response.data
+    prod_reported = []
+    for prod in prod_data:
+        print(prod.get('id'))
+        for prod_reports in prod["product_reports"]:
+            if prod_reports["reported_by"]["id"] == request.user.id:
+                prod_reported.append(prod)
+
+    for prod in prod_reported:
+        prod_data.remove(prod)
 
     context = {
-        "all_products": all_product_response.data,
+        "all_products": prod_data,
         "user_type": 'buyers',
     }
 
@@ -50,13 +61,15 @@ def product_details(request, prod_id):
     product_detail_response = product_detail_obj.get(request, prod_id)
     
     report_category = ["False Information", "Fake Products", "Misinformation",  "Something Else"]
-
-    prod_report_data = product_detail_response.data.get('product_reports') 
-    reported = False
-    for report in prod_report_data:
-        if report["reported_by"]["id"] == request.user.id:
-            reported = True
-            break
+    if len(product_detail_response.data) > 0:
+        prod_report_data = product_detail_response.data.get('product_reports') 
+        reported = False
+        for report in prod_report_data:
+            if report["reported_by"]["id"] == request.user.id:
+                reported = True
+                break
+    else:
+        reported = True
 
     context = {
         "product_detail": product_detail_response.data,
@@ -242,9 +255,18 @@ def all_equipments(request):
     headers = {'Authorization': 'Token ' + request.session['token']}
     eqp_display_obj = EquipmentsToDisplayView()
     all_equipment_response = eqp_display_obj.get(request)
+    eqp_data = all_equipment_response.data
+    eqp_reported = []
+    for eqp in eqp_data:
+        for eqp_reports in eqp["reports"]:
+            if eqp_reports["reported_by"]["id"] == request.user.id:
+                eqp_reported.append(eqp)
+    
+    for eqp in eqp_reported:
+        eqp_data.remove(eqp)
 
     context = {
-        "all_equipments": all_equipment_response.data,
+        "all_equipments": eqp_data,
         "user_type": 'buyers',
     }
 
@@ -271,12 +293,16 @@ def equipment_details(request, eqp_id):
 
     report_category = ["False Information", "Fake Equipments", "Misinformation",  "Something Else"]
 
-    eqp_report_data = equipment_detail_response.data.get('reports') 
-    reported = False
-    for report in eqp_report_data:
-        if report["reported_by"]["id"] == request.user.id:
-            reported = True
-            break
+    
+    if len(equipment_detail_response.data) > 0:
+        eqp_report_data = equipment_detail_response.data.get('reports') 
+        reported = False
+        for report in eqp_report_data:
+            if report["reported_by"]["id"] == request.user.id:
+                reported = True
+                break
+    else:
+        reported = True
 
     context = {
         "equipment_detail": equipment_detail_response.data,
@@ -516,4 +542,16 @@ def edit_profile(request, user_id):
         'user_data': user_detail_response
     }
     return render(request, 'buyers/editProfile.html', context)
+
+
+@login_required
+@buyers_only
+def view_ticket(request):
+    my_ticket_obj = MyTickets()
+    my_ticket_data = my_ticket_obj.get(request, request.user.id).data
+    
+    context = {
+        "all_tickets": my_ticket_data
+    }
+    return render(request, 'buyers/viewTicket.html', context)
 

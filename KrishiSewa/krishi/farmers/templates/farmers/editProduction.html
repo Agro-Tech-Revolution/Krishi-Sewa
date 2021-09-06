@@ -1,57 +1,101 @@
 {% extends 'layout-farmers.html' %}
+{% load static %}
 
 {% block title %}
 <title>Edit Production</title>
+<link href="{% static 'farmers/css/editproduct.css' %}" rel="stylesheet">
 {% endblock title %}
 
 {% block content %}
+    <div class="page-wrapper bg-gra-02 p-t-130 p-b-100 font-poppins mt-5">
+        <div class="wrapper wrapper--w680">
+            <div class="card card-4" style="width: 100%;">
+                <div class="card-body">
+                    <p class="title">Edit Production</p>
+                    <form method="POST">
+                      {% csrf_token %}
+                        <div class="">
+                            <div class="input-group-icon">
+                                <select class="input--style-4 selectProduct" name="product_type" id="product_category" onchange="changeName()">
+                                {% for type in categories %}
+                                {% if type == production_data.product_id.prod_category %}
+                                    <option value="{{type}}" selected>{{type}}</option>
+                                {% else %}
+                                    <option value="{{type}}">{{type}}</option>
+                                {% endif %}
+                                {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="input-group-icon">
+                                <select class="input--style-4 selectProduct" name="product_id" id="productname">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="input-group-icon">
+                                <label>Production Quantity</label>
+                                <input class="input--style-4" type="number" required name="production_qty" required placeholder="Production Quantity" value="{{production_data.production_qty}}">
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="input-group-icon">
+                                <label>Production Area</label>
+                                <input class="input--style-4" type="text" required name="area" required placeholder="Area" value="{{production_data.area}}">
+                            </div>
+                        </div>
+                                
+                        <div class="btn-block">
+                            <button type="submit">Submit</button>
+                            
 
- <div class="container mt-4" >
-   <div class="row ">
-    <div class="col-md-3"></div>
-      <div class="col-md-6">
-        <h2 class="text-success text-center mb-4">Edit Production</h2>
-
-
-		<form method="POST">
-        {% csrf_token %}
-            <div class="border border-success rounded w-75 p-4 mx-auto">
-		    <div class="form-group mt-2 mb-3" >
-		    	<label class="form-label">Product Name:</label>
-                <div class="input-group mb-3">
-                    <select class="custom-select" name="product_id">
-                    {% for product in products %}
-                        {% if product.id == production_data.product_id.id %}
-                            <option value="{{product.id}}" selected>{{product.prod_name}}</option>
-                        {% else %}
-                            <option value="{{product.id}}">{{product.prod_name}}</option>
-                        {% endif %}
-                    {% endfor %}
-                    </select>
-		  	</div>
-		  	<div class="form-group mb-2">
-		    	<label  class="form-label">Production Quantity:</label>
-		    	<input type="number" class="form-control" required="" name="production_qty" value="{{production_data.production_qty}}">
-		  	</div>
-		    <div class="form-group mb-2">
-		    	<label  class="form-label">Area:</label>
-		    	<input type="text" class="form-control " required="" name="area" value="{{production_data.area}}">
-		  	</div>
-        <div class="text-center">
-            <div class="d-inline-block mt-3">
-              <button type="submit" class="btn btn-success text-center">Submit</button>
-            </div>
-            <div class="d-inline-block mt-3">
-              <a href="/farmers/myProduction" class="btn btn-danger text-center">Cancel</a>
+                        </div>
+                        <div class="btn-block">
+                          <a href="/farmers/myProduction" class="btn btn-danger text-center" style="padding:10px; border-radius:25px; width:150px;">
+                            Cancel
+                          </a>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-            </div>
-            </div>
-		</form>
-        </div>
-
-      </div>
     </div>
-  </div>
-</div>
+    {{products|json_script:"products"}}
+    {{production_data|json_script:"production_data"}}
+    <script>
+        const product = JSON.parse(document.getElementById('products').textContent);
+        const production_data = JSON.parse(document.getElementById('production_data').textContent);
+        const prod_names = document.getElementById('productname');
+        
+        var category = document.getElementById('product_category');
+        var htmlContent = '';
+        addNames(category.value);
+        prod_names.innerHTML = htmlContent;
+        
+
+        function addNames(prod_type) {
+            for(var i=0; i<product.length; i++) {
+                if(product[i].prod_category == prod_type) {
+                    var prod_name = product[i].prod_name;
+                    var prod_id = product[i].id;
+                    if(prod_name == production_data.product_id.prod_name) {
+                        htmlContent += '<option value="' + prod_id +'" selected>' + prod_name + '</option>';
+                    } else {
+                        htmlContent += '<option value="' + prod_id +'">' + prod_name + '</option>';
+                    }
+                  
+                }
+            }
+
+        }
+
+        function changeName() {
+            var product_category = document.getElementById('product_category');
+            htmlContent='';
+            addNames(product_category.value);
+            prod_names.innerHTML = htmlContent;
+        }
+
+    </script>
 {% endblock content %}

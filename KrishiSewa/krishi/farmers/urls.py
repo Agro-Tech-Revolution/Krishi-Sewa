@@ -61,16 +61,17 @@ urlpatterns = [
 
     path('eqpBuyRequests', equipment_bought_requests),
     path('eqpBuyRequests/<str:action>', equipment_bought_requests),
-    path('eqpuipments/<str:action>', approved_eqp_requests),
+    path('equipments/<str:action>', approved_eqp_requests),
 
     path('eqpRentRequests', equipment_rented_requests),
     path('eqpRentRequests/<str:action>', equipment_rented_requests),
-    path('equipments/<str:action>', approved_eqp_requests),
-
+    
     path('editBuyRequest/<int:req_id>', edit_eqp_buy_requests),
     path('deleteBuyRequest/<int:req_id>', delete_eqp_buy_requests),
 
     path('editRentRequest/<int:req_id>', edit_eqp_rent_requests),
     path('deleteRentRequest/<int:req_id>', delete_eqp_rent_requests),
+
+    path('view-ticket/', view_ticket),
 
 ]

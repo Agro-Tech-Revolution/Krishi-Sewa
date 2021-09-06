@@ -22,6 +22,10 @@ urlpatterns = [
     path('user-reports/', ReportUserView.as_view()),
 
     path('tickets/', TicketView.as_view()),
+    path('my-tickets/<int:user_id>', MyTickets.as_view()),    
+    path('updateStatus/<int:ticket_id>', MyTickets.as_view()),    
+
+    path('ticket-response/', TicketResponseView.as_view()),   
 
     # path('vendors-sales', VendorEqpSalesView.as_view()),
 

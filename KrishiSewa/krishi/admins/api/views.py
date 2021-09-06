@@ -14,6 +14,7 @@ from vendors.serializers import *
 from api.serializers import *
 from django.db.models import Sum, Q, Count
 import os
+from admins.api.utils import *
 
 
 class DashboardView(APIView):
@@ -458,16 +459,7 @@ class ReportUserView(APIView):
 class TicketView(APIView):
     def get(self, request):
         tickets = Ticket.objects.all()
-        ticket_data = TicketSerializer(tickets, many=True).data
-        for ticket in ticket_data:
-            ticket_to = User.objects.get(id=ticket["ticket_to"])
-            ticket_to_data = UserSerializer(ticket_to).data 
-            profile_for_ticket_to = Profile.objects.get(user=ticket["ticket_to"])
-            profile_data_for_ticket_to = UpdateProfileSerializer(profile_for_ticket_to).data 
-
-            ticket_to_data["profile"] = profile_data_for_ticket_to
-            ticket["ticket_to"] = ticket_to_data
-
+        ticket_data = get_ticket_data(request, tickets)
         return Response(ticket_data)
 
     def post(self, request):
@@ -478,44 +470,27 @@ class TicketView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class MyTickets(APIView):
+    def get(self, request, user_id):
+        tickets = Ticket.objects.filter(ticket_to=user_id)
+        ticket_data = get_ticket_data(request, tickets)
+        return Response(ticket_data)
+
+
 class UpdateTicketStatus(APIView):
     def put(self, request, ticket_id):
         ticket = Ticket.objects.filter(id=ticket_id)
         if len(ticket) > 0:
-            serializer = TicketSerializer(product, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            ticket.update(status=request.data["status"])
+            return Response({"success": "Status Changed"})
         else:
-            return Response({})
+            return Response({"Bad Request": "No Ticket Available"})
 
 
 class TicketResponseView(APIView):
     def get(self, request):
         ticket_response = TicketResponse.objects.all()
-        ticket_response_data = TicketResponseSerializer(ticket_response, many=True).data
-        for tick_resp in ticket_response_data:
-            ticket = Ticket.objects.get(tick_resp["ticket"])
-            ticket_data = TicketSerializer(ticket).data 
-
-            ticket_to = User.objects.get(id=ticket_data["ticket_to"])
-            ticket_to_data = UserSerializer(ticket_to).data 
-            profile_for_ticket_to = Profile.objects.get(user=ticket_data["ticket_to"])
-            profile_data_for_ticket_to = UpdateProfileSerializer(profile_for_ticket_to).data 
-
-            ticket_to_data["profile"] = profile_data_for_ticket_to
-            ticket_data["ticket_to"] = ticket_to_data
-            tick_resp["ticket"] = ticket_data
-
-            response_by = User.objects.get(id=tick_resp["response_by"])
-            response_by_data = UserSerializer(response_by).data
-
-            profile_for_response_by = Profile.objects.get(user=tick_resp["response_by"])
-            profile_data_for_response_by = UpdateProfileSerializer(profile_for_response_by).data
-            response_by_data["profile"] = profile_data_for_response_by
-            tick_resp["response_by"] = response_by_data
-
+        ticket_response_data = get_ticket_response_data(request, ticket_response)
         return Response(ticket_response_data)
 
     def post(self, request):
@@ -524,3 +499,4 @@ class TicketResponseView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+

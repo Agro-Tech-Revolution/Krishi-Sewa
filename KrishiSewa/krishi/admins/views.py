@@ -398,3 +398,31 @@ def create_ticket(request, category, link_id, user_id):
         else:
             print(ticket_response.data)
     return redirect('/admins/report'+category.capitalize())
+
+
+@login_required
+@admin_only
+def view_ticket(request):
+    all_ticket_obj = TicketView()
+    all_ticket_data = all_ticket_obj.get(request).data
+    
+    context = {
+        "all_tickets": all_ticket_data
+    }
+    return render(request, 'admins/viewTicket.html', context)
+
+
+@login_required
+@admin_only
+def update_ticket_status(request, ticket_id):
+    request.data = {
+        "status": "Resolved"
+    }
+    update_obj = UpdateTicketStatus()
+    update_obj_response = update_obj.put(request, ticket_id)
+    if update_obj_response.data.get('success') != None:
+        print("Ticket Resolved")
+    else:
+        print(update_obj_response.data)
+    return redirect('/admins/tickets')
+

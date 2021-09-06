@@ -1,10 +1,15 @@
-{% extends 'layout-farmers.html' %}
+{% extends 'layout-vendors.html' %}
 
 {% block title %}
 <title>My Sales</title>
 {% endblock title %}
 
 {% block content %}
+<div class="text-center my-3">
+  <a href="/vendors/mysales" class="btn btn btn-primary mr-2">All Sold/Rented Equipment</a>
+  <a href="/vendors/mysales/buy" class="btn btn btn-primary mr-2">Bought Equipment</a>
+  <a href="/vendors/mysales/rent" class="btn btn btn-primary">Rented Equipment</a>
+</div>
 <table class="table text-center">
   <thead>
     <tr>
@@ -33,9 +38,9 @@
         {% endif %}
       </td>
       <td>
-      {{sale.quantity_sold}}
-        {% if sale.quantity_sold %}
-        {{sale.quantity_sold}}
+      
+        {% if sale.quantity %}
+        {{sale.quantity}}
         {% elif sale.rented_quantity %}
         {{sale.rented_quantity}}
         {% endif %}

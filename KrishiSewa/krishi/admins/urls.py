@@ -28,6 +28,8 @@ urlpatterns = [
     path('buyers-list', buyers_list),
 
     path('create-ticket/<str:category>/<int:link_id>/<int:user_id>/', create_ticket),
+    path('tickets', view_ticket),
+    path('change-status/<int:ticket_id>', update_ticket_status),
 
 
 

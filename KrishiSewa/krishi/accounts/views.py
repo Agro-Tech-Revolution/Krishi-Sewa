@@ -1,3 +1,4 @@
+from admins.api.views import TicketResponseView
 from django.shortcuts import render, redirect
 from rest_framework.response import Response
 from django.contrib.auth import authenticate, login, logout
@@ -171,6 +172,28 @@ def report_user(request, user_id):
             print("Reported Successfully")
         else:
             print(report_user_response.data)
+    return redirect('/')
+
+
+def send_response(request, ticket_id):
+    if request.method == 'POST':
+        data = request.POST
+        response = data["response"]
+        ticket = ticket_id
+        response_by = request.user.id
+
+        request.data = {
+            "ticket": ticket,
+            "response": response,
+            "response_by": response_by,
+        }
+
+        ticket_response_obj = TicketResponseView()
+        ticket_response_sent = ticket_response_obj.post(request)
+        if ticket_response_sent.data.get('id') != None:
+            print('Response Submitted Successfully')
+        else:
+            print(ticket_response_sent.data)
     return redirect('/')
 
 

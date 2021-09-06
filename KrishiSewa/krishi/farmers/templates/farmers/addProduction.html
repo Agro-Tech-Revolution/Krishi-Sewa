@@ -1,61 +1,56 @@
 {% extends 'layout-farmers.html' %}
+{% load static %}
 
 {% block title %}
 <title>Add Production</title>
+<link href="{% static 'farmers/css/editproduct.css' %}" rel="stylesheet">
 {% endblock title %}
 
 {% block content %}
+    <div class="page-wrapper bg-gra-02 p-t-130 p-b-100 font-poppins mt-5">
+        <div class="wrapper wrapper--w680">
+            <div class="card card-4" style="width: 100%;">
+                <div class="card-body">
+                    <p class="title">Add Production</p>
+                    <form method="POST">
+                      {% csrf_token %}
 
- <div class="container mt-4" >
-   <div class="row ">
-    <div class="col-md-3"></div>
-      <div class="col-md-6">
-        <h2 class="text-success text-center mb-4">Add Production</h2>
+                        <div class="">
+                            <div class="input-group-icon">
+                                <select class="input--style-4 selectProduct" name="product_type" id="product_category" onchange="changeName()">
+                                {% for category in categories %}
+                                  <option value="{{category}}">{{category}}</option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="input-group-icon">
+                                <select class="input--style-4 selectProduct" name="product_id" id="productname">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="input-group-icon">
+                                <input class="input--style-4" type="number" name="production_qty" required placeholder="Production Quantity">
 
-
-		<form method="POST">
-    {% csrf_token %}
-            <div class="border border-success rounded w-75 p-4 mx-auto">
-		    <div class="form-group mt-2 mb-3" >
-		    	<label class="form-label">Product Type:</label>
-                <div class="input-group mb-3">
-                    <select class="custom-select" name="product_type" id="product_category" onchange="changeName()">
-                    {% for category in categories %}
-                      <option value="{{category}}">{{category}}</option>
-                    {% endfor %}
-                    </select>
-		  	        </div>
-        </div>
-        <div class="form-group mt-2 mb-3" >
-		    	<label class="form-label">Product Name:</label>
-                <div class="input-group mb-3">
-                    <select class="custom-select" name="product_id" id="productname">
-                    </select>
-		  	        </div>
-        </div>
-		  	<div class="form-group mb-2">
-		    	<label  class="form-label">Production Quantity:</label>
-		    	<input type="number" class="form-control" required="" name="production_qty">
-		  	</div>
-		    <div class="form-group mb-2">
-		    	<label  class="form-label">Area:</label>
-		    	<input type="text" class="form-control " required="" name="area">
-		  	</div>
-        <div class="text-center">
-            <div class="d-inline-block mt-3">
-             
-              <button type="submit" class="btn btn-success text-center">Submit</button>
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="input-group-icon">
+                                <input class="input--style-4" type="text" name="area" required placeholder="Area">
+                                
+                            </div>
+                        </div>
+                                
+                        <div class="btn-block">
+                            <button type="submit">Submit</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-            </div>
-            </div>
-		</form>
-        </div>
-
-      </div>
     </div>
-  </div>
-</div>
     {{products|json_script:"products"}}
 
 

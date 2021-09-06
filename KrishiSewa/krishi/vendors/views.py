@@ -485,3 +485,15 @@ def my_sales(request, action=None):
         "my_sales": buy_req + rent_req
     }
     return render(request, 'vendors/Mysales.html', context)
+
+
+@login_required
+@vendors_only
+def view_ticket(request):
+    my_ticket_obj = MyTickets()
+    my_ticket_data = my_ticket_obj.get(request, request.user.id).data
+    
+    context = {
+        "all_tickets": my_ticket_data
+    }
+    return render(request, 'vendors/viewTicket.html', context)
