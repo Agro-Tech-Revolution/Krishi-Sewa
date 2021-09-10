@@ -13,10 +13,11 @@ urlpatterns = [
     path('profile/<int:user_id>', GetProfileType.as_view()),
     path('profile/<int:user_id>/edit', UpdateProfileView.as_view()),
 
-    # products
-    # path('products/', ProductsAPIView.as_view()),
-    # path('products/<int:id>', ProductDetails.as_view()),
+    path('changePassword/', ChangePasswordView.as_view()),
+    path('feedback/', FeedbackView.as_view()),
 
+    # product
+    path('filter-product/', ProductList.as_view()),
     path('productsOnSale/', ProductsForSaleView.as_view()),
     path('productsOnSale/<int:id>', ProductsForSaleDetails.as_view()),
     path('productsOnSale/mine/<int:user_id>', MyProductsOnSale.as_view()),
@@ -51,9 +52,7 @@ urlpatterns = [
     path('homeExpenses/user/<int:user_id>', MyHomeExpense.as_view()),
 
     # equipments
-    # path('equipment/', EquipmentAPIView.as_view()),
-    # path('equipment/<int:id>', EquipmentDetails.as_view()),
-    
+    path('filter-equipment/', EquipmentList.as_view()),
     path('equipmentToDisplay/', EquipmentsToDisplayView.as_view()),
     path('equipmentToDisplay/<int:id>', EquipmentsToDisplayDetails.as_view()),
     path('equipmentToDisplay/mine/<int:user_id>', MyEquipments.as_view()),

@@ -331,3 +331,33 @@ def getNPK_Prediction(N, P, K, temp, humidity, ph):
     for i in crops.keys():
         if i == prediction:
             return crops[i]
+
+def search_prod(request):
+    if request.method == 'POST':
+        data = request.POST
+        search_val = data.get('search_value')
+
+        if search_val is None:
+            search_val = ''
+
+        request.data = {
+            "prod_name": search_val,
+        }
+        search_obj = ProductList()
+        prod_data = search_obj.get(request).data
+        return prod_data
+
+def search_eqp(request):
+    if request.method == 'POST':
+        data = request.POST
+        search_val = data.get('search_value')
+
+        if search_val is None:
+            search_val = ''
+
+        request.data = {
+            "eqp_name": search_val,
+        }
+        search_obj = EquipmentList()
+        eqp_data = search_obj.get(request).data
+        return eqp_data

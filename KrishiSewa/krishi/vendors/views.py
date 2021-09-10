@@ -21,6 +21,11 @@ def index(request):
 
 @login_required
 @vendors_only
+def feedback(request):
+    return render(request, 'vendors/user-feedback.html')
+
+@login_required
+@vendors_only
 def equipments(request):
     headers = {'Authorization': 'Token ' + request.session['token']}
     if request.method == 'POST':
@@ -108,9 +113,13 @@ def my_equipments(request):
 
     eqp_obj = MyEquipments()
     eqp_get_response = eqp_obj.get(request, request.user.id)
+    eqp_data = eqp_get_response.data
+
+    if request.method == 'POST':
+        eqp_data = search_eqp(request)
     context = {
         "categories": categories,
-        "eqp_data": eqp_get_response.data
+        "eqp_data": eqp_data
     }
 
     return render(request, 'vendors/myEquipments.html', context)
@@ -497,3 +506,8 @@ def view_ticket(request):
         "all_tickets": my_ticket_data
     }
     return render(request, 'vendors/viewTicket.html', context)
+
+@login_required
+@vendors_only
+def change_password(request):
+    return render(request, 'vendors/changePassword.html')

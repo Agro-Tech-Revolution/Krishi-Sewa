@@ -31,6 +31,12 @@ def index(request):
 
 @login_required
 @farmers_only
+def feedback(request):
+    return render(request, 'farmers/user-feedback.html')
+
+
+@login_required
+@farmers_only
 def add_product(request):
     headers = {'Authorization': 'Token ' + request.session['token']}
     if request.method == 'POST':
@@ -87,30 +93,22 @@ def add_product(request):
 @farmers_only
 def my_products(request):
     headers = {'Authorization': 'Token ' + request.session['token']}
-    
-    # if request.method == 'POST':
-    #     comment_post_response = comment_add(request)
-    #     if comment_post_response.json().get('id') != None:
-    #         print('Comment added successfully')
-    #     else:
-    #         error = comment_post_response.json()
-    #         print(error)
-    #         return redirect('/farmers/myProducts')
+
     
     # calling product api to get all the products added by me
     my_products_obj = MyProductsOnSale()
     product_response = my_products_obj.get(request, user_id=request.user.id)
-    
-    # product_endpoint = '/api/productsOnSale/mine/' + str(request.user.id)
-    # product_url = base_url + product_endpoint
-    # product_response = requests.get(product_url, headers=headers)
+    product_data = product_response.data
+
+    if request.method == 'POST':
+        product_data = search_prod(request)
 
     categories = ['Cereals', 'Pulses', 'Vegetables', 'Fruits', 'Nuts', 'Oilseeds',
                   'Sugars and Starches', 'Fibres', 'Beverages', 'Narcotics',
                   'Spices', 'Condiments', 'Others']
     
     context = {
-        "my_products": product_response.data,
+        "my_products": product_data,
         "categories": categories
     }
 
@@ -851,6 +849,10 @@ def all_equipments(request):
     eqp_display_obj = EquipmentsToDisplayView()
     all_equipment_response = eqp_display_obj.get(request)
     eqp_data = all_equipment_response.data
+
+    if request.method == 'POST':
+        eqp_data = search_eqp(request)
+
     eqp_reported = []
     for eqp in eqp_data:
         for eqp_reports in eqp["reports"]:
@@ -1182,5 +1184,10 @@ def view_ticket(request):
         "all_tickets": my_ticket_data
     }
     return render(request, 'farmers/viewTicket.html', context)
+
+@login_required
+@farmers_only
+def change_password(request):
+    return render(request, 'farmers/changePassword.html')
 
 

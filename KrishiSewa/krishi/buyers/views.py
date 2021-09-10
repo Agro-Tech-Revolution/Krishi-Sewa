@@ -16,6 +16,11 @@ def index(request):
 def report_form(request):
     return render(request, 'buyers/ReportForm.html')
 
+@login_required
+@buyers_only
+def feedback(request):
+    return render(request, 'buyers/user-feedback.html')
+
 
 # products start
 @login_required
@@ -24,9 +29,12 @@ def all_products(request):
     prod_display_obj = ProductsForSaleView()
     all_product_response = prod_display_obj.get(request)
     prod_data = all_product_response.data
+
+    if request.method == 'POST':
+        prod_data = search_prod(request)
+
     prod_reported = []
     for prod in prod_data:
-        print(prod.get('id'))
         for prod_reports in prod["product_reports"]:
             if prod_reports["reported_by"]["id"] == request.user.id:
                 prod_reported.append(prod)
@@ -34,9 +42,15 @@ def all_products(request):
     for prod in prod_reported:
         prod_data.remove(prod)
 
+
+    categories = ['Cereals', 'Pulses', 'Vegetables', 'Fruits', 'Nuts', 'Oilseeds',
+                  'Sugars and Starches', 'Fibres', 'Beverages', 'Narcotics',
+                  'Spices', 'Condiments', 'Others']
+
     context = {
         "all_products": prod_data,
         "user_type": 'buyers',
+        "categories": categories
     }
 
     return render(request, 'buyers/allProducts.html', context)
@@ -256,6 +270,10 @@ def all_equipments(request):
     eqp_display_obj = EquipmentsToDisplayView()
     all_equipment_response = eqp_display_obj.get(request)
     eqp_data = all_equipment_response.data
+        
+    if request.method == 'POST':
+        eqp_data = search_eqp(request)
+
     eqp_reported = []
     for eqp in eqp_data:
         for eqp_reports in eqp["reports"]:
@@ -498,7 +516,7 @@ def delete_eqp_rent_requests(request, req_id):
 @login_required
 @buyers_only
 def profile(request, user_id):
-    headers = {'Authorization': 'Token ' + request.session['token']}
+    # headers = {'Authorization': 'Token ' + request.session['token']}
     user_detail_obj = GetUserDetails()
     user_detail_response = user_detail_obj.get(request, user_id)
 
@@ -522,7 +540,6 @@ def profile(request, user_id):
 @buyers_only
 def edit_profile(request, user_id):
     headers = {'Authorization': 'Token ' + request.session['token']}
-
     user_detail_obj = GetUserDetails()
     user_detail_response = user_detail_obj.get(request, user_id).data
 
@@ -554,4 +571,21 @@ def view_ticket(request):
         "all_tickets": my_ticket_data
     }
     return render(request, 'buyers/viewTicket.html', context)
+
+@login_required
+@buyers_only
+def change_password(request):
+    return render(request, 'buyers/changePassword.html')
+
+@login_required
+@buyers_only
+def sort_product(request):
+    print("worked")
+    return redirect('/')
+
+@login_required
+@buyers_only
+def search_product(request):
+    print("worked")
+    return redirect('/')
 

@@ -1,3 +1,4 @@
+from django.db.models import fields
 from django.db.models.base import Model
 from rest_framework import serializers
 from .models import *
@@ -57,4 +58,12 @@ class ReportUserSerializer(serializers.ModelSerializer):
         model = ReportUser
         fields = '__all__'
 
+class ChangePasswordSerializer(serializers.Serializer):
+    model = User
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
 
+class FeedbackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Feedback
+        fields = '__all__'

@@ -174,7 +174,7 @@ def report_user(request, user_id):
             print(report_user_response.data)
     return redirect('/')
 
-
+@login_required
 def send_response(request, ticket_id):
     if request.method == 'POST':
         data = request.POST
@@ -194,6 +194,48 @@ def send_response(request, ticket_id):
             print('Response Submitted Successfully')
         else:
             print(ticket_response_sent.data)
+    return redirect('/')
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        data = request.POST
+        request.data = {
+            "old_password": data["old_password"],
+            "new_password": data["new_password"]
+        }
+        change_psw_obj = ChangePasswordView()
+        change_psw_response = change_psw_obj.put(request)
+        if change_psw_response.data.get('message') != None:
+            print(change_psw_response.data.get('message'))
+        else:
+            print(change_psw_response.data)
+    return redirect('/')
+
+def feedback(request):
+    return render(request, 'accounts/user-feedback.html')
+
+def submit_feedback(request):
+    if request.method == 'POST':
+        data = request.POST
+        feedback_type = data["type"]
+        name = data["name"]
+        email = data["email"]
+        description = data["description"]
+
+        request.data = {
+            "feedback_type": feedback_type,
+            "name": name,
+            "email": email,
+            "description": description,
+        }
+
+        feedback_obj = FeedbackView()
+        feedback_response = feedback_obj.post(request)
+        if feedback_response.data.get('id') != None:
+            print("Feedback Submitted Successfully")
+        else:
+            print(feedback_response.data)
     return redirect('/')
 
 

@@ -43,7 +43,13 @@ urlpatterns = [
     path('profile/<int:user_id>', profile),
     path('profile/<int:user_id>/edit', edit_profile),
 
+    path('changePassword/', change_password),
+    path('feedback/', feedback),
+
     path('view-ticket/', view_ticket),
+
+    path('sortproduct/', sort_product),
+    path('searchproduct/', search_product),
 
 
     # path('viewEquipments/editComment', edit_eqp_comment),

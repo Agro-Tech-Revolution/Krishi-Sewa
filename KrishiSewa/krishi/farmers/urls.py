@@ -3,6 +3,8 @@ from .views import *
 
 urlpatterns = [
     path('', index),
+
+    path('feedback', feedback),
     # path('addProductsForSale', products_for_sale),
 
 
@@ -38,6 +40,8 @@ urlpatterns = [
 
     path('profile/<int:user_id>', profile),
     path('profile/<int:user_id>/edit', edit_profile),
+
+    path('changePassword/', change_password),
 
     path('npktest', npk_result),
 

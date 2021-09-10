@@ -34,7 +34,15 @@ class ReportUser(models.Model):
     reported_date = models.DateTimeField(auto_now_add=True)
 
 
-
-
+class Feedback(models.Model):
+    type_of_feedback = [
+        ('Comments', 'Comments'),
+        ('Bug Reports', 'Bug Reports'),
+        ('Questions', 'Questions'),
+    ]
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    feedback_type = models.CharField(max_length=20, choices=type_of_feedback)
+    description = models.TextField()
 
 

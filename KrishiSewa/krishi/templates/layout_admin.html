@@ -57,8 +57,8 @@
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
                                                 <a class="dropdown-item text-capitalize" href="#">{{user.first_name}} {{user.last_name}}</a>
-                                                <a class="dropdown-item" href="#">{{user.email}}</a>
-                                                <a class="dropdown-item" href="#">My Profile</a>
+                                                <a class="dropdown-item" href="/admins/profile/{{user.id}}">My Profile</a>
+                                                <a class="dropdown-item" href="/admins/changePassword/">Change Password</a>
                                                 <div class="dropdown-divider"></div>
                                                 <a class="dropdown-item" href="/logout">Logout</a>
                                               </div>

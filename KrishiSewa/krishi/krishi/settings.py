@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'admins.apps.AdminsConfig',
     'chat.apps.ChatConfig',
     'channels',
+    'django_filters',
     'rest_framework',
     'rest_framework.authtoken'
 ]
@@ -148,3 +149,11 @@ CHANNEL_LAYERS = {
 }
 
 LOGIN_URL = '/login/'
+
+# SMTP configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'soilanalyzer101@gmail.com'
+EMAIL_HOST_PASSWORD = 'soil@101'

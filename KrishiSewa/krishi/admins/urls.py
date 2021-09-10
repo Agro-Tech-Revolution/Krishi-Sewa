@@ -31,6 +31,12 @@ urlpatterns = [
     path('tickets', view_ticket),
     path('change-status/<int:ticket_id>', update_ticket_status),
 
+    path('profile/<int:user_id>', profile),
+    path('profile/<int:user_id>/edit', edit_profile),
+
+    path('changePassword/', change_password),
+    
+    path('feedbacks', view_feedback),
 
 
 ]

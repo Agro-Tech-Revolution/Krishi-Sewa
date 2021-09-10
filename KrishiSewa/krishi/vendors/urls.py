@@ -14,6 +14,9 @@ urlpatterns = [
     path('profile/<int:user_id>', profile),
     path('profile/<int:user_id>/edit', edit_profile),
 
+    path('changePassword/', change_password),
+
+    path('feedback', feedback),
     # path('equipmentRequests', equipment_requests),
     # path('equipmentRequests/<str:action>', equipment_requests),
 

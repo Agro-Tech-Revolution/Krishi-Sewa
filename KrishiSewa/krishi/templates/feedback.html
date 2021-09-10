@@ -1,0 +1,47 @@
+{% load static %}
+<div class="border p-3 border-success rounded w-50 mx-auto">
+	<div class="container " >
+		<div class="row d-block">
+			<div class="col-md-12">
+				<h2 class="text-success text-center">Feedback Form</h2>
+				<p class="text-black text-center">We would love to hear your thoughts with anything so we can improve !</p>
+				<hr>
+				<form method="POST" action="/submit-feedback/">
+					{% csrf_token %}
+					<h4 class="text-success text-center">Feedback type</h4>
+					<div class="row ">
+					<div class="col-md-4 ">
+						<input type= "radio" name="type" class="pointer" id="comments" value="Comments" required>&nbsp;&nbsp;<label for="comments">Comments</label>
+					</div>
+					<div class="col-md-4">
+						<input type="radio" name="type" id="bug" value="Bug Reports" required>&nbsp;&nbsp;<label for="bug">Bug Reports</label>
+					</div>
+					<div class="col-md-4">
+						<input type="radio" name="type" id="question" value="Questions" required>&nbsp;&nbsp;<label for="question">Questions</label>
+					</div>
+					</div>
+
+					<div class="form-group mt-3 mb-3" >
+						<label class="form-label">Name:</label>
+						<input type="text" name="name" class="form-control" required value="{{user.first_name}} {{user.last_name}}">
+					</div>
+					<div class="form-group mb-2">
+						<label  class="form-label">Email:</label>
+						<input type="Email" name="email" class="form-control" required value="{{user.email}}">
+					</div>
+					<div class="form-group mb-2">
+						<label  class="form-label">Describe Feedback:</label>
+						<textarea style="margin-top:5px;" rows="3" class="form-control" id="description" required placeholder="Enter your review" name="description"></textarea>
+
+					</div>
+					<div class="text-center">
+						<button type="submit" style="margin-left:5px;" class="btn btn-lg btn-success">Submit</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+

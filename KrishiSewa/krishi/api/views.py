@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from .models import *
 from vendors.models import *
 from farmers.models import *
-
+from django.db.models import Q
 from rest_framework import status
 from .serializers import *
 from farmers.serializers import *
@@ -12,6 +12,57 @@ from vendors.serializers import *
 from .utils import *
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import generics
+from django_filters import rest_framework as filters
+
+
+class FeedbackView(APIView):
+    def get(self, request):
+        feedback = Feedback.objects.all()
+        serializer = FeedbackSerializer(feedback, many=True)
+
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = FeedbackSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ChangePasswordView(APIView):
+    # serializer_class = ChangePasswordSerializer
+    # model = User
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self, request):
+        obj = request.user
+        return obj
+
+    def put(self, request, *args, **kwargs):
+        self.object = self.get_object(request)
+        serializer = ChangePasswordSerializer(data=request.data)
+
+        if serializer.is_valid():
+            # Check old password
+            if not self.object.check_password(serializer.data.get("old_password")):
+                return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
+            # set_password also hashes the password that the user will get
+            self.object.set_password(serializer.data.get("new_password"))
+            self.object.save()
+            response = {
+                'status': 'success',
+                'code': status.HTTP_200_OK,
+                'message': 'Password updated successfully',
+                'data': []
+            }
+
+            return Response(response)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserAPIView(APIView):
@@ -235,9 +286,20 @@ class NoteDetails(APIView):
             return Response({})
 
 
+class ProductList(APIView):
+    def get(self, request):
+        prod_name = request.data.get('prod_name')
+        if prod_name is None:
+            prod_name = ''
+        products_for_sale = ProductsForSale.objects.filter(to_display=True, product__prod_name__icontains=prod_name)
+
+        product_data = get_product_details(products_for_sale)
+        return Response(product_data, status=status.HTTP_200_OK)                                                               
+
+
 class ProductsForSaleView(APIView):
-    permission_classes = [IsAuthenticated]
-    authentication_classes = (TokenAuthentication,)
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,)
     def get(self, request):
         products_for_sale = ProductsForSale.objects.filter(to_display=True)
         product_data = get_product_details(products_for_sale)
@@ -939,6 +1001,16 @@ class MyHomeExpense(APIView):
 
 
 # equipments
+class EquipmentList(APIView):
+    def get(self, request):
+        eqp_name = request.data.get('eqp_name')
+        if eqp_name is None:
+            eqp_name = ''
+        eqp_for_sale = EquipmentToDisplay.objects.filter(to_display=True, equipment__name__icontains=eqp_name)
+
+        eqp_data = get_equipment_details(eqp_for_sale)
+        return Response(eqp_data, status=status.HTTP_200_OK)  
+
 class EquipmentsToDisplayView(APIView):
     def get(self, request):
         all_equipments = EquipmentToDisplay.objects.filter(to_display=True)

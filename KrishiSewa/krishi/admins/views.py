@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from django.core.files.storage import  default_storage
 from PIL import Image
 from admins.api.views import *
+from farmers.utils import update_profile_data
 
 # Create your views here.
 base_url = 'http://127.0.0.1:8000'
@@ -425,4 +426,67 @@ def update_ticket_status(request, ticket_id):
     else:
         print(update_obj_response.data)
     return redirect('/admins/tickets')
+
+@login_required
+@admin_only
+def profile(request, user_id):
+    user_detail_obj = GetUserDetails()
+    user_detail_response = user_detail_obj.get(request, user_id)
+
+    user_report_data = user_detail_response.data.get('reports') 
+    reported = False
+    for report in user_report_data:
+        if report["reported_by"] == request.user.id:
+            reported = True
+            break
+
+    report_category = ["False Information", "Fake Account", "Posts Disturbing content", "Something Else"]
+    context = {
+        'user_data': user_detail_response.data,
+        'report_category': report_category,
+        'reported': reported
+    }
+    return render(request, 'admins/profile.html', context)
+
+
+@login_required
+@admin_only
+def edit_profile(request, user_id):
+
+    user_detail_obj = GetUserDetails()
+    user_detail_response = user_detail_obj.get(request, user_id).data
+
+    current_profile_pic = user_detail_response["profile_pic"]
+
+    if request.method == 'POST':
+        user_put_response = update_profile_data(request, user_id, current_profile_pic)
+        if user_put_response.data.get('username') != None:
+            print('Profile updated successfully')
+            return redirect('/admins/profile/' + str(user_id))
+        else:
+            error = user_put_response.data
+            print(error)
+        return redirect('/admins/profile/' + str(user_id) + '/edit')       
+
+    context = {
+        'user_data': user_detail_response
+    }
+    return render(request, 'admins/editProfile.html', context)
+
+
+@login_required
+@admin_only
+def change_password(request):
+    return render(request, 'admins/changePassword.html')
+
+@login_required
+@admin_only
+def view_feedback(request):
+    all_feedback_obj = FeedbackView()
+    all_feedback_data = all_feedback_obj.get(request).data
+    
+    context = {
+        "all_feedbacks": all_feedback_data
+    }
+    return render(request, 'admins/viewFeedback.html', context)
 
