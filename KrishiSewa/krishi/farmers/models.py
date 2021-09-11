@@ -156,13 +156,13 @@ class NPKTest(models.Model):
     temperature = models.FloatField()
     humidity = models.FloatField()
     ph = models.FloatField()
-    reccommended_crop = models.CharField(max_length=50)
+    recommended_crop = models.CharField(max_length=50)
     test_of = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 class ImageTest(models.Model):
     image = models.CharField(max_length=150)
-    reccomended_crops = models.CharField(max_length=255)
+    recomended_crops = models.CharField(max_length=255)
     test_of = models.ForeignKey(User, on_delete=models.CASCADE)
 
 

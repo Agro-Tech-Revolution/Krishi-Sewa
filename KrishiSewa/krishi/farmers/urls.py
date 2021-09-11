@@ -33,6 +33,8 @@ urlpatterns = [
 
 
     path('imagetest', image_test),
+    path('npk-records', npk_records),
+    path('img-test-records', image_test_records),
     path('detailReport', profit_loss_report),
 
     # path('generalTable', general_table),

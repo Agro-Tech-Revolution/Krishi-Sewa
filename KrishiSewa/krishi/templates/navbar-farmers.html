@@ -16,7 +16,13 @@
             </ul>
         </li>
         <li>
-            <a href="#">Previous Records</a>
+            <a href="#recordSubmenu" data-toggle="collapse" aria-expanded="false" class="soil-test">
+                Previous Records<i class="fas fa-chevron-down drop-down"></i>
+            </a>
+            <ul class="collapse list-unstyled" id="recordSubmenu">
+                <li><a href="/farmers/npk-records">NPK Test Records</a></li>
+                <li><a href="/farmers/img-test-records">Image Test Records</a></li>
+            </ul>
         </li>
         <li>
             <a href="/farmers/feedback">Feedback</a>
@@ -66,6 +72,9 @@
         </li>
         <li>
             <a href="/farmers/detailReport">Profit Loss Report</a>
+        </li>
+        <li>
+            <a href="/chat/m/{{user.username}}/">Chat</a>
         </li>
         <li>
             <a href="/farmers/profile/{{request.user.id}}">Profile</a>

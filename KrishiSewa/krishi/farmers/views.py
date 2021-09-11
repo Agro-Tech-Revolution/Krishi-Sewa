@@ -73,9 +73,6 @@ def add_product(request):
     product_get_response = product_obj.get(request)
     product_data = product_get_response.data
 
-    # product_get_endpoint = '/api/products/'
-    # product_get_url = base_url + product_get_endpoint
-    # product_get_response = requests.get(product_get_url, headers=headers)
 
     categories = ['Cereals', 'Pulses', 'Vegetables', 'Fruits', 'Nuts', 'Oilseeds',
                   'Sugars and Starches', 'Fibres', 'Beverages', 'Narcotics',
@@ -140,11 +137,6 @@ def edit_product(request, prod_id):
         
         product_put_response = product_on_sale_obj.put(request, prod_id)
 
-        # product_put_endpoint = '/api/productsOnSale/' + str(prod_id)
-        # product_put_url = base_url + product_put_endpoint
-
-        # product_put_response = requests.put(product_put_url, data=product_put_data, headers=headers)
-
         if product_put_response.data.get('id') != None:
             print('Product updated successfully')
             return redirect('/farmers/myproducts')
@@ -157,14 +149,6 @@ def edit_product(request, prod_id):
     product_details_response = product_details_obj.get(request)
     
     product_get_response = product_on_sale_obj.get(request, prod_id)
-
-    # product_details_endpoint = '/api/products'
-    # product_details_url = base_url + product_details_endpoint
-    # product_details_response = requests.get(product_details_url, headers=headers)
-
-    # product_get_endpoint = '/api/productsOnSale/' + str(prod_id)
-    # product_get_url = base_url + product_get_endpoint
-    # product_get_response = requests.get(product_get_url, headers=headers)
 
     categories = ['Cereals', 'Pulses', 'Vegetables', 'Fruits', 'Nuts', 'Oilseeds',
                   'Sugars and Starches', 'Fibres', 'Beverages', 'Narcotics',
@@ -185,10 +169,6 @@ def delete_product(request, prod_id):
 
     product_on_sale_obj = ProductsForSaleDetails()
     product_response = product_on_sale_obj.delete(request, prod_id)
-
-    # product_endpoint = '/api/productsOnSale/' + str(id)
-    # product_url = base_url + product_endpoint
-    # product_response = requests.delete(product_url, headers=headers)
 
     if Response(product_response).status_code == 200:
         print('Deleted Successfully')
@@ -238,9 +218,6 @@ def add_production(request):
         production_post_obj = ProductionAPIView()
         production_post_response = production_post_obj.post(request)
 
-        # production_post_endpoint = '/api/products/production/'
-        # production_post_url = base_url + production_post_endpoint
-        # production_post_response = requests.post(production_post_url, data=production_data, headers=headers)
         if production_post_response.data.get('id') != None:
             print('Production added successfully')
             return redirect('/farmers/addProduction')
@@ -283,10 +260,6 @@ def edit_production(request, id):
         
         production_put_response = production_obj.put(request, id)
 
-        # production_put_endpoint = '/api/products/production/' + str(id)
-        # production_put_url = base_url + production_put_endpoint
-
-        # production_put_response = requests.put(production_put_url, data=production_data, headers=headers)
         if production_put_response.data.get('id') != None:
             print('Production updated successfully')
             return redirect('/farmers/myProduction')
@@ -318,9 +291,6 @@ def delete_production(request, id):
     headers = {'Authorization': 'Token ' + request.session['token']}
     production_obj = ProductionDetails()
     production_del_response = production_obj.delete(request, id)
-    # production_del_endpoint = '/api/products/production/' + str(id)
-    # production_del_url = base_url + production_del_endpoint
-    # production_del_response = requests.delete(production_del_url, headers=headers)
 
     if Response(production_del_response).status_code == 200:
         print('Deleted Successfully')
@@ -419,9 +389,6 @@ def edit_home_expense(request, exp_id):
             error = home_expense_put_response.data
             print(error)
             return redirect('/farmers/editHomeExpense/' + str(exp_id))
-
-        
-
 
     product_obj = ProductsAPIView()
     product_get_response = product_obj.get(request)
@@ -576,9 +543,6 @@ def my_production(request):
     my_production_obj = MyProductions()
     my_production_response = my_production_obj.get(request, request.user.id)
 
-    # my_production_endpoint = '/api/products/production/mine/' + str(request.user.id)
-    # my_production_url = base_url + my_production_endpoint
-    # my_production_request = requests.get(my_production_url, headers=headers)
     context = {
         "my_production": my_production_response.data
     }
@@ -592,10 +556,6 @@ def my_stock(request):
 
     my_stock_obj = MyProductStock()
     my_stock_response = my_stock_obj.get(request, request.user.id)
-
-    # my_stock_endpoint = '/api/products/stock/mine/' + str(request.user.id)
-    # my_stock_url = base_url + my_stock_endpoint
-    # my_stock_request = requests.get(my_stock_url, headers=headers)
 
     context = {
         "my_stock": my_stock_response.data
@@ -627,10 +587,6 @@ def profit_loss_report(request):
     report_obj = ProfitLossReportView()
     report_response = report_obj.get(request, request.user.id)
     
-
-    # report_endpoint = '/api/profitloss/' + str(request.user.id)
-    # report_url = base_url + report_endpoint
-    # report_response = requests.get(report_url, headers=headers).json()
     context = {
         "all_details": report_response.data,
         "net_amount": abs(report_response.data["NetAmount"])
@@ -642,16 +598,6 @@ def profit_loss_report(request):
 """
 Soil testing part -----------------------------------------
 """
-
-
-# @login_required
-# @farmers_only
-# def test(request):
-#     return render(request, 'farmers/Npktest.html')
-
-
-# @login_required
-# @farmers_only
 def getNPK_Prediction(N, P, K, temp, humidity, ph):
     model = pickle.load(open('npk_model.sav', 'rb'))
     scaler = pickle.load(open('scaler.sav', 'rb'))
@@ -664,26 +610,7 @@ def getNPK_Prediction(N, P, K, temp, humidity, ph):
              14: 'mungbean', 2: 'blackgram', 10: 'lentil', 19: 'pomegranate', 1: 'banana', 12: 'mango', 7: 'grapes',
              21: 'watermelon', 15: 'muskmelon', 0: 'apple', 16: 'orange', 17: 'papaya', 4: 'coconut', 6: 'cotton',
              8: 'jute', 5: 'coffee'}
-
-    print(prediction)
     return crops[prediction[0]]
-
-
-
-# def getNPK_Prediction(N, P, K, temp, humidity, ph):
-#     model = pickle.load(open('npk_model.sav', 'rb'))
-#     scaler = pickle.load(open('scaler.sav', 'rb'))
-#
-#     prediction = model.predict(scaler.transform([
-#         [N, P, K, temp, humidity, ph]
-#     ]))
-#
-#     crops = {20: 'rice', 11: 'maize', 3: 'chickpea', 9: 'kidneybeans', 18: 'pigeonpeas', 13: 'mothbeans',
-#              14: 'mungbean', 2: 'blackgram', 10: 'lentil', 19: 'pomegranate', 1: 'banana', 12: 'mango', 7: 'grapes',
-#              21: 'watermelon', 15: 'muskmelon', 0: 'apple', 16: 'orange', 17: 'papaya', 4: 'coconut', 6: 'cotton',
-#              8: 'jute', 5: 'coffee'}
-#
-#     return crops[prediction]
 
 
 @login_required
@@ -698,9 +625,7 @@ def npk_result(request):
         humidity = data['humidity']
         ph = data['ph']
 
-        print(int(N))
         result = getNPK_Prediction(int(N), int(P), int(K), int(temp), int(humidity), int(ph))
-        print(result)
         context = {'result': result}
 
         request.data = {
@@ -723,11 +648,6 @@ def npk_result(request):
         return render(request, 'farmers/Npktest.html', context)
     else:
         return render(request, 'farmers/Npktest.html')
-
-
-
-# def npk_test(request):
-#     return render(request, 'farmers/Npktest.html')
 
 def get_image_model(image_path):
     image = load_img(image_path, target_size=(224, 224))
@@ -784,12 +704,25 @@ def image_test(request):
 
     return render(request, 'farmers/imagetest.html', {'img_result': predict})
 
+@login_required
+@farmers_only
+def npk_records(request):
+    npk_obj = NPKTestView()
+    npk_data = npk_obj.get(request).data
+    context = {
+        'npk_records': npk_data
+    }
+    return render(request, 'farmers/npk_test_records.html', context)
 
 @login_required
 @farmers_only
-def general_table(request):
-    return render(request, 'farmers/GeneralTable.html')
-
+def image_test_records(request):
+    img_test_obj = ImageTestView()
+    img_test_data = img_test_obj.get(request).data
+    context = {
+        'img_test_records': img_test_data
+    }
+    return render(request, 'farmers/image_test_records.html', context)
 
 
 @login_required

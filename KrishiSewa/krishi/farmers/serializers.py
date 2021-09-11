@@ -80,5 +80,5 @@ class NPKTestSerializer(serializers.ModelSerializer):
 
 class ImageTestSerializer(serializers.ModelSerializer):
     class Meta:
-        model = NPKTest
+        model = ImageTest
         fields = '__all__'

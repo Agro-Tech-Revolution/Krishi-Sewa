@@ -13,7 +13,13 @@ from .utils import *
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics
-from django_filters import rest_framework as filters
+from django.core.mail import EmailMessage
+# from accounts.views import VerificationView
+from django.urls import reverse
+
+from django.utils.encoding import force_bytes, force_text, DjangoUnicodeDecodeError
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib.sites.shortcuts import get_current_site
 
 
 class FeedbackView(APIView):
@@ -75,6 +81,25 @@ class UserAPIView(APIView):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+
+            user = User.objects.get(pk=serializer.data.get('id'))
+            # path to view
+            uidb64 = urlsafe_base64_encode(force_bytes(serializer.data.get('id')))
+
+            domain = get_current_site(request).domain
+            link = reverse('activate', kwargs={'uidb64': uidb64, 'token':token_generator.make_token(user)})
+            activate_url = 'http://'+domain+link
+
+            email_subject = 'Activate your account'
+            email_body = 'Hi ' + serializer.data.get('username') + '. Please use this link to verify your account.\n' + activate_url
+            email = EmailMessage(
+                        email_subject,
+                        email_body,
+                        'noreply@semycolon.com',
+                        [serializer.data.get('email')],
+                    )
+            email.send(fail_silently=False)
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -1731,7 +1756,7 @@ class ImageTestView(APIView):
         return Response(serializer.data)
 
     def post(self, request):
-        serializer = NPKTestSerializer(data=request.data)
+        serializer = ImageTestSerializer(data=request.data)
 
         if serializer.is_valid():
             serializer.save()

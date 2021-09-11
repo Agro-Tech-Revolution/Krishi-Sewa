@@ -7,20 +7,7 @@ from .auth import *
 # from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.decorators import login_required
-
-# Create your views here.
-
-@unauthenticated_user
-def feedback(request):
-    return render(request,'accounts/Feedback.html')
-
-
-@unauthenticated_user
-def history(request):
-    return render(request,'accounts/History.html')
-
-
-base_url = "http://127.0.0.1:8000"
+from django.views import View
 
 
 @unauthenticated_user
@@ -53,53 +40,28 @@ def login_view(request):
         else:
             print("No user found")
         
-    return render(request, 'accounts/login.html')                        
+    return render(request, 'accounts/login.html')  
 
 
-# @unauthenticated_user
-# def login_view(request):
-#     if request.method== 'POST':
-#         username = request.POST.get('username')
-#         password = request.POST.get('password')
-        
-#         user_data = {
-#             'username': username,
-#             'password': password
-#         }
-#         user = authenticate(request,
-#                             username=username,
-#                             password=password)
-#         if user is not None:
-#             auth_endpoint = "/auth/"
-#             auth_url = base_url + auth_endpoint
-            
-#             r = requests.post(auth_url, data=user_data)
-#             if Response(r).status_code == 200:
-#                 login(request, user)
-#                 token = r.json().get('token')
-#                 request.session['token'] = token
-#                 if user.is_staff:
-#                     return redirect('/admins/')
-#                 else:
-#                     headers = {'Authorization': 'Token ' + token}
-#                     profile_endpoint = "/api/profile/"
-#                     profile_url = base_url + profile_endpoint + str(user.id)
+class VerificationView(View):
+    def get(self, request, uidb64, token):
+        try:
+            id = force_text(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=id)
 
-#                     profile_response = requests.get(profile_url, headers=headers)
-#                     user_type = profile_response.json().get('user_type')
-                    
-#                     if user_type.upper() == 'BUYERS':
-#                         return redirect('/buyers/')
-#                     elif user_type.upper() == 'FARMERS':
-#                         return redirect('/farmers/')
-#                     elif user_type.upper() == 'VENDORS':
-#                         return redirect('/vendors/')
-            
-#         else:
-#             print("No user found")
-        
-#     return render(request, 'accounts/login.html')
+            if not token_generator.check_token(user, token):
+                print('User already activated')
 
+            if user.is_active:
+                return redirect('/login/')
+            user.is_active = True
+            user.save()
+
+            print('Account activated successfully')
+                
+        except Exception as e:
+            pass
+        return redirect('/login/')                  
 
 @unauthenticated_user
 def register_view(request):
@@ -118,7 +80,8 @@ def register_view(request):
             "last_name": lname,
             "username": username,
             "email": email,
-            "password": password
+            "password": password,
+            "is_active": False
         }
         
         user_obj = UserAPIView()
