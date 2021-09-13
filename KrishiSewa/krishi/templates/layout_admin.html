@@ -75,6 +75,25 @@
                     </div>
                 </div>
             </nav>
+            {% if messages %}
+            <div class="col-sm-6 col-lg-5 mx-auto text-center font-weight-bold">
+                
+                {% for message in messages %}
+                    {% if message.tags == 'error' %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {% else %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {% endif %}
+
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+                
+            </div>
+            {% endif %}
 
             {% block content %}
 

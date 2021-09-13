@@ -16,7 +16,7 @@
                       {% csrf_token %}
                         <div class="">
                             <div class="input-group-icon">
-                                <select class="input--style-4 selectProduct" name="product_type" id="product_category" onchange="changeName()">
+                                <select required class="input--style-4 selectProduct" name="product_type" id="product_category" onchange="changeName()">
                                 {% for type in categories %}
                                 {% if type == production_data.product_id.prod_category %}
                                     <option value="{{type}}" selected>{{type}}</option>
@@ -29,20 +29,20 @@
                         </div>
                         <div class="">
                             <div class="input-group-icon">
-                                <select class="input--style-4 selectProduct" name="product_id" id="productname">
+                                <select required class="input--style-4 selectProduct" name="product_id" id="productname">
                                 </select>
                             </div>
                         </div>
                         <div class="">
                             <div class="input-group-icon">
                                 <label>Production Quantity</label>
-                                <input class="input--style-4" type="number" required name="production_qty" required placeholder="Production Quantity" value="{{production_data.production_qty}}">
+                                <input class="input--style-4" type="number" required name="production_qty" placeholder="Production Quantity" value="{{production_data.production_qty}}">
                             </div>
                         </div>
                         <div class="">
                             <div class="input-group-icon">
                                 <label>Production Area</label>
-                                <input class="input--style-4" type="text" required name="area" required placeholder="Area" value="{{production_data.area}}">
+                                <input class="input--style-4" type="text" required name="area" placeholder="Area" value="{{production_data.area}}">
                             </div>
                         </div>
                                 

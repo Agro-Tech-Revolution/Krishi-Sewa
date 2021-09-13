@@ -20,7 +20,7 @@
                       <div class="">
 
                       <div class="input-group-icon">
-                        <select class="selectProduct input--style-4" name="category" placeholder="Category">
+                        <select required class="selectProduct input--style-4" name="category" placeholder="Category">
                         {% for type in expense_type %}
                             {% if type == expense_data.category %}
                             <option value="{{type}}" selected>{{type}}</option>
@@ -35,7 +35,7 @@
                   <div class="row row-space">
                             <div class="col-6">
 								<div class="input-group">
-									<select class="selectProduct input--style-4" id="product_category" onchange="changeName()">
+									<select required class="selectProduct input--style-4" id="product_category" onchange="changeName()">
 									    {% for type in prod_categories %}
                                             {% if type == expense_data.product.prod_category %}
                                             <option value="{{type}}" selected>{{type}}</option>
@@ -49,7 +49,7 @@
                             </div>
                             <div class="col-6">
                                 <div class="input-group">
-									<select class="selectProduct input--style-4" name="product" id="productname">
+									<select required class="selectProduct input--style-4" name="product" id="productname">
 									</select>
 								</div>
                             </div>
@@ -58,13 +58,13 @@
                       <div class="" style="margin-top: 25px;">
 
                         <div class="input-group-icon">
-                            <input class="input--style-4" type="number" name="quantity" placeholder="Quantity" value={{expense_data.quantity}}>
+                            <input required class="input--style-4" type="number" name="quantity" placeholder="Quantity" value={{expense_data.quantity}}>
                         </div>
                     </div>
 
                     <div class="">
                         <div class="input-group-icon">
-                            <input class="input--style-4" type="number" name="price" placeholder="Estimated Price" value={{expense_data.estimated_price}}>
+                            <input required class="input--style-4" type="number" name="price" placeholder="Estimated Price" value={{expense_data.estimated_price}}>
                         </div>
                     </div>
 				<div class="" style="margin-top: 15px;">

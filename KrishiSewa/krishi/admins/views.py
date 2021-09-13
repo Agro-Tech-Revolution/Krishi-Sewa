@@ -6,9 +6,9 @@ from django.core.files.storage import  default_storage
 from PIL import Image
 from admins.api.views import *
 from farmers.utils import update_profile_data
+from django.contrib import messages
 
 # Create your views here.
-base_url = 'http://127.0.0.1:8000'
 
 @login_required
 @admin_only
@@ -53,7 +53,7 @@ def add_products(request):
                 Image.open(prod_img)
                 image_path = default_storage.save('static/product_images/' + str(prod_img), prod_img)
             except:
-                print("Not Valid Image")
+                messages.error(request, "Not valid image")
                 return redirect('/admins/addProducts/')
 
         request.data = {
@@ -66,10 +66,10 @@ def add_products(request):
         product_response = prod_obj.post(request)
         # print(product_response.json().get('id'))
         if product_response.data.get('id') != None:
-            print('Product added successfully')
+            messages.success(request, "Product added successfully")
         else:
             error = product_response.data
-            print(error)
+            messages.error(request, error)
     
     all_products = prod_obj.get(request)
 
@@ -106,7 +106,7 @@ def edit_product_details(request, prod_id):
                 Image.open(prod_img)
                 image_path = default_storage.save('static/product_images/' + str(prod_img), prod_img)
             except:
-                print("Not Valid Image")
+                messages.error(request, "Not valid image")
                 return redirect('/admins/addProducts/')
 
         request.data = {
@@ -117,11 +117,11 @@ def edit_product_details(request, prod_id):
         
         product_response = prod_obj.put(request, prod_id)
         if product_response.data.get('id') != None:
-            print('Updated Successfully')
+            messages.success(request, "Updated successfully")
             return redirect('/admins/addProducts/')
         else:
             error = product_response.data
-            print(error)
+            messages.error(request, error)
             return redirect('/admins/editProducts/' + str(prod_id))
 
     categories = ["Cereals", "Pulses", "Vegetables", "Fruits", "Nuts", "Oilseeds",
@@ -140,7 +140,7 @@ def delete_product(request, prod_id):
     prod_obj = ProductDetails()
     prod_response = prod_obj.delete(request, prod_id)
     if Response(prod_response).status_code == 200:
-        print('Deleted Successfully')
+        messages.success(request, "Deleted successfully")
     return redirect('/admins/addProducts/')
 
 
@@ -160,10 +160,10 @@ def add_equipments(request):
 
         eqp_post_response = eqp_obj.post(request)
         if eqp_post_response.data.get('id') != None:
-            print("Equipment Added Successfully")
+            messages.success(request, "Equipment added successfully")
         else:
             error = eqp_post_response.data
-            print(error)
+            messages.error(request, error)
         return redirect('/admins/addEquipments/')
 
     all_equipments = eqp_obj.get(request)
@@ -196,11 +196,11 @@ def edit_equipment_details(request, eqp_id):
 
         eqp_response = eqp_obj.put(request, eqp_id)
         if eqp_response.data.get('id') != None:
-            print('Updated Successfully')
+            messages.success(request, "Updated successfully")
             return redirect('/admins/addEquipments/')
         else:
-            error = eqp_response.data 
-            print(error)
+            error = eqp_response.data
+            messages.error(request, error)
             return redirect('/admins/editEquipments/' + str(eqp_id))
 
     categories = [ "Tractor", "Harvester", "ATV or UTV", "Plows", "Harrows",
@@ -219,7 +219,7 @@ def delete_equipment(request, eqp_id):
     eqp_obj = EquipmentDetails()
     eqp_response = eqp_obj.delete(request, eqp_id)
     if Response(eqp_response).status_code == 200:
-        print('Deleted Successfully')
+        messages.success(request, "Deleted successfully")
     return redirect('/admins/addEquipments/')
 
 
@@ -244,9 +244,9 @@ def disable_user_account(request, user_id):
     action_obj = ActionOnUserView()
     action_response = action_obj.put(request, user_id)
     if action_response.data.get('success') != None:
-        print('Account disabled')
+        messages.success(request, "Account disabled")
     else:
-        print(action_response.data)
+        messages.error(request, action_response.data)
     return redirect('/admins/users/')
 
 
@@ -259,9 +259,9 @@ def activate_user_account(request, user_id):
     action_obj = ActionOnUserView()
     action_response = action_obj.put(request, user_id)
     if action_response.data.get('success') != None:
-        print('Account Activated')
+        messages.success(request, "Account activated")
     else:
-        print(action_response.data)
+        messages.error(request, action_response.data)
     return redirect('/admins/users/')
 
 
@@ -395,9 +395,9 @@ def create_ticket(request, category, link_id, user_id):
         ticket_obj = TicketView()
         ticket_response = ticket_obj.post(request)
         if ticket_response.data.get('id') != None:
-            print('Ticket Created Successfully')
+            messages.success(request, "Ticket created successfully")
         else:
-            print(ticket_response.data)
+            messages.error(request, ticket_response.data)
     return redirect('/admins/report'+category.capitalize())
 
 
@@ -422,9 +422,9 @@ def update_ticket_status(request, ticket_id):
     update_obj = UpdateTicketStatus()
     update_obj_response = update_obj.put(request, ticket_id)
     if update_obj_response.data.get('success') != None:
-        print("Ticket Resolved")
+        messages.success(request, "Ticket resolved")
     else:
-        print(update_obj_response.data)
+        messages.error(request, update_obj_response.data)
     return redirect('/admins/tickets')
 
 @login_required
@@ -461,11 +461,11 @@ def edit_profile(request, user_id):
     if request.method == 'POST':
         user_put_response = update_profile_data(request, user_id, current_profile_pic)
         if user_put_response.data.get('username') != None:
-            print('Profile updated successfully')
+            messages.success(request, "Profile updated successfully")
             return redirect('/admins/profile/' + str(user_id))
         else:
             error = user_put_response.data
-            print(error)
+            messages.error(request, error)
         return redirect('/admins/profile/' + str(user_id) + '/edit')       
 
     context = {

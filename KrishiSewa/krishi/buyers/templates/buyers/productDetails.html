@@ -54,7 +54,7 @@
                                     <form method="POST" action="/buyers/reportProd/{{product_detail.id}}">
                                         {% csrf_token %}
                                         <div class="input-group">
-                                            <select class="selectProduct input--style-4" id="" name="report-category">
+                                            <select class="selectProduct input--style-4" required id="" name="report-category">
                                                 {% for category in report_category %}
                                                 <option value="{{category}}">{{category}}</option>
                                                 {% endfor %}
@@ -64,7 +64,7 @@
                                         <div class="" style="margin-top: 15px;">
 
                                             <div class="input-group-icon">
-                                                <textarea class="input--style-4" name="description" placeholder="Reason" rows="2"></textarea>
+                                                <textarea class="input--style-4" required name="description" placeholder="Reason" rows="2"></textarea>
                                             </div>
                                         </div>
                                         <div class="btn-block">
@@ -117,7 +117,7 @@
                                 {% csrf_token %}
                                 <div class="col mt-2">
                                     <label for="quantity">Quantity <em>(in k.g.)</em></label><br>
-                                    <input type="number" class="form-control" id="purchasequantity" name="quantity" onchange="Purchasmultiply()" min="1">
+                                    <input type="number" required class="form-control" id="purchasequantity" name="quantity" onchange="Purchasmultiply()" min="1">
                                     <!-- <label for="address">Address</label>
                                     <input type="text" class="form-control" id="address" name="address"> -->
                                     <label for="remarks">Remarks</label>
@@ -133,40 +133,6 @@
                         </div>
                     </div>
 
-                    <!-- <div id="collapse2" class="collapse card" aria-labelledby="heading1" data-parent="#accordionExample">
-                        <div class="card-body">
-                            <h2 style="text-align:center; font-size:1.5rem;"><u>Rent Now</u></h2>
-                            <form class="mx-auto" method="POST" action="/buyers/rent/{{equipment_detail.id}}">
-                                {% csrf_token %}
-                                <div class="col mt-2">
-                                    <label for="quantity">Quantity</label><br>
-                                    <input type="number" class="form-control" id="rentquantity" name="quantity" onchange="Rentmultiply()">
-                                </div>
-                                <div class="col">
-                                    <div class="form-row align-items-center">
-                                        <div class="col-sm-8 my-1">
-                                            <label for="address">Day</label>
-                                            <input type="number" class="form-control" id="rentday" onchange="Rentmultiply()" name="day">
-                                        </div>
-                                        <div class="col-sm-4 my-1">
-                                            <label for="hours">Hours</label>
-                                            <input type="number" class="form-control" id="hours" onchange="Rentmultiply()" name="hours">
-                                        </div>
-                                    </div>
-                                    <label for="address">Address</label>
-                                    <input type="text" class="form-control" id="address" name="address">
-                                    <label for="remarks">Remarks</label>
-                                    <textarea class="form-control" id="remarks2" name="remarks" rows="2" cols="38"></textarea>
-                                    <label for="result">Total Rent Price:</label>
-                                    <label id="Rentresult"></label>
-                                    
-                                    <div class="col" style="text-align:center;">
-                                        <button type="submit" class="btn btn-success mt-2" style="width: 8rem;">Rent</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div> -->
                 </div>
 
             </div>
@@ -197,7 +163,7 @@
                         <div class="media ml-2">
                             <a href=""><img class="img-fluid mr-3" src="/{{user.profile.profile_pic}}" alt="" style="height: 2rem; width: 2rem; border-radius: 50%;"></a>
                             <div class="media-body">
-                                <textarea class="form-control" id="message" placeholder="Add a comment..." rows="5" name="comment"></textarea>
+                                <textarea class="form-control" required id="message" placeholder="Add a comment..." rows="5" name="comment"></textarea>
                             </div>
                         </div>
                         <div class="col-xs-1 col-sm-12 col-lg-12">

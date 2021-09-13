@@ -7,101 +7,6 @@
 {% endblock title %}
 
 {% block content %}
-  <!-- <div class="container mt-2" >
-    <div class="row">
-      <div class="col-md-3"></div>
-      <div class="col-md-6"> 
-        <form method="POST" enctype="multipart/form-data">
-          {% csrf_token %}
-          <div class="border border-dark rounded w-100 p-4 mx-auto shadow-lg p-3 mb-5 rounded" style="background-color:#D2B48C">
-            <h2 class=" text-center mb-2">Add Equipments</h2>
-            <hr class="bg-success mb-3 mt-0 d-inline-block mx-auto" style="width: 490px; height: 1px">
-
-            <div class="form-group mt-1 mb-3" >
-              <label class="form-label">Category:</label>
-              <div class="input-group mb-3">
-                <select class="custom-select" name="category">
-                  {% for category in categories %}
-                  <option value="{{category}}">{{category}}</option>
-                  {% endfor %}
-                </select> 
-              </div>
-            </div>
-
-            <div class="form-group mt-2 mb-3" >
-              <label class="form-label">Name:</label>
-              <div class="input-group mb-3">
-                <select class="custom-select" name="equipment">
-                  {% for names in equipment_names %}
-                  <option value="{{names.id}}">{{names.name}}</option>
-                  {% endfor %}
-
-                </select>
-              </div>
-            </div>
-
-            <div class="form-group mb-3">
-              <label  class="form-label">Modal:</label>
-              <input type="text" class="form-control" required name="modal">
-            </div>
-
-            <div class="form-group row ml-1 mb-2">
-              <label  class="form-label">Available for rent:</label>
-              <div class="col-md-4 ">
-                  <input type= "radio" id="rent_yes" name="rent_availability" class="pointer" value="True">&nbsp;&nbsp;<label for="rent_yes">Yes</label>    
-              </div>
-              <div class="col-md-4">
-                  <input type="radio" id="rent_no" name="rent_availability" value="False">&nbsp;&nbsp;<label for="rent_no">No</label>    
-              </div>      
-            </div>
-
-            <div class="form-group row ml-1 mb-3">
-              <label  class="form-label">Available for buy :</label>
-              <div class="col-md-4 ">
-                <input type= "radio" name="buy_availability" id="buy_yes" class="pointer" value="True">&nbsp;&nbsp;<label for="buy_yes">Yes</label>    
-              </div>
-              <div class="col-md-4">
-                <input type="radio" name="buy_availability" id="buy_no" value="False">&nbsp;&nbsp;<label for="buy_no">No</label>    
-              </div>      
-            </div>
-
-            <div class="form-group mb-3">
-              <label class="form-label">Price per hour:</label>
-              <input type="number" class="form-control" required name="price_per_hour">
-            </div>
-
-            <div class="form-group mb-3">
-              <label class="form-label">Total Available Hours:</label>
-              <input type="number" class="form-control" required name="available_duration"> 
-            </div>
-
-            <div class="form-group mb-3">
-                <label class="form-label">Price to buy:</label>
-                <input type="number" class="form-control" required name="price_to_buy">
-            </div>
-
-            <div class="form-group mb-3">
-                <label for="eqp_image">Upload Equipment Image: </label>
-                <input type="file" class="form-control-file" name="eqp_image" id="eqp_image">
-            </div>
-
-            <div class="form-group mb-3">
-              <label  class="form-label">Details:</label>
-              <textarea style="margin-top:5px;"  rows="2" class="form-control" placeholder="Enter all details..." required name="details"></textarea>
-            </div>
-
-            <div class="text-center"> 
-              <div class="d-inline-block mt-2">
-                <button class="nav-link btn btn-success text-center" style="border-radius: 25px; padding: 7px; font-size: 20px; width:170px" type="submit">Submit</button>
-              </div>
-            </div>
-            
-          </div>
-        </form>
-      </div>
-    </div>
-  </div> -->
-
     <div class="page-wrapper bg-gra-02 p-t-130 p-b-100 font-poppins mt-5">
       <div class="wrapper wrapper--w680">
           <div class="card card-4" style="width: 100%;">
@@ -113,7 +18,7 @@
 
                       <div class="col-6">
                         <div class="input-group">
-                          <select class="selectProduct input--style-4" id="eqp_category" onchange="changeName()">
+                          <select required class="selectProduct input--style-4" id="eqp_category" onchange="changeName()">
                             {% for category in categories %}
                             <option value="{{category}}">{{category}}</option>
                             {% endfor %}
@@ -123,14 +28,14 @@
 
                       <div class="col-6">
                         <div class="input-group">
-                          <select class="selectProduct input--style-4" name="equipment" id="eqp_names">
+                          <select required class="selectProduct input--style-4" name="equipment" id="eqp_names">
                           </select>
                         </div>
                       </div>
                     </div>
                     <div class="" style="margin-top: 25px;">
                         <div class="input-group-icon">
-                            <input class="input--style-4" type="text" name="modal" placeholder="Modal">
+                            <input required class="input--style-4" type="text" name="modal" placeholder="Modal">
                         </div>
                     </div>
                     <div class="row row-space">
@@ -179,7 +84,7 @@
                     <div class="" style="margin-top: 15px;">
                       <div class="input-group-icon">
                         <label for="eqp_image">Upload Equipment Image: </label>
-                        <input type="file" class="input--style-4" style="height:65px" id="eqp_image" name="eqp_image">
+                        <input type="file" required class="input--style-4" style="height:65px" id="eqp_image" name="eqp_image">
                       </div>
                     </div>
                     <div class="btn-block mb-3">

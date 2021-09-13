@@ -18,6 +18,7 @@ from django.core.files.storage import default_storage
 from PIL import Image
 from django.core.files.base import ContentFile
 from admins.api.views import *
+from django.contrib import messages
 
 # Create your views here.
 # base_url = 'http://127.0.0.1:8000'
@@ -57,17 +58,12 @@ def add_product(request):
         
         product_on_sale_obj = ProductsForSaleView()
         product_on_sale_response = product_on_sale_obj.post(request)
-        
-        # product_on_sale_endpoint = '/api/productsOnSale/'
-        # product_on_sale_url = base_url + product_on_sale_endpoint
-
-        # product_on_sale_response = requests.post(product_on_sale_url, data=product_data, headers=headers)
 
         if product_on_sale_response.data.get('id') != None:
-            print('Product added successfully')
+            messages.success(request, "Product added successfully")
         else:
             error = product_on_sale_response.data
-            print(error)
+            messages.error(request, error)
 
     product_obj = ProductsAPIView()
     product_get_response = product_obj.get(request)
@@ -138,11 +134,11 @@ def edit_product(request, prod_id):
         product_put_response = product_on_sale_obj.put(request, prod_id)
 
         if product_put_response.data.get('id') != None:
-            print('Product updated successfully')
+            messages.success(request, "Product updated successfully")
             return redirect('/farmers/myproducts')
         else:
             error = product_put_response.data
-            print(error)
+            messages.error(request, error)
             return redirect('/farmers/editproduct/' + str(prod_id))
 
     product_details_obj = ProductsAPIView()
@@ -171,7 +167,7 @@ def delete_product(request, prod_id):
     product_response = product_on_sale_obj.delete(request, prod_id)
 
     if Response(product_response).status_code == 200:
-        print('Deleted Successfully')
+        messages.success(request, "Deleted successfully")
     return redirect('/farmers/myproducts')
 
 
@@ -180,10 +176,10 @@ def delete_product(request, prod_id):
 def edit_comment(request, id):
     comment_put_response = comment_edit(request, id)
     if comment_put_response.data.get('id') != None:
-        print('Product added successfully')
+        messages.success(request, "Comment updated successfully")
     else:
         error = comment_put_response.data
-        print(error)
+        messages.error(request, error)
     return redirect('/farmers/myproducts')
 
 
@@ -193,7 +189,7 @@ def delete_comment(request, id):
     comment_del_response = comment_delete(request, id)
 
     if Response(comment_del_response).status_code == 200:
-        print('Deleted Successfully')
+        messages.success(request, "Comment deleted successfully")
     return redirect('/farmers/myproducts')
 
 
@@ -219,11 +215,11 @@ def add_production(request):
         production_post_response = production_post_obj.post(request)
 
         if production_post_response.data.get('id') != None:
-            print('Production added successfully')
+            messages.success(request, "Production added successfully")
             return redirect('/farmers/addProduction')
         else:
             error = production_post_response.data
-            print(error)
+            messages.error(request, error)
             return redirect('/farmers/addProduction')
 
     product_get_obj = ProductsAPIView()
@@ -261,11 +257,12 @@ def edit_production(request, id):
         production_put_response = production_obj.put(request, id)
 
         if production_put_response.data.get('id') != None:
-            print('Production updated successfully')
+            messages.success(request, "Production updated successfully")
+
             return redirect('/farmers/myProduction')
         else:
             error = production_put_response.data
-            print(error)
+            messages.error(request, error)
             return redirect('/farmers/myProduction')
 
     production_get_response = production_obj.get(request, id)
@@ -293,7 +290,7 @@ def delete_production(request, id):
     production_del_response = production_obj.delete(request, id)
 
     if Response(production_del_response).status_code == 200:
-        print('Deleted Successfully')
+        messages.success(request, "Deleted successfully")
 
     return redirect('/farmers/myProduction')
 
@@ -323,10 +320,10 @@ def add_home_expenses(request):
         home_expense_response = home_expense_obj.post(request)
 
         if home_expense_response.data.get('id') != None:
-            print('Home Expense added successfully')
+            messages.success(request, "Home expense added successfully")
         else:
             error = home_expense_response.data
-            print(error)
+            messages.error(request, error)
         return redirect('/farmers/addHomeExpenses')
 
     product_obj = ProductsAPIView()
@@ -383,11 +380,11 @@ def edit_home_expense(request, exp_id):
         home_expense_put_response = home_expense_obj.put(request, exp_id)
 
         if home_expense_put_response.data.get('id') != None:
-            print('Home Expense updated successfully')
+            messages.success(request, "Home expense updated successfully")
             return redirect('/farmers/myHomeExpenses')
         else:
             error = home_expense_put_response.data
-            print(error)
+            messages.error(request, error)
             return redirect('/farmers/editHomeExpense/' + str(exp_id))
 
     product_obj = ProductsAPIView()
@@ -419,7 +416,7 @@ def delete_home_expense(request, exp_id):
     home_expense_obj = HomeExpenseDetails()
     home_expense_response = home_expense_obj.delete(request, exp_id)
     if Response(home_expense_response).status_code == 200:
-        print('Deleted Successfully')
+        messages.success(request, "Deleted successfully")
     return redirect('/farmers/myHomeExpenses')
 
 
@@ -448,10 +445,10 @@ def add_expenses(request):
         expense_post_obj = ExpenseAPIView()
         expense_post_response = expense_post_obj.post(request)
         if expense_post_response.data.get('id') != None:
-            print("Expense added successfully")
+            messages.success(request, "Expense added successfully")
         else:
             error = expense_post_response.data
-            print(error)
+            messages.error(request, error)
         return redirect('/farmers/addExpenses')
 
     type_of_expense = [ "Before Harvesting", "During Harvesting", "After Harvesting"]
@@ -501,10 +498,11 @@ def edit_my_expense(request, exp_id):
 
         expense_put_response = expense_obj.put(request, exp_id)
         if expense_put_response.data.get('id') != None:
-            print("Expense Updated Successfully")
+            messages.success(request, "Expense updated successfully")
+
         else:
             error = expense_put_response.data
-            print(error)
+            messages.error(request, error)
         return redirect('/farmers/myExpenses')
 
 
@@ -531,7 +529,7 @@ def delete_my_expense(request, exp_id):
     expense_obj = ExpenseDetails()
     expense_response = expense_obj.delete(request, exp_id)
     if Response(expense_response).status_code == 200:
-        print('Deleted Successfully')
+        messages.success(request, "Deleted successfully")
     return redirect('/farmers/myExpenses')
 
 
@@ -641,10 +639,10 @@ def npk_result(request):
         npk_test_obj = NPKTestView()
         npk_test_response = npk_test_obj.post(request)
         if npk_test_response.data.get('id') != None:
-            print('Success')
+            messages.success(request, "Success")
         else:
             error = npk_test_response.data
-            print(error)
+            messages.error(request, error)
         return render(request, 'farmers/Npktest.html', context)
     else:
         return render(request, 'farmers/Npktest.html')
@@ -683,11 +681,10 @@ def image_test(request):
                 Image.open(image)
                 image_path = default_storage.save('static/image_test/' + str(image), image)
             except:
-                print("Not Valid Image")
+                messages.error(request, "Not valid image")
                 return redirect('/farmers/imagetest')
 
         file_path = os.path.join('', image_path)
-        print(file_path)
         predict = get_image_model(file_path)
         request.data = {
             "image": file_path,
@@ -697,10 +694,10 @@ def image_test(request):
         image_test_obj = ImageTestView()
         image_test_response = image_test_obj.post(request)
         if image_test_response.data.get('id') != None:
-            print('Success')
+            messages.success(request, "Success")
         else:
             error = image_test_response.data
-            print(error)
+            messages.error(request, error)
 
     return render(request, 'farmers/imagetest.html', {'img_result': predict})
 
@@ -762,11 +759,11 @@ def edit_profile(request, user_id):
     if request.method == 'POST':
         user_put_response = update_profile_data(request, user_id, current_profile_pic)
         if user_put_response.data.get('username') != None:
-            print('Profile updated successfully')
+            messages.success(request, "Profile updated successfully")
             return redirect('/farmers/profile/' + str(user_id))
         else:
             error = user_put_response.data
-            print(error)
+            messages.error(request, error)
         return redirect('/farmers/profile/' + str(user_id) + '/edit')       
 
     context = {
@@ -812,11 +809,11 @@ def equipment_details(request, eqp_id):
         comment_post_response = comment_add_eqp(request, eqp_id)
 
         if comment_post_response.data.get('id') != None:
-            print('Comment submitted successfully')
+            messages.success(request, "Comment submitted successfully")
             return redirect('/farmers/equipmentdetails/' + str(eqp_id))
         else:
             error = comment_post_response.data
-            print(error)
+            messages.error(request, error)
             return redirect('/farmers/equipmentdetails/' + str(eqp_id))
 
     equipment_detail_obj = EquipmentsToDisplayDetails()
@@ -847,9 +844,9 @@ def report_eqp_view(request, eqp_id):
     if request.method == 'POST':
         eqp_report_response = report_eqp(request, eqp_id)
         if eqp_report_response.data.get('id') != 'None':
-            print('Reported Successfully')
+            messages.success(request, "Reported successfully")
         else:
-            print(eqp_report_response.data)
+            messages.error(request, eqp_report_response.data)
             return redirect('/farmers/equipmentDetails/'+str(eqp_id))
 
     return redirect('/farmers/allEquipments/')
@@ -863,11 +860,11 @@ def purchase_request(request, eqp_id):
         buy_equipment_response = purchase_eqp_request(request, eqp_id)
 
         if buy_equipment_response.data.get('id') != None:
-            print('Request submitted successfully')
+            messages.success(request, "Request submitted successfully")
             return redirect('/farmers/allEquipments/')
         else:
             error = buy_equipment_response.data
-            print(error)
+            messages.error(request, error)
             return redirect('/farmers/equipmentdetails/' + str(eqp_id))
 
     return redirect('/farmers/equipmentdetails/' + str(eqp_id))
@@ -881,11 +878,11 @@ def rent_request(request, eqp_id):
         rent_equipment_response = rent_eqp_request(request, eqp_id)
         
         if rent_equipment_response.data.get('id') != None:
-            print('Request submitted successfully')
+            messages.success(request, "Request submitted successfully")
             return redirect('/farmers/allEquipments/')
         else:
             error = rent_equipment_response.data
-            print(error)
+            messages.error(request, error)
             return redirect('/farmers/equipmentdetails/' + str(eqp_id))
     return redirect('/farmers/equipmentdetails/' + str(eqp_id))
 
@@ -896,10 +893,10 @@ def product_details(request, prod_id):
     if request.method == 'POST':
         comment_post_response = comment_add(request, prod_id)
         if comment_post_response.data.get('id') != None:
-            print("Comment Added Successfully")
+            messages.success(request, "Comment added successfully")
         else:
             error = comment_post_response.data
-            print(error)
+            messages.error(request, error)
         return redirect('/farmers/myproducts/' + str(prod_id))
 
     product_details_obj = ProductsForSaleDetails()
@@ -907,8 +904,6 @@ def product_details(request, prod_id):
     context = {
         "product_data": product_details_response.data
     }
-
-
     return render(request, 'farmers/productDetails.html', context)
 
 
@@ -952,9 +947,9 @@ def approve_product_request(request, prod_req_id):
     prod_req_obj = ChangeProductRequestStatus()
     prod_req_response = prod_req_obj.put(request, prod_req_id)
     if prod_req_response.data.get("success") != None:
-        print(prod_req_response.data)
+        messages.success(request, prod_req_response.data)
     else:
-        print(prod_req_response.data)
+        messages.error(request, prod_req_response.data)
     return redirect('/farmers/productRequests')
 
 
@@ -967,9 +962,9 @@ def disapprove_product_request(request, prod_req_id):
     prod_req_obj = ChangeProductRequestStatus()
     prod_req_response = prod_req_obj.put(request, prod_req_id)
     if prod_req_response.data.get("success") != None:
-        print(prod_req_response.data)
+        messages.success(request, prod_req_response.data)
     else:
-        print("Error")
+        messages.error(request, "Error")
     return redirect('/farmers/productRequests')
 
 
@@ -1024,9 +1019,9 @@ def edit_eqp_buy_requests(request, req_id):
         eqp_req_put_response = edit_eqp_buy(request, req_id)
 
         if eqp_req_put_response.data.get('id') != None:
-            print("Updated Successfully")
+            messages.success(request, "Updated successfully")
         else:
-            print(eqp_req_put_response.data)
+            messages.error(request, eqp_req_put_response.data)
         return redirect("/farmers/eqpBuyRequests")
 
     eqp_req_data = ""
@@ -1050,9 +1045,9 @@ def delete_eqp_buy_requests(request, req_id):
         if eqp_req_response.data["sold_to"]["id"] == request.user.id:
             eqp_req_del_response = eqp_req_obj.delete(request, req_id)
             if Response(eqp_req_del_response).status_code == 200:
-                print('Deleted Successfully')
+                messages.success(request, "Deleted successfully")
     else:
-        print("Sorry Cannot perform the request")
+        messages.error(request, "Sorry cannot perform the request")
     return redirect('/farmers/eqpBuyRequests')
 
 
@@ -1065,9 +1060,9 @@ def edit_eqp_rent_requests(request, req_id):
     if request.method == 'POST':
         eqp_req_put_response = edit_eqp_rent(request, req_id)
         if eqp_req_put_response.data.get('id') != None:
-            print("Updated Successfully")
+            messages.success(request, "Updated successfully")
         else:
-            print(eqp_req_put_response.data)
+            messages.error(request, eqp_req_put_response.data)
         return redirect("/farmers/eqpRentRequests")
 
     eqp_req_data = ""
@@ -1101,9 +1096,9 @@ def delete_eqp_rent_requests(request, req_id):
         if eqp_req_response.data["rented_to"]["id"] == request.user.id:
             eqp_req_del_response = eqp_req_obj.delete(request, req_id)
             if Response(eqp_req_del_response).status_code == 200:
-                print('Deleted Successfully')
+                messages.success(request, "Deleted successfully")
     else:
-        print("Sorry Cannot perform the request")
+        messages.error(request, "Sorry cannot perform the request")
     return redirect('/farmers/eqpRentRequests')
 
 

@@ -8,6 +8,7 @@ from .auth import *
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.decorators import login_required
 from django.views import View
+from django.contrib import messages
 
 
 @unauthenticated_user
@@ -33,12 +34,14 @@ def login_view(request):
             login(request, user)
 
             request.session['token'] = token.key
+            messages.success(request, "User Logged in")
             if user.is_staff:
                 return redirect('/admins/')
             else:
+                
                 return redirect('/')
         else:
-            print("No user found")
+            messages.error(request, "No user found")
         
     return render(request, 'accounts/login.html')  
 
@@ -57,7 +60,7 @@ class VerificationView(View):
             user.is_active = True
             user.save()
 
-            print('Account activated successfully')
+            messages.success(request, 'Account activated successfully')
                 
         except Exception as e:
             pass
@@ -86,30 +89,23 @@ def register_view(request):
         
         user_obj = UserAPIView()
         user_response = user_obj.post(request)
-        # user_endpoint = "/api/users/"
-        # user_url = base_url + user_endpoint
-        # r = requests.post(user_url, data=user_data)
         if user_response.data.get('id') != None:
             id = user_response.data.get('id')
             request.data = {
                 "user": id,
                 "user_type": user_type
             }
-            print(request.data)
             profile_obj = CreateProfile()
             profile_response = profile_obj.post(request)
-
-            # profile_endpoint = "/api/profile/"
-            # profile_url = base_url + profile_endpoint
-            # profile_request = requests.post(profile_url, data=profile_data)
             
             if profile_response.data.get('user') != None:
-                print("User successfully created")
+                messages.success(request, 'User Created Successfully! \nActivate your account by clicking the link in your email.')                   
                 return redirect('/login')
         else:
-            print("Error in creating user")
+            messages.error(request, "Error in creating user")
+            
 
-    return render(request, 'accounts/register.html')
+    return render(request, 'accounts/signup.html')
 
 
 @login_required
@@ -132,9 +128,9 @@ def report_user(request, user_id):
         report_user_response = report_user_obj.post(request)
 
         if report_user_response.data.get('id') != None:
-            print("Reported Successfully")
+            messages.success(request, "Reported Successfully")
         else:
-            print(report_user_response.data)
+            messages.error(request, report_user_response.data)
     return redirect('/')
 
 @login_required
@@ -154,9 +150,10 @@ def send_response(request, ticket_id):
         ticket_response_obj = TicketResponseView()
         ticket_response_sent = ticket_response_obj.post(request)
         if ticket_response_sent.data.get('id') != None:
-            print('Response Submitted Successfully')
+            messages.success(request, "Response submitted successfully")
+
         else:
-            print(ticket_response_sent.data)
+            messages.error(ticket_response_sent.data)
     return redirect('/')
 
 @login_required
@@ -170,9 +167,9 @@ def change_password(request):
         change_psw_obj = ChangePasswordView()
         change_psw_response = change_psw_obj.put(request)
         if change_psw_response.data.get('message') != None:
-            print(change_psw_response.data.get('message'))
+            messages.success(request, change_psw_response.data.get('message'))
         else:
-            print(change_psw_response.data)
+            messages.error(change_psw_response.data)
     return redirect('/')
 
 def feedback(request):
@@ -196,13 +193,14 @@ def submit_feedback(request):
         feedback_obj = FeedbackView()
         feedback_response = feedback_obj.post(request)
         if feedback_response.data.get('id') != None:
-            print("Feedback Submitted Successfully")
+            messages.success(request, "Feedback Submitted Successfully")
         else:
-            print(feedback_response.data)
+            messages.error(request, feedback_response.data)
     return redirect('/')
 
 
 def logout_user(request):
     request.session.clear()
     logout(request)
+    messages.success(request, "Logged out successfully")
     return redirect('/login')

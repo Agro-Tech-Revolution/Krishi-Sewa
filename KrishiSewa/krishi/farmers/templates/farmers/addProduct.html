@@ -19,7 +19,7 @@
                         <div class="row row-space">
                             <div class="col-6">
 								<div class="input-group">
-									<select class="selectProduct input--style-4" id="product_category" onchange="changeName()">
+									<select required class="selectProduct input--style-4" id="product_category" onchange="changeName()">
 									    {% for type in categories %}
                                             <option value="{{type}}">{{type}}</option>
                                         {% endfor %}
@@ -28,7 +28,7 @@
                             </div>
                             <div class="col-6">
                                 <div class="input-group">
-									<select class="selectProduct input--style-4" name="product" id="productname">
+									<select required class="selectProduct input--style-4" name="product" id="productname">
 									</select>
 								</div>
                             </div>
@@ -36,12 +36,12 @@
                                 <div class="" style="margin-top: 25px;">
 
                                     <div class="input-group-icon">
-                                        <input class="input--style-4" type="number" name="quantity" placeholder="Quantity">
+                                        <input required class="input--style-4" type="number" name="quantity" placeholder="Quantity">
                                     </div>
                                 </div>
 								<div class="">
                                     <div class="input-group-icon">
-                                        <input class="input--style-4" type="number" name="price" placeholder="Price">
+                                        <input required class="input--style-4" type="number" name="price" placeholder="Price">
                                     </div>
 								</div>
 								<div class="" style="margin-top: 15px;">

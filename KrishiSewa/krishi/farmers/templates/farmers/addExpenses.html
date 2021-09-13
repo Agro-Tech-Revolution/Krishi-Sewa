@@ -22,7 +22,7 @@
                       <div class="">
 
                       <div class="input-group-icon">
-                        <select class="selectProduct input--style-4" name="category" placeholder="Category">
+                        <select required class="selectProduct input--style-4" name="category" placeholder="Category">
                         {% for type in type %}
                           <option value="{{type}}">{{type}}</option>
                         {% endfor %}
@@ -34,26 +34,26 @@
                       <div class="">
 
                         <div class="input-group-icon">
-                            <input class="input--style-4" type="text" name="particular" placeholder="Particular">
+                            <input required class="input--style-4" type="text" name="particular" placeholder="Particular">
                         </div>
                     </div>
 
         <div class="">
           <div class="input-group-icon">
-            <input class="input--style-4" type="text" name="unit" placeholder="Unit">
+            <input required class="input--style-4" type="text" name="unit" placeholder="Unit">
           </div>
 				</div>
 
         <div class="">
           <div class="input-group-icon">
-            <input class="input--style-4" type="number" name="quantity" placeholder="Quantity" step=".1">
+            <input required class="input--style-4" type="number" name="quantity" placeholder="Quantity" step=".1">
           </div>
 				</div>
                     
                                 
         <div class="">
           <div class="input-group-icon">
-            <input class="input--style-4" type="number" name="amount" placeholder="Expense Amount" step=".1">
+            <input required class="input--style-4" type="number" name="amount" placeholder="Expense Amount" step=".1">
           </div>
 				</div>
 

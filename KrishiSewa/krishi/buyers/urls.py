@@ -4,10 +4,6 @@ from .views import *
 urlpatterns = [
     path('', index),
 
-    # path('viewProducts', view_products),
-    # path('viewProducts/editComment', edit_comment),
-    # path('viewProducts/delete/comment/<int:id>', delete_comment),
-    # path('viewProducts/report', report_product),
     path('allProducts/', all_products),
     path('productdetails/<int:prod_id>', product_details),
     path('buy_product/<int:prod_id>', buy_product_request),
@@ -47,14 +43,6 @@ urlpatterns = [
     path('feedback/', feedback),
 
     path('view-ticket/', view_ticket),
-
-    path('sortproduct/', sort_product),
-    path('searchproduct/', search_product),
-
-
-    # path('viewEquipments/editComment', edit_eqp_comment),
-    # path('viewEquipments/delete/comment/<int:id>', delete_eqp_comment),
-    # path('viewEquipments/report', report_equipment),
 
     path('reportForm', report_form),
     

@@ -17,7 +17,7 @@
 
                         <div class="">
                             <div class="input-group-icon">
-                                <select class="input--style-4 selectProduct" name="product_type" id="product_category" onchange="changeName()">
+                                <select required class="input--style-4 selectProduct" name="product_type" id="product_category" onchange="changeName()">
                                 {% for category in categories %}
                                   <option value="{{category}}">{{category}}</option>
                                 {% endfor %}
@@ -26,13 +26,13 @@
                         </div>
                         <div class="">
                             <div class="input-group-icon">
-                                <select class="input--style-4 selectProduct" name="product_id" id="productname">
+                                <select required class="input--style-4 selectProduct" name="product_id" id="productname">
                                 </select>
                             </div>
                         </div>
                         <div class="">
                             <div class="input-group-icon">
-                                <input class="input--style-4" type="number" name="production_qty" required placeholder="Production Quantity">
+                                <input  class="input--style-4" type="number" name="production_qty" required placeholder="Production Quantity">
 
                             </div>
                         </div>

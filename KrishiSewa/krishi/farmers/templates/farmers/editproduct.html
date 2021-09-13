@@ -19,7 +19,7 @@
                         <div class="row row-space">
                             <div class="col-6">
 								<div class="input-group">
-									<select class="selectProduct input--style-4" id="product_category" onchange="changeName()">
+									<select required class="selectProduct input--style-4" id="product_category" onchange="changeName()">
                                         {% for type in categories %}
                                         {% if type == product.product.prod_category %}
 									        <option value="{{type}}" selected>{{type}}</option>
@@ -32,7 +32,7 @@
                             </div>
                             <div class="col-6">
                                 <div class="input-group">
-									<select class="selectProduct input--style-4" name="product" id="productname">                                        
+									<select required class="selectProduct input--style-4" name="product" id="productname">                                        
 									</select>
 								</div>
                             </div>
@@ -41,14 +41,14 @@
                                 <div class="" style="margin-top: 25px;">
 
                                     <div class="input-group-icon">
-                                        <input class="input--style-4" type="number" name="quantity" value="{{product.quantity_in_kg}}" placeholder="Quantity" step=".1">
+                                        <input required class="input--style-4" type="number" name="quantity" value="{{product.quantity_in_kg}}" placeholder="Quantity" step=".1">
                                     </div>
 
                                 </div>
                                 
 								<div class="">
                                     <div class="input-group-icon">
-                                        <input class="input--style-4" type="number" name="price" value="{{product.price_per_kg}}" placeholder="Price" step=".1">
+                                        <input required class="input--style-4" type="number" name="price" value="{{product.price_per_kg}}" placeholder="Price" step=".1">
                                     </div>
         
 								</div>

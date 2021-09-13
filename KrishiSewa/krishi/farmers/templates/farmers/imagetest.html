@@ -44,7 +44,7 @@
 
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-             <input id="default-btn" type="file" name="image" hidden>
+             <input id="default-btn" required type="file" name="image" hidden>
 
             <div class="submit-button">
             <button type="submit" class="btn btn-light">Predict</button>

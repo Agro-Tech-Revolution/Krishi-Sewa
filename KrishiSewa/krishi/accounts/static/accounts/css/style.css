@@ -65,8 +65,7 @@
 } */
 
 /* <!------hover over username & password field-----> */
-.form-input input:focus,
-.form-input input:valid {
+.form-input input:focus{
   border: 2px solid #aadb86;
 }
 /* <!-------------------------------------- -----> */

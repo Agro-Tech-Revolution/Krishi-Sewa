@@ -9,6 +9,7 @@ from django.core.files.storage import  default_storage
 from PIL import Image
 from api.views import *
 from admins.api.views import *
+from django.contrib import messages
 
 # Create your views here.
 
@@ -50,7 +51,7 @@ def equipments(request):
             price_to_buy_per_item = data['price_to_buy']
         
         if price_per_hour == None and price_to_buy_per_item == None:
-            print("Both rent and buy price cannot be empty")
+            messages.error(request, "Both rent and buy price cannot be empty")
             return redirect('/vendors/addEquipments')
 
         try:
@@ -64,11 +65,9 @@ def equipments(request):
                 Image.open(eqp_img)
                 image_path = default_storage.save('static/eqp_images/' + str(eqp_img), eqp_img)
             except:
-                print("Not Valid Image")
+                messages.error(request, "Not valid image")
                 return redirect('/vendors/addEquipments')
         
-        
-
         request.data = {
             "equipment": equipment,
             "modal": modal,
@@ -85,11 +84,11 @@ def equipments(request):
         equipment_post_response = equipment_post_obj.post(request)
 
         if equipment_post_response.data.get('id') != None:
-            print('Equipment addedd successfully')
+            messages.success(request, "Equipment added successfully")
             return redirect('/vendors/addEquipments')
         else:
             error = equipment_post_response.data
-            print(error)
+            messages.error(request, error)
         return redirect('/vendors/addEquipments')
 
     equipment_names_obj = EquipmentAPIView()
@@ -132,11 +131,11 @@ def equipment_details(request, eqp_id):
         comment_post_response = comment_add_eqp(request, eqp_id)
 
         if comment_post_response.data.get('id') != None:
-            print('Comment submitted successfully')
+            messages.success(request, "Comment submitted successfully")
             return redirect('/vendors/myEquipments/' + str(eqp_id))
         else:
             error = comment_post_response.data
-            print(error)
+            messages.error(request, error)
             return redirect('/vendors/myEquipments/' + str(eqp_id))
 
     eqp_detail_obj = EquipmentsToDisplayDetails()
@@ -151,7 +150,6 @@ def equipment_details(request, eqp_id):
     context = {
         'eqp_data': eqp_data
     }
-
 
     return render(request, 'vendors/equipmentDetails.html', context)
 
@@ -191,7 +189,7 @@ def edit_equipment(request, eqp_id):
             price_to_buy_per_item = data['price_to_buy']
         
         if price_per_hour == None and price_to_buy_per_item == None:
-            print("Both rent and buy price cannot be empty")
+            messages.error(request, "Both rent and buy price cannot be empty")
             return redirect('/vendors/editEquipment/' + str(eqp_id))
 
         try:
@@ -205,7 +203,7 @@ def edit_equipment(request, eqp_id):
                 Image.open(eqp_img)
                 image_path = default_storage.save('static/eqp_images/' + str(eqp_img), eqp_img)
             except:
-                print("Not Valid Image")
+                messages.error(request, "Not valid image")
                 return redirect('/vendors/editEquipment/' + str(eqp_id))
         else:
             image_path = eqp_data.get('eqp_img')
@@ -226,11 +224,11 @@ def edit_equipment(request, eqp_id):
         equipment_put_response = eqp_detail_obj.put(request, eqp_id)
 
         if equipment_put_response.data.get('id') != None:
-            print('Equipment updated successfully')
+            messages.success(request, "Equipment updated successfully")
             return redirect('/vendors/myEquipments')
         else:
             error = equipment_put_response.data
-            print(error)
+            messages.error(request, error)
         return redirect('/vendors/editEquipment/' + str(eqp_id))
 
     equipment_names_obj = EquipmentAPIView()
@@ -255,10 +253,9 @@ def delete_equipment(request, eqp_id):
     if eqp_get_response.get('added_by').get('id') == request.user.id:
         eqp_del_response = eqp_detail_obj.delete(request, eqp_id)    
         if Response(eqp_del_response).status_code == 200:
-            print('Deleted Successfully')
+            messages.success(request, "Deleted successfully")
     else:
-        print("Not your equipment")
-    
+        messages.error(request, "Not your equipment")    
     return redirect('/vendors/myEquipments')
 
 
@@ -266,22 +263,12 @@ def delete_equipment(request, eqp_id):
 @vendors_only
 def edit_comment(request):
     pass
-    # comment_put_response = eqp_comment_edit(request)
-    
-    # if Response(comment_put_response).status_code == 200:
-    #     print('Comment Updated Successfully')
-    # return redirect('/vendors/myEquipments')
 
 
 @login_required
 @vendors_only
 def delete_comment(request, id):
     pass
-    # comment_del_response = eqp_comment_delete(request, id)
-    
-    # if Response(comment_del_response).status_code == 200:
-    #     print('Deleted Successfully')
-    # return redirect('/vendors/myEquipments')
 
 
 @login_required
@@ -319,11 +306,11 @@ def edit_profile(request, user_id):
     if request.method == 'POST':
         user_put_response = update_profile_data(request, user_id, current_profile_pic)
         if user_put_response.data.get('username') != None:
-            print('Profile updated successfully')
+            messages.success(request, "Profile updated successfully")
             return redirect('/vendors/profile/' + str(user_id))
         else:
             error = user_put_response.data
-            print(error)
+            messages.error(request, error)
         return redirect('/vendors/profile/' + str(user_id) + '/edit')
 
     context = {
@@ -347,9 +334,9 @@ def approve_eqp_buy_request(request, eqp_req_id):
     eqp_req_obj = ChangeEqpBuyRequestStatus()
     eqp_req_response = eqp_req_obj.put(request, eqp_req_id)
     if eqp_req_response.data.get("success") != None:
-        print(eqp_req_response.data)
+        messages.success(request, eqp_req_response.data)
     else:
-        print(eqp_req_response.data)
+        messages.error(request, eqp_req_response.data)
     return redirect('/vendors/eqpBuyRequests')
 
 
@@ -362,9 +349,9 @@ def disapprove_eqp_buy_request(request, eqp_req_id):
     eqp_req_obj = ChangeEqpBuyRequestStatus()
     eqp_req_response = eqp_req_obj.put(request, eqp_req_id)
     if eqp_req_response.data.get("success") != None:
-        print(eqp_req_response.data)
+        messages.success(request, eqp_req_response.data)
     else:
-        print(eqp_req_response.data)
+        messages.error(request, eqp_req_response.data)
     return redirect('/vendors/eqpBuyRequests')
 
 
@@ -442,9 +429,9 @@ def approve_eqp_rent_request(request, eqp_req_id):
     eqp_req_obj = ChangeEqpRentRequestStatus()
     eqp_req_response = eqp_req_obj.put(request, eqp_req_id)
     if eqp_req_response.data.get("success") != None:
-        print(eqp_req_response.data)
+        messages.success(request, eqp_req_response.data)
     else:
-        print(eqp_req_response.data)
+        messages.error(request, eqp_req_response.data)
     return redirect('/vendors/eqpRentRequests')
 
 
@@ -457,9 +444,9 @@ def disapprove_eqp_rent_request(request, eqp_req_id):
     eqp_req_obj = ChangeEqpRentRequestStatus()
     eqp_req_response = eqp_req_obj.put(request, eqp_req_id)
     if eqp_req_response.data.get("success") != None:
-        print(eqp_req_response.data)
+        messages.success(request, eqp_req_response.data)
     else:
-        print(eqp_req_response.data)
+        messages.error(request, eqp_req_response.data)
     return redirect('/vendors/eqpRentRequests')
 
 

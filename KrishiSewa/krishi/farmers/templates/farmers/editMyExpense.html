@@ -23,7 +23,7 @@
                       <div class="">
 
                       <div class="input-group-icon">
-                        <select class="selectProduct input--style-4" name="category" placeholder="Category">
+                        <select required class="selectProduct input--style-4" name="category" placeholder="Category">
                         {% for type in type %}
                           {% if type == expense_data.expense_type %}
                             <option value="{{type}}" selected>{{type}}</option>
@@ -39,26 +39,26 @@
                       <div class="">
 
                         <div class="input-group-icon">
-                            <input class="input--style-4" type="text" name="particular" placeholder="Particular" value={{expense_data.particular}}>
+                            <input required class="input--style-4" type="text" name="particular" placeholder="Particular" value={{expense_data.particular}}>
                         </div>
                     </div>
 
         <div class="">
           <div class="input-group-icon">
-            <input class="input--style-4" type="text" name="unit" placeholder="Unit" value={{expense_data.unit}}>
+            <input class="input--style-4" required type="text" name="unit" placeholder="Unit" value={{expense_data.unit}}>
           </div>
 				</div>
 
         <div class="">
           <div class="input-group-icon">
-            <input class="input--style-4" type="number" name="quantity" placeholder="Quantity" step=".1" value={{expense_data.quantity}}>
+            <input class="input--style-4" required type="number" name="quantity" placeholder="Quantity" step=".1" value={{expense_data.quantity}}>
           </div>
 				</div>
                     
                                 
         <div class="">
           <div class="input-group-icon">
-            <input class="input--style-4" type="number" name="amount" placeholder="Expense Amount" step=".1" value={{expense_data.amount}}>
+            <input class="input--style-4" required type="number" name="amount" placeholder="Expense Amount" step=".1" value={{expense_data.amount}}>
           </div>
 				</div>
 

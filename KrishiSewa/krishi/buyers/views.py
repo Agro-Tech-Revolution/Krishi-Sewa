@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from farmers.utils import *
 from vendors.utils import *
 from admins.api.views import *
+from django.contrib import messages
 
 # Create your views here.
 @login_required
@@ -64,11 +65,11 @@ def product_details(request, prod_id):
         comment_post_response = comment_add(request, prod_id)
 
         if comment_post_response.data.get('id') != None:
-            print('Comment submitted successfully')
+            messages.success(request, "Comment submitted successfully")
             return redirect('/buyers/productdetails/' + str(prod_id))
         else:
             error = comment_post_response.data
-            print(error)
+            messages.error(request, error)
             return redirect('/buyers/productdetails/' + str(prod_id))
 
     product_detail_obj = ProductsForSaleDetails()
@@ -113,9 +114,9 @@ def report_prod_view(request, prod_id):
         prod_report_obj = ProductReportView()
         prod_report_response = prod_report_obj.post(request)
         if prod_report_response.data.get('id') != 'None':
-            print('Reported Successfully')
+            messages.success(request, "Reported Successfully")
         else:
-            print(prod_report_response.data)
+            messages.error(request, prod_report_response.data)
             return redirect('/buyers/productdetails/'+str(prod_id))
 
     return redirect('/buyers/allProducts/')
@@ -149,11 +150,11 @@ def buy_product_request(request, prod_id):
         buy_product_response = buy_product_obj.post(request)
 
         if buy_product_response.data.get('id') != None:
-            print('Request submitted successfully')
+            messages.success(request, "Request submitted successfully")
             return redirect('/buyers/allProducts/')
         else:
             error = buy_product_response.data
-            print(error)
+            messages.error(request, error)
             return redirect('/buyers/productdetails/' + str(prod_id))
 
     return redirect('/buyers/productdetails/' + str(prod_id))
@@ -229,9 +230,9 @@ def edit_prod_buy_requests(request, req_id):
         prod_req_put_response = prod_req_obj.put(request, req_id)
 
         if prod_req_put_response.data.get('id') != None:
-            print("Updated Successfully")
+            messages.success(request, "Updated successfully")
         else:
-            print(prod_req_put_response.data)
+            messages.error(request, prod_req_put_response.data)
         return redirect("/buyers/prodBuyRequests")
 
     prod_req_data = ""
@@ -255,9 +256,9 @@ def delete_prod_buy_requests(request, req_id):
         if prod_req_response.data["sold_to"]["id"] == request.user.id:
             prod_req_del_response = prod_req_obj.delete(request, req_id)
             if Response(prod_req_del_response).status_code == 200:
-                print('Deleted Successfully')
+                messages.success(request, "Deleted successfully")
     else:
-        print("Sorry Cannot perform the request")
+        messages.error(request, "Sorry cannot perform the request")
     return redirect('/buyers/prodBuyRequests')
 
 
@@ -299,11 +300,11 @@ def equipment_details(request, eqp_id):
         comment_post_response = comment_add_eqp(request, eqp_id)
 
         if comment_post_response.data.get('id') != None:
-            print('Comment submitted successfully')
+            messages.success(request, "Comment submitted successfully")
             return redirect('/buyers/equipmentdetails/' + str(eqp_id))
         else:
             error = comment_post_response.data
-            print(error)
+            messages.error(request, error)
             return redirect('/buyers/equipmentdetails/' + str(eqp_id))
 
     equipment_detail_obj = EquipmentsToDisplayDetails()
@@ -336,9 +337,9 @@ def report_eqp_view(request, eqp_id):
     if request.method == 'POST':
         eqp_report_response = report_eqp(request, eqp_id)
         if eqp_report_response.data.get('id') != 'None':
-            print('Reported Successfully')
+            messages.success(request, "Reported successfully")
         else:
-            print(eqp_report_response.data)
+            messages.error(request, eqp_report_response.data)
             return redirect('/buyers/equipmentDetails/'+str(eqp_id))
 
     return redirect('/buyers/allEquipments/')
@@ -352,11 +353,11 @@ def purchase_request(request, eqp_id):
         buy_equipment_response = purchase_eqp_request(request, eqp_id)
 
         if buy_equipment_response.data.get('id') != None:
-            print('Request submitted successfully')
+            messages.success(request, "Request submitted successfully")
             return redirect('/buyers/allEquipments/')
         else:
             error = buy_equipment_response.data
-            print(error)
+            messages.error(request, error)
             return redirect('/buyers/equipmentdetails/' + str(eqp_id))
 
     return redirect('/buyers/equipmentdetails/' + str(eqp_id))
@@ -370,11 +371,11 @@ def rent_request(request, eqp_id):
         rent_equipment_response = rent_eqp_request(request, eqp_id)
         
         if rent_equipment_response.data.get('id') != None:
-            print('Request submitted successfully')
+            messages.success(request, "Rent submitted successfully")
             return redirect('/buyers/allEquipments/')
         else:
             error = rent_equipment_response.data
-            print(error)
+            messages.error(request, error)
             return redirect('/buyers/equipmentdetails/' + str(eqp_id))
     return redirect('/buyers/equipmentdetails/' + str(eqp_id))
 
@@ -430,9 +431,9 @@ def edit_eqp_buy_requests(request, req_id):
         eqp_req_put_response = edit_eqp_buy(request, req_id)
 
         if eqp_req_put_response.data.get('id') != None:
-            print("Updated Successfully")
+            messages.success(request, "Updated successfully")
         else:
-            print(eqp_req_put_response.data)
+            messages.error(request, eqp_req_put_response.data)
         return redirect("/buyers/eqpBuyRequests")
 
     eqp_req_data = ""
@@ -456,9 +457,9 @@ def delete_eqp_buy_requests(request, req_id):
         if eqp_req_response.data["sold_to"]["id"] == request.user.id:
             eqp_req_del_response = eqp_req_obj.delete(request, req_id)
             if Response(eqp_req_del_response).status_code == 200:
-                print('Deleted Successfully')
+                messages.success(request, "Deleted successfully")
     else:
-        print("Sorry Cannot perform the request")
+        messages.error(request, "Sorry cannot perform the request")
     return redirect('/buyers/eqpBuyRequests')
 
 
@@ -471,9 +472,9 @@ def edit_eqp_rent_requests(request, req_id):
     if request.method == 'POST':
         eqp_req_put_response = edit_eqp_rent(request, req_id)
         if eqp_req_put_response.data.get('id') != None:
-            print("Updated Successfully")
+            messages.success(request, "Updated successfully")
         else:
-            print(eqp_req_put_response.data)
+            messages.error(request, eqp_req_put_response.data)
         return redirect("/buyers/eqpRentRequests")
 
     eqp_req_data = ""
@@ -507,9 +508,9 @@ def delete_eqp_rent_requests(request, req_id):
         if eqp_req_response.data["rented_to"]["id"] == request.user.id:
             eqp_req_del_response = eqp_req_obj.delete(request, req_id)
             if Response(eqp_req_del_response).status_code == 200:
-                print('Deleted Successfully')
+                messages.success(request, "Deleted successfully")
     else:
-        print("Sorry Cannot perform the request")
+        messages.error(request, "Sorry cannot perform the request")
     return redirect('/buyers/eqpRentRequests')
 
 
@@ -548,11 +549,11 @@ def edit_profile(request, user_id):
     if request.method == 'POST':
         user_put_response = update_profile_data(request, user_id, current_profile_pic)
         if user_put_response.data.get('username') != None:
-            print('Profile updated successfully')
+            messages.success(request, "Profile updated successfully")
             return redirect('/buyers/profile/' + str(user_id))
         else:
             error = user_put_response.data
-            print(error)
+            messages.error(request, error)
         return redirect('/buyers/profile/' + str(user_id) + '/edit')       
 
     context = {
@@ -577,15 +578,4 @@ def view_ticket(request):
 def change_password(request):
     return render(request, 'buyers/changePassword.html')
 
-@login_required
-@buyers_only
-def sort_product(request):
-    print("worked")
-    return redirect('/')
-
-@login_required
-@buyers_only
-def search_product(request):
-    print("worked")
-    return redirect('/')
 

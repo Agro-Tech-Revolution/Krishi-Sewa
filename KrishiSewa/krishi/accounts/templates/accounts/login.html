@@ -6,71 +6,59 @@
 <link rel="stylesheet" type="text/css" href="{% static 'accounts/css/style.css' %}" />
 {% endblock title %}
 {% block content %}
-    <div class="container mt-5 py-5">
-      <div class="row mt-5 px-3"><div class="col-lg-10 col-xl-9 card flex-row mx-auto px-0">
-          <div class="img-left d-none d-md-flex"></div>
+    <div class="container my-5 py-2">
+        {% if messages %}
+        <div class="col-sm-6 col-lg-5 mx-auto text-center font-weight-bold">
+            
+            {% for message in messages %}
+                {% if message.tags == 'error' %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {% else %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {% endif %}
 
-          <div class="card-body">
-              <h5 class="title text-center mt-4">Login</h5>
-              <form class="form-box px-3" method="POST">
-                {% csrf_token %}
-                  <div class="form-input">
-                      <span><i class="fas fa-user"></i></span>
-                      <input type="text" name="username" placeholder="Username" tabindex="10" required>
-                    </div>
-                    <div class="form-input">
-                        <span><i class="fa fa-key"></i></span>
-                        <input type="password" name="password" placeholder="password">
-                      </div>
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+            
+        </div>
+        {% endif %}
+        <div class="row mt-2 px-3"><div class="col-lg-10 col-xl-9 card flex-row mx-auto px-0">
+            <div class="img-left d-none d-md-flex"></div>
 
+                <div class="card-body">
+                    <h5 class="title text-center mt-4">Login</h5>
+                    <form class="form-box px-3" method="POST">
+                        {% csrf_token %}
+                        <div class="form-input">
+                            <span><i class="fas fa-user"></i></span>
+                            <input type="text" name="username" placeholder="Username" required>
+                        </div>
+                        <div class="form-input">
+                            <span><i class="fa fa-key"></i></span>
+                            <input type="password" name="password" placeholder="password" required>
+                        </div>
 
-<!-----------------------------------------------------Remember me checkbox---------------------------------------------->
-                      <div class="mb-3">
-                          <div class="custom-control custom-checkbox">
-                              <input type="checkbox" class="custom-control-input" id="cb1" name="">
-                              <label class="custom-control-label" for="cb1">Remember me</label>
-                          </div>
-                      </div>
+    <!-------------------------------------------Login button-------------------------------------------------------->       
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-block text-uppercase">LOGIN</button>
+                        </div>
+    <!-------------------------------------------forgotpassword-------------------------------------------------->                                   <div class="text-right">
+                        <div>
+                            <a href="/reset_password/" class="forget-link">Forgot Password?</a>
+                        </div>
+    <!-------------------------------------------Signup here--------------------------------------------------> 
 
-<!-------------------------------------------Login button-------------------------------------------------------->       
-                      <div class="mb-3">
-                          <button type="submit" class="btn btn-block text-uppercase">LOGIN</button>
-                      </div>
-<!-------------------------------------------forgotpassword-------------------------------------------------->                                   <div class="text-right">
-                        <a href="/reset_password/" class="forget-link">Forgot Password?</a>
                         <hr class="my-4">
-                  </div>
-<!-------------------------------------------OR-------------------------------------------------->   
-                  <div class="text-center mb-3">Or, login with</div>
-                  
-
-<!-------------------------------------------Social media icons-------------------------------------------------->   
-                  <div class="row mb-3">
-                      <div class="col-4">
-                          <a href="https://www.facebook.com/" target="_blank"><i class="fab fa-facebook fa-2x"></i>
-                          </a>
-                      </div>
-
-                      <div class="col-4">
-                        <a href="https://www.gmail.com/" target="_blank"><i class="fab fa-google fa-2x"></i>
-                        </a>
-                    </div>
-
-                    <div class="col-4">
-                      <a href="https://www.twitter.com/" target="_blank"><i class="fab fa-twitter fa-2x"></i>
-                      </a>
-                  </div>
-
-                      
-
-                  </div>
-<!-------------------------------------------Signup here--------------------------------------------------> 
-
-                  <hr class="my-4">
-                  <div class="text-center mb-2">Don't have an account? <a href="/register" class="register-link">Register here</a>
-                  </div>
-              </form>
-          </div>
-      </div>
+                        <div class="text-center mb-2">
+                            Don't have an account? <a href="/register" class="register-link">Register here</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock content %}

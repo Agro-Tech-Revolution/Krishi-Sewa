@@ -18,7 +18,7 @@
                     <div class="row row-space">
                       <div class="col-6">
                         <div class="input-group">
-                          <select class="selectProduct input--style-4" id="eqp_category" onchange="changeName()">
+                          <select required class="selectProduct input--style-4" id="eqp_category" onchange="changeName()">
                             {% for category in categories %}
                             
                             {% if eqp_data.equipment.category == category %}
@@ -33,14 +33,14 @@
 
                       <div class="col-6">
                         <div class="input-group">
-                          <select class="selectProduct input--style-4" name="equipment" id="eqp_names">
+                          <select required class="selectProduct input--style-4" name="equipment" id="eqp_names">
                           </select>
                         </div>
                       </div>
                     </div>
                     <div class="" style="margin-top: 25px;">
                         <div class="input-group-icon">
-                            <input class="input--style-4" type="text" name="modal" placeholder="Modal" value="{{eqp_data.modal}}">
+                            <input required class="input--style-4" type="text" name="modal" placeholder="Modal" value="{{eqp_data.modal}}">
                         </div>
                     </div>
                     <div class="row row-space">
@@ -48,7 +48,7 @@
                       <div class="col-6">
                         <label class="d-inline-block">Available To Buy</label>
                         <div class="input-group">
-                          <select class="selectProduct input--style-4" name="buy_availability" id="buy_availability" onchange="changeStatus()">
+                          <select required class="selectProduct input--style-4" name="buy_availability" id="buy_availability" onchange="changeStatus()">
                             {% if eqp_data.available_to_buy %}
                             <option value="Yes" selected>Yes</option>
                             <option value="No">No</option>
@@ -103,7 +103,7 @@
                     <div class="" style="margin-top: 15px;">
                         <div class="input-group-icon">
                             <label for="eqp_image">Upload Equipment Image: </label>
-                            <input type="file" class="input--style-4" style="height:65px" id="eqp_image" name="eqp_image">
+                            <input type="file" required class="input--style-4" style="height:65px" id="eqp_image" name="eqp_image">
                         </div>
                     </div>
                     <div class="btn-block mb-3">

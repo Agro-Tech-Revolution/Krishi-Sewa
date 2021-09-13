@@ -34,11 +34,11 @@
              <div class="row m-4">
             <div class="col">
                 <label class="mr-3 pr-4">Equipment :</label>
-                <input type="text" placeholder="Enter equipment name" name="name" style="height: 40px; width: 70%">
+                <input type="text" required placeholder="Enter equipment name" name="name" style="height: 40px; width: 70%">
             </div>
             <div class="col">
                 <label class="mr-5 pr-4">Categories : </label>
-                <select id='sel' name="category">
+                <select id='sel' name="category" required>
                 {% for category in categories %}
                 <option value="{{category}}">{{category}}</option>
                 {% endfor %}
