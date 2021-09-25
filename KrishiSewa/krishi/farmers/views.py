@@ -624,7 +624,7 @@ def npk_result(request):
         ph = data['ph']
 
         result = getNPK_Prediction(int(N), int(P), int(K), int(temp), int(humidity), int(ph))
-        context = {'result': result}
+        # context = {'result': result}
 
         request.data = {
             "nitrogen": N,
@@ -633,19 +633,18 @@ def npk_result(request):
             "temperature": temp,
             "humidity": humidity,
             "ph": ph,
-            "reccommended_crop": result,
+            "recommended_crop": result.capitalize(),
             "test_of": request.user.id
         }
         npk_test_obj = NPKTestView()
         npk_test_response = npk_test_obj.post(request)
         if npk_test_response.data.get('id') != None:
-            messages.success(request, "Success")
+            messages.success(request, "Recommendation: " + result.capitalize())
         else:
             error = npk_test_response.data
             messages.error(request, error)
-        return render(request, 'farmers/Npktest.html', context)
-    else:
-        return render(request, 'farmers/Npktest.html')
+
+    return render(request, 'farmers/Npktest.html')
 
 def get_image_model(image_path):
     image = load_img(image_path, target_size=(224, 224))
@@ -688,7 +687,7 @@ def image_test(request):
         predict = get_image_model(file_path)
         request.data = {
             "image": file_path,
-            "reccomended_crops": predict,
+            "recomended_crops": predict,
             "test_of": request.user.id
         }
         image_test_obj = ImageTestView()
@@ -731,10 +730,11 @@ def profile(request, user_id):
 
     user_report_data = user_detail_response.data.get('reports') 
     reported = False
-    for report in user_report_data:
-        if report["reported_by"] == request.user.id:
-            reported = True
-            break
+    if user_report_data is not None:
+        for report in user_report_data:
+            if report["reported_by"] == request.user.id:
+                reported = True
+                break
 
     report_category = ["False Information", "Fake Account", "Posts Disturbing content", "Something Else"]
     context = {

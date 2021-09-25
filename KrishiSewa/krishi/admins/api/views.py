@@ -25,19 +25,19 @@ class DashboardView(APIView):
         buyers_count = Profile.objects.filter(user_type='Buyers').count()
 
         prod_categories = {
-            "Cereals": 0,
-            "Pulses": 0, 
-            "Vegetables": 0, 
-            "Fruits": 0, 
-            "Nuts": 0, 
-            "Oilseeds": 0,
-            "Sugars and Starches": 0, 
-            "Fibres": 0, 
-            "Beverages": 0, 
-            "Narcotics": 0, 
-            "Spices": 0, 
-            "Condiments": 0, 
-            "Others": 0,
+            "Cereals": {'production': 0, 'sales': 0},
+            "Pulses": {'production': 0, 'sales': 0}, 
+            "Vegetables": {'production': 0, 'sales': 0}, 
+            "Fruits": {'production': 0, 'sales': 0}, 
+            "Nuts": {'production': 0, 'sales': 0}, 
+            "Oilseeds": {'production': 0, 'sales': 0},
+            "Sugars and Starches": {'production': 0, 'sales': 0}, 
+            "Fibres": {'production': 0, 'sales': 0}, 
+            "Beverages": {'production': 0, 'sales': 0}, 
+            "Narcotics": {'production': 0, 'sales': 0}, 
+            "Spices": {'production': 0, 'sales': 0}, 
+            "Condiments": {'production': 0, 'sales': 0}, 
+            "Others": {'production': 0, 'sales': 0},
         }
 
         eqp_categories = {
@@ -55,7 +55,7 @@ class DashboardView(APIView):
         all_production = Production.objects.values('product_id__prod_category').annotate(qty=Sum('production_qty')).order_by()
         for production in all_production:
             category = production.get('product_id__prod_category')
-            prod_categories[category] = production.get('qty')
+            prod_categories[category]['production'] = production.get('qty')
                 
         products_sold = ProductSold.objects.filter(approved=True
                                                     ).values(
@@ -66,16 +66,17 @@ class DashboardView(APIView):
                                                         '-sales'
                                                     )[:5]
         prod_sales = []
+
         for prod_sold in products_sold:
             category = prod_sold.get('sold_product__product__prod_category')
             prod_sales.append({category: prod_sold.get('sales')})
-            # prod_categories[category]['sales'] = prod_sold.get('sales')  
-        
+            prod_categories[category]['sales'] = prod_sold.get('sales')  
+
         equipments_sold = BuyDetails.objects.filter(approved=True
                                                     ).values(
                                                         'equipment__equipment__category'
                                                     ).annotate(
-                                                        sales=Sum('quantity')
+                                                        sales=Sum('total_price')
                                                     ).order_by(
                                                         '-sales'
                                                     )
@@ -256,7 +257,7 @@ class FarmersListView(APIView):
                                                     approved=True).values(
                                                         'sold_product__added_by'
                                                     ).annotate(
-                                                        sold_qty=Sum('quantity_sold')
+                                                        sold_qty=Sum('sold_price')
                                                     ).order_by()
 
             sales_qty = [sq.get('sold_qty') for sq in sales_data]

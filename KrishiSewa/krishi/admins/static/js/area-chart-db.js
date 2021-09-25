@@ -11,16 +11,15 @@ const labels = ["Cereals", "Pulses", "Vegetables", "Fruits", "Nuts", "Oilseeds",
 var production_data = [];
 for(var i=0; i<labels.length; i++) {
   var key = labels[i]
-  production_data[i] = productions[key]
+  production_data[i] = productions[key]['production']
 }     
-const max_val = Math.max(...production_data) + 100    
+const max_val = Math.max(...production_data) + 5000  
 
 var myLineChart = new Chart(ctx, {
   type: 'line',
   data: {
     labels: labels,
     datasets: [{
-      label: "Vegetable and Fruits",
       lineTension: 0.3,
       backgroundColor: "rgba(2,117,216,0.2)",
       borderColor: "rgba(2,117,216,1)",

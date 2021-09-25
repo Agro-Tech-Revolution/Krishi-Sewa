@@ -278,10 +278,11 @@ def profile(request, user_id):
     user_detail_response = user_detail_obj.get(request, user_id)
     user_report_data = user_detail_response.data.get('reports') 
     reported = False
-    for report in user_report_data:
-        if report["reported_by"] == request.user.id:
-            reported = True
-            break
+    if user_report_data is not None:
+        for report in user_report_data:
+            if report["reported_by"] == request.user.id:
+                reported = True
+                break
 
     report_category = ["False Information", "Fake Account", "Posts Disturbing content", "Something Else"]
     context = {

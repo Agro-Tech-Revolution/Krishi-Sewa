@@ -23,7 +23,7 @@
           {% if record.test_of == user.id %}
           <tr>
             <th scope="row">{{forloop.counter}}</th>
-            <td><img src="/{{record.image}}" class="img-fluid rounded"></td>
+            <td><img src="/{{record.image}}" class="img-fluid rounded" style="width: 250px"></td>
             <td>{{record.recomended_crops}}</td>
           </tr>
           {% endif %}

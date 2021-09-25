@@ -42,9 +42,9 @@
                                           <th scope="col">Name</th>
                                           <th scope="col">Address</th>
                                           <th scope="col">Contact No</th>
-                                          <th scope="col">Crop Production(MT)</th>
-                                          <th scope="col">Sells(Thousand)</th>
-                                          <th scope="col">Farming Area(Hector)</th>
+                                          <th scope="col">Crop Production</th>
+                                          <th scope="col">Sells</th>
+                                          <th scope="col">Farming Area</th>
                                         </tr>
                                       </thead>
                                       <tbody>
@@ -67,7 +67,7 @@
                                             {% endif %}
                                           </td>
                                           <td>{{farmer.production}} kg</td>
-                                          <td>{{farmer.sales}} kg</td>
+                                          <td>NRs. {{farmer.sales}}</td>
                                           <td>{{farmer.area}} sq. ft.</td>
                                       </tr>
                                       {% endfor %}

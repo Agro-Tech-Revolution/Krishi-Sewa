@@ -21,12 +21,12 @@
     {% if my_stock|length > 0 %}
     {% for stock in my_stock %}
     <tr>
-      <th scope="row">{{stock.id}}</th>
+      <th scope="row">{{forloop.counter}}</th>
       <td>{{stock.product_id.prod_name}}</td>
       <td>{{stock.total_production}} kg</td>
-      <td>{{stock.total_sales}} kg</td>
-      <td>{{stock.total_expense}} kg</td>
-      <td>{{stock.stock}} kg</td>
+      <td class="text-success">{{stock.total_sales}} kg</td>
+      <td class="text-danger">{{stock.total_expense}} kg</td>
+      <td class="text-primary">{{stock.stock}} kg</td>
     </tr>
     {% endfor %}
     {% else %}

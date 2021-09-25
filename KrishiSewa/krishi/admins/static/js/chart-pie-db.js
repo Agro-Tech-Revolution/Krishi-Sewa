@@ -20,10 +20,9 @@ while (eqp_values.length < 5) {
       break;
     }
   }
-  eqp_labels.push(labels[j])
+  eqp_labels.push(all_eqp[j])
   eqp_values.push(0)
 }
-console.log(eqp_labels)
 
 // Pie Chart Example
 var ctx = document.getElementById("vendorPieChart");

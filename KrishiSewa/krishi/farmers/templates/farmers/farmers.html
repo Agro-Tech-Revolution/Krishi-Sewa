@@ -7,7 +7,7 @@
 
 {% block content %}
 <div>
-    <h1 class="text-center">Welcome, Farmer!</h1>
+    <h1 class="text-center">Welcome, <span class="text-capitalize">{{user.first_name}} {{user.last_name}}</span>!</h1>
 </div>
 {% endblock content %}
 

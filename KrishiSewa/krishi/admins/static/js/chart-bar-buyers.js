@@ -10,7 +10,7 @@ const all_prod_labels = ["Cereals", "Pulses", "Vegetables", "Fruits", "Nuts", "O
 var prod_purchase = [];
 for(var i=0; i<all_prod_labels.length; i++) {
   var key = all_prod_labels[i]
-  prod_purchase[i] = prod_data[key]
+  prod_purchase[i] = prod_data[key]['sales']
 }     
 const max_val = Math.max(...prod_purchase) + 100                         
 

@@ -220,7 +220,7 @@
                     <fieldset>
                         <hr>
                         <div class="media ml-2">
-                            <a href=""><img class="img-fluid mr-3" src="/{{user.profile.profile_pic}}" alt="" style="height: 2rem; width: 2rem; border-radius: 50%;"></a>
+                            <a href="/farmers/profile/{{user.id}}"><img class="img-fluid mr-3" src="/{{user.profile.profile_pic}}" alt="" style="height: 2rem; width: 2rem; border-radius: 50%;"></a>
                             <div class="media-body">
                                 <textarea class="form-control" required id="message" placeholder="Add a comment..." rows="5" name="comment"></textarea>
                             </div>
@@ -236,12 +236,14 @@
                 <!-- COMMENT 1 - START -->
                 {% for comment in equipment_detail.comments %}
                 <div class="media ml-2">
-                    <a href=""><img class="img-fluid" src="/{{comment.comment_by.profile.profile_pic}}" alt="" style="height: 2rem; width: 2rem; border-radius: 50%;"></a>
+                    <a href="/farmers/profile/{{comment.comment_by.id}}">
+                    <img class="img-fluid" src="/{{comment.comment_by.profile.profile_pic}}" alt="" style="height: 2rem; width: 2rem; border-radius: 50%;">
                     <div class="media-body">
                         <h6 class="media-heading ml-3">
                             <b class="text-capitalize">{{comment.comment_by.first_name}} {{comment.comment_by.last_name}}</b> 
                             <!-- <span style="float: right;">2 days ago</span> -->
                         </h6>
+                        </a>
                         <p class="ml-3">
                             {{comment.comment}}
                         </p>

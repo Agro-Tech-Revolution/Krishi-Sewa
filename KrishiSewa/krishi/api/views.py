@@ -1409,7 +1409,7 @@ class RentedEquipmentSeller(APIView):
 class ProfitLossReportView(APIView):
     def get(self, request, id):
         # income
-        product_sales_details = ProductSold.objects.filter(sold_product__added_by=id)
+        product_sales_details = ProductSold.objects.filter(approved=True, sold_product__added_by=id)
         product_sold_data = get_sold_details(product_sales_details)
         total_income = 0
         for sale in product_sold_data:
@@ -1636,7 +1636,6 @@ class FarmerProductRequests(APIView):
 class ChangeProductRequestStatus(APIView):  
     def put(self, request, id):
         product_request = ProductSold.objects.filter(id=id)
-        print(product_request)
         if len(product_request) > 0:
             product_id = product_request[0].sold_product.product.id
             farmer_id = product_request[0].sold_product.added_by

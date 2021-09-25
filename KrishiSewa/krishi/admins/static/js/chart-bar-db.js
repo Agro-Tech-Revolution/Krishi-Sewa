@@ -41,7 +41,7 @@ var myLineChart = new Chart(ctx, {
   data: {
     labels: prod_labels,
     datasets: [{
-      label: "Revenue",
+      label: "Quantity Sold",
       backgroundColor: "rgba(2,117,216,1)",
       borderColor: "rgba(2,117,216,1)",
       data: prod_values,

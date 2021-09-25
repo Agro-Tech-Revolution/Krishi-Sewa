@@ -53,10 +53,11 @@
                                     <li class="dropdown">
                                         <div class="dropdown">
                                             <a class="btn dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="fas fa-user fa-2x"></i>
+                                                <!-- <i class="fas fa-user fa-2x"></i> -->
+                                                <img src="/{{user.profile.profile_pic}}" class="img-fluid rounded-circle" style="width: 30px;">
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
-                                                <a class="dropdown-item text-capitalize" href="#">{{user.first_name}} {{user.last_name}}</a>
+                                                <span class="dropdown-item text-capitalize">{{user.first_name}} {{user.last_name}}</span>
                                                 <a class="dropdown-item" href="/admins/profile/{{user.id}}">My Profile</a>
                                                 <a class="dropdown-item" href="/admins/changePassword/">Change Password</a>
                                                 <div class="dropdown-divider"></div>
